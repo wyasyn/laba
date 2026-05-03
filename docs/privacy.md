@@ -3,8 +3,6 @@ layout: default
 title: Privacy Policy
 ---
 
-> **NOTE:** This is starter boilerplate, not legal advice. Have a lawyer review before public launch.
-
 **Effective date:** 3 May 2026
 
 ## 1. Who we are
@@ -22,15 +20,15 @@ When you sign in, **Clerk** (our authentication provider) may process:
 - optional **profile image** (uploaded by you or supplied by Google if you use Google Sign-In);
 - **session tokens** needed to keep you signed in securely.
 
-Clerk’s own privacy practices apply to how they process data on our behalf. See Clerk’s documentation for details.
+Clerk’s own privacy practices apply to how they process data on our behalf. See [Clerk’s Privacy Policy](https://clerk.com/legal/privacy).
 
 ### 2.2 Data on your device
 
 The App may store preferences and light app state on your device using **AsyncStorage** and **Secure Store** (for example: theme preference, favourite stations, playback-related state). This data stays on your device unless you clear app data or uninstall the App.
 
-### 2.3 Streaming and analytics
+### 2.3 Streaming and network activity
 
-When you play a stream, your device connects to **third-party servers** operated by broadcasters or their partners (in Uganda and, where included, other countries). We do not control those servers. The App may use standard networking as needed to deliver audio/video.
+When you play a stream, your device connects to **third-party servers** operated by broadcasters or their partners (in Uganda and, where included, other countries). We do not control those servers. The App uses standard network connections to deliver audio and video; those third parties may process technical data (such as IP address or device information) according to their own practices.
 
 ## 3. How we use information
 
@@ -42,6 +40,8 @@ We use the information above to:
 - operate, secure, and improve the App.
 
 We **do not sell** your personal information.
+
+We retain account-related personal data while your account exists. After you delete your account, **Clerk** and other processors may retain certain records for a limited period as described in their policies and as required by law.
 
 ## 4. Sharing
 
@@ -58,7 +58,7 @@ We do not share your data for unrelated marketing.
 Depending on your location, you may have rights to access, correct, or delete personal data. In the App you can:
 
 - view and update profile details under **Settings → Manage account**;
-- **delete your account** permanently from the same screen (Danger zone), when enabled.
+- **delete your account** permanently from the same screen (Danger zone), when self-service deletion is enabled for your account in Clerk.
 
 You may also contact us at **ywalum@gmail.com** for privacy-related requests.
 

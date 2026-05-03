@@ -14,11 +14,16 @@ import Animated, {
 interface FavouriteButtonProps {
   stationId: string;
   size?: number;
+  accessibilityLabel?: string;
 }
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export function FavouriteButton({ stationId, size = 20 }: FavouriteButtonProps) {
+export function FavouriteButton({
+  stationId,
+  size = 20,
+  accessibilityLabel = "Toggle favourite",
+}: FavouriteButtonProps) {
   const { colors } = useTheme();
   const isFavourite = useFavouritesStore((s) => s.ids.includes(stationId));
   const toggle = useFavouritesStore((s) => s.toggle);
@@ -42,6 +47,8 @@ export function FavouriteButton({ stationId, size = 20 }: FavouriteButtonProps) 
       onPress={handlePress}
       style={animatedStyle}
       hitSlop={8}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
     >
       <HugeiconsIcon
         icon={FavouriteIcon}

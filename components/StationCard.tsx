@@ -1,23 +1,29 @@
-import { FavouriteButton } from "@/components/FavouriteButton";
+import { StationArtwork } from "@/components/StationArtwork";
 import type { Station } from "@/lib/schemas";
 import { useTheme } from "@/lib/useTheme";
 import { usePlayerStore } from "@/stores/usePlayerStore";
-import { Radio01Icon, Tv01Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react-native";
-import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
-import { memo, useCallback, useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { memo, useCallback } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 interface StationCardProps {
   station: Station;
   size?: "small" | "large";
+  /** Poster + title below (home rows). */
+  layout?: "overlay" | "stacked";
+  /** @deprecated Kept for overlay layout; home rows use `layout="stacked"`. */
+  compact?: boolean;
 }
+
+const STACKED_RADIUS = 26;
+const STACKED_TITLE_ROW_PAD_H = 12;
 
 export const StationCard = memo(function StationCard({
   station,
   size = "small",
+  layout = "overlay",
+  compact = false,
 }: StationCardProps) {
   const router = useRouter();
   const { colors } = useTheme();
@@ -25,8 +31,6 @@ export const StationCard = memo(function StationCard({
   const isLarge = size === "large";
   const isTv = station.type === "tv";
   const badgeColor = isTv ? colors.primary : colors.success;
-  const [logoFailed, setLogoFailed] = useState(false);
-  const showFallback = !station.logo || logoFailed;
 
   const handlePress = useCallback(() => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -37,69 +41,199 @@ export const StationCard = memo(function StationCard({
     } as never);
   }, [station.id, router]);
 
-  const handleLogoError = useCallback(() => setLogoFailed(true), []);
+  const aspectRatio = isLarge ? 4 / 5 : 3 / 4;
+  const titleSize = isLarge ? 15 : 13;
+
+  if (layout === "stacked") {
+    return (
+      <View style={styles.stackedRoot}>
+        <Pressable
+          onPress={handlePress}
+          accessibilityRole="button"
+          accessibilityLabel={`Play ${station.name}`}
+          style={({ pressed }) => [pressed && styles.pressed]}
+        >
+          <View
+            style={[
+              styles.stackedArtWrap,
+              {
+                aspectRatio,
+                borderRadius: STACKED_RADIUS,
+                backgroundColor: colors.background,
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 1 },
+                shadowOpacity: 0.08,
+                shadowRadius: 4,
+                elevation: 2,
+              },
+            ]}
+          >
+            <StationArtwork
+              station={station}
+              variant="tile"
+              style={StyleSheet.absoluteFillObject}
+            />
+          </View>
+        </Pressable>
+        <Pressable
+          onPress={handlePress}
+          accessibilityRole="button"
+          accessibilityLabel={`Play ${station.name}`}
+          style={({ pressed }) => [
+            styles.stackedTitleWrap,
+            {
+              paddingHorizontal: STACKED_TITLE_ROW_PAD_H,
+              paddingTop: 18,
+            },
+            pressed && styles.pressed,
+          ]}
+        >
+          <Text
+            numberOfLines={2}
+            style={[styles.stackedTitle, { fontSize: titleSize, color: colors.textPrimary }]}
+          >
+            {station.name}
+          </Text>
+        </Pressable>
+      </View>
+    );
+  }
 
   return (
     <Pressable
       onPress={handlePress}
       accessibilityRole="button"
       accessibilityLabel={`Play ${station.name}`}
-      className="rounded-2xl active:opacity-80"
+      style={({ pressed }) => [pressed && styles.pressed]}
     >
-      <View className="overflow-hidden rounded-2xl border border-border bg-surface">
-        {/* Logo */}
-        <View
-          className={`items-center justify-center bg-surface-light ${isLarge ? "h-44" : "h-28"}`}
-        >
-          {showFallback ? (
-            <HugeiconsIcon
-              icon={isTv ? Tv01Icon : Radio01Icon}
-              size={isLarge ? 48 : 32}
-              color={colors.textSecondary}
-            />
-          ) : (
-            <Image
-              source={{ uri: station.logo }}
-              style={{ width: "100%", height: "100%" }}
-              contentFit="cover"
-              cachePolicy="memory-disk"
-              transition={200}
-              onError={handleLogoError}
-            />
-          )}
-        </View>
+      <View
+        style={[
+          styles.cardRoot,
+          {
+            aspectRatio,
+            borderRadius: 12,
+            backgroundColor: colors.background,
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.06,
+            shadowRadius: 3,
+            elevation: 2,
+          },
+        ]}
+      >
+        <StationArtwork station={station} variant="tile" style={StyleSheet.absoluteFill} />
 
-        {/* Info */}
-        <View className="flex-row items-start justify-between px-3 py-2.5">
-          <View className="flex-1">
-            <Text
-              numberOfLines={1}
-              className={`font-semibold text-foreground ${isLarge ? "text-base" : "text-sm"}`}
-            >
-              {station.name}
-            </Text>
-            <View className="mt-1 flex-row items-center">
+        <View
+          style={[styles.bottomBlock, { backgroundColor: `${colors.background}E8` }]}
+          pointerEvents="box-none"
+        >
+          <Text
+            numberOfLines={compact ? 2 : 2}
+            style={[
+              styles.title,
+              { fontSize: titleSize, color: colors.textPrimary, textAlign: "center" },
+            ]}
+          >
+            {station.name}
+          </Text>
+          {!compact && (
+            <View style={styles.metaRow}>
               <View
                 className="rounded-md px-1.5 py-0.5"
-                style={{ backgroundColor: badgeColor + "33" }}
+                style={{ backgroundColor: badgeColor + "44" }}
               >
                 <Text
-                  className="text-[11px] font-medium"
+                  className="text-[10px] font-semibold uppercase tracking-wide"
                   style={{ color: badgeColor }}
                 >
                   {isTv ? "TV" : "Radio"}
                 </Text>
               </View>
               {station.language !== "English" && (
-                <Text className="ml-2 text-[11px] text-text-secondary">
+                <Text
+                  className="text-[10px]"
+                  style={{ color: colors.textSecondary, marginLeft: 6 }}
+                >
                   {station.language}
                 </Text>
               )}
             </View>
-          </View>
-          <FavouriteButton stationId={station.id} size={16} />
+          )}
+          {compact && (
+            <View
+              style={[
+                styles.compactPill,
+                { backgroundColor: badgeColor + "55", alignSelf: "center" },
+              ]}
+            >
+              <Text style={[styles.compactPillText, { color: badgeColor }]}>
+                {isTv ? "TV" : "Radio"}
+              </Text>
+            </View>
+          )}
         </View>
       </View>
     </Pressable>
   );
+});
+
+const styles = StyleSheet.create({
+  pressed: {
+    opacity: 0.88,
+  },
+  stackedRoot: {
+    width: "100%",
+  },
+  stackedArtWrap: {
+    width: "100%",
+    overflow: "hidden",
+  },
+  stackedTitleWrap: {
+    alignItems: "center",
+  },
+  stackedTitle: {
+    fontWeight: "700",
+    letterSpacing: 0.2,
+    textAlign: "center",
+    width: "100%",
+  },
+  cardRoot: {
+    width: "100%",
+    overflow: "hidden",
+  },
+  bottomBlock: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingHorizontal: 10,
+    paddingBottom: 10,
+    paddingTop: 14,
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
+    alignItems: "center",
+  },
+  title: {
+    fontWeight: "700",
+    letterSpacing: 0.2,
+    alignSelf: "stretch",
+  },
+  metaRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    flexWrap: "wrap",
+    marginTop: 6,
+  },
+  compactPill: {
+    marginTop: 6,
+    borderRadius: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+  compactPillText: {
+    fontSize: 9,
+    fontWeight: "800",
+    letterSpacing: 0.6,
+  },
 });

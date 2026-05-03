@@ -1,9 +1,10 @@
 import type { ThemePalette } from "@/constants/theme";
+import { StationArtwork } from "@/components/StationArtwork";
+import type { Station } from "@/lib/schemas";
 import { useTheme } from "@/lib/useTheme";
 import {
   PauseIcon,
   PlayCircleIcon,
-  Radio01Icon,
   StopIcon,
   VolumeHighIcon,
   VolumeLowIcon,
@@ -11,9 +12,8 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
-import { Image } from "expo-image";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   cancelAnimation,
@@ -28,9 +28,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 interface AudioPlayerProps {
-  streamUrl: string;
-  stationName: string;
-  logo?: string;
+  station: Station;
   onError?: (error: string) => void;
 }
 
@@ -85,12 +83,8 @@ const WaveformBar = memo(function WaveformBar({
   );
 });
 
-export function AudioPlayer({
-  streamUrl,
-  stationName,
-  logo,
-  onError,
-}: AudioPlayerProps) {
+export function AudioPlayer({ station, onError }: AudioPlayerProps) {
+  const streamUrl = station.streamUrl!;
   const { colors } = useTheme();
   const player = useAudioPlayer({ uri: streamUrl });
   const status = useAudioPlayerStatus(player);
@@ -147,6 +141,10 @@ export function AudioPlayer({
 
   const discStyle = useAnimatedStyle(() => ({
     transform: [{ rotate: `${rotation.value}deg` }],
+  }));
+
+  const discInnerStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${-rotation.value}deg` }],
   }));
 
   // Glow pulse
@@ -240,9 +238,9 @@ export function AudioPlayer({
   const barIndices = useMemo(() => Array.from({ length: BAR_COUNT }, (_, i) => i), []);
 
   return (
-    <View className="items-center px-4 py-6">
+    <View className="items-center px-4 py-5">
       {/* Artwork disc */}
-      <View className="relative mb-8 items-center justify-center">
+      <View className="relative mb-6 items-center justify-center">
         {/* Glow ring */}
         <Animated.View
           className="absolute h-60 w-60 rounded-full bg-primary"
@@ -250,37 +248,26 @@ export function AudioPlayer({
         />
 
         <Animated.View
-          className="h-56 w-56 items-center justify-center overflow-hidden rounded-full bg-surface-light"
+          className="h-56 w-56 overflow-hidden rounded-full bg-surface-light"
           style={discStyle}
         >
-          {logo ? (
-            <Image
-              source={{ uri: logo }}
-              style={{ width: "100%", height: "100%" }}
-              contentFit="cover"
-              cachePolicy="memory-disk"
-              transition={200}
+          <Animated.View
+            style={[StyleSheet.absoluteFillObject, discInnerStyle]}
+          >
+            <StationArtwork
+              station={station}
+              variant="disc"
+              style={StyleSheet.absoluteFillObject}
             />
-          ) : (
-            <HugeiconsIcon
-              icon={Radio01Icon}
-              size={80}
-              color={colors.textSecondary}
-            />
-          )}
+          </Animated.View>
 
           {/* Vinyl hole overlay */}
           <View className="absolute h-10 w-10 rounded-full bg-background" />
         </Animated.View>
       </View>
 
-      {/* Station name */}
-      <Text className="mb-1 text-center text-2xl font-bold text-foreground">
-        {stationName}
-      </Text>
-
       {/* Status indicator */}
-      <View className="mb-6 flex-row items-center gap-2">
+      <View className="mb-5 flex-row items-center gap-2">
         {isPlaying && <View className={`h-2 w-2 rounded-full ${dotClass}`} />}
         <Text className={`text-center text-sm font-medium ${statusClass}`}>
           {statusText}

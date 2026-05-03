@@ -1,4 +1,5 @@
 import { AudioPlayer } from "@/components/AudioPlayer";
+import { StationArtwork } from "@/components/StationArtwork";
 import { VideoPlayer } from "@/components/VideoPlayer";
 import { YouTubePlayer } from "@/components/YouTubePlayer";
 import { useTheme } from "@/lib/useTheme";
@@ -9,8 +10,6 @@ import {
   ArrowLeft01Icon,
   FavouriteIcon,
   LinkSquare01Icon,
-  Radio01Icon,
-  Tv01Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -49,10 +48,10 @@ export default function StationScreen() {
   }
 
   const isTv = station.type === "tv";
+  const badgeColor = isTv ? colors.primary : colors.success;
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={isTv ? ["top"] : undefined}>
-      {/* Header — hidden for TV (back button is inside the player) */}
       {!isTv && (
         <View className="flex-row items-center justify-between px-4 py-3">
           <Pressable
@@ -92,7 +91,15 @@ export default function StationScreen() {
           />
         }
       >
-        {/* Player */}
+        {!isTv && (
+          <View
+            className="mx-4 mb-1 overflow-hidden rounded-xl bg-background"
+            style={{ aspectRatio: 16 / 9 }}
+          >
+            <StationArtwork station={station} variant="tile" />
+          </View>
+        )}
+
         {isTv ? (
           station.youtubeChannelId ? (
             <YouTubePlayer
@@ -109,31 +116,30 @@ export default function StationScreen() {
           )
         ) : (
           <View className="px-4">
-            <AudioPlayer
-              streamUrl={station.streamUrl!}
-              stationName={station.name}
-              logo={station.logo}
-            />
+            <AudioPlayer station={station} />
           </View>
         )}
 
-        {/* Station Info */}
-        <View className="mt-6 px-4">
-          <View className="flex-row items-center justify-between">
-            <View className="flex-1 flex-row items-center">
-              <HugeiconsIcon
-                icon={isTv ? Tv01Icon : Radio01Icon}
-                size={20}
-                color={isTv ? colors.primary : colors.success}
-              />
-              <Text className="ml-2 flex-1 text-2xl font-bold text-foreground">
-                {station.name}
+        <View className="mt-2 px-4">
+          <View className="flex-row flex-wrap items-center gap-2">
+            <Text className="flex-shrink text-2xl font-bold text-foreground">
+              {station.name}
+            </Text>
+            <View
+              className="rounded-md px-2 py-0.5"
+              style={{ backgroundColor: badgeColor + "33" }}
+            >
+              <Text
+                className="text-[11px] font-bold uppercase tracking-wide"
+                style={{ color: badgeColor }}
+              >
+                {isTv ? "TV" : "Radio"}
               </Text>
             </View>
             {isTv && (
               <Pressable
                 onPress={() => toggle(id)}
-                className="ml-3 rounded-full bg-surface p-2.5"
+                className="ml-auto rounded-full bg-surface p-2.5"
               >
                 <HugeiconsIcon
                   icon={FavouriteIcon}
@@ -150,11 +156,13 @@ export default function StationScreen() {
             </Text>
           ) : null}
 
-          {/* Tags */}
           {station.categories.length > 0 && (
             <View className="mt-4 flex-row flex-wrap gap-2">
               {station.categories.map((cat) => (
-                <View key={cat} className="rounded-lg bg-surface px-3 py-1.5">
+                <View
+                  key={cat}
+                  className="rounded-full border border-border bg-surface px-3 py-1"
+                >
                   <Text className="text-[11px] capitalize text-text-secondary">
                     {cat}
                   </Text>
@@ -163,28 +171,29 @@ export default function StationScreen() {
             </View>
           )}
 
-          {/* Details */}
-          <View className="mt-6 rounded-2xl bg-surface p-4">
-            <DetailRow label="Language" value={station.language} />
-            <DetailRow label="Country" value={station.country} />
+          <View className="mt-6 border-t border-border pt-1">
+            <DetailRow label="Language" value={station.language} isLast={false} />
+            <DetailRow label="Country" value={station.country} isLast={false} />
             <DetailRow
               label="Type"
               value={station.type === "tv" ? "Television" : "Radio"}
+              isLast
             />
           </View>
 
-          {/* Website link */}
           {station.website && (
             <Pressable
               onPress={() => WebBrowser.openBrowserAsync(station.website!)}
-              className="mt-4 flex-row items-center rounded-2xl bg-surface p-4"
+              className="mt-5 flex-row items-center border-t border-border py-4"
             >
               <HugeiconsIcon
                 icon={LinkSquare01Icon}
                 size={20}
                 color={colors.primary}
               />
-              <Text className="ml-3 flex-1 text-primary">Visit website</Text>
+              <Text className="ml-3 flex-1 text-[15px] font-medium text-primary">
+                Visit website
+              </Text>
             </Pressable>
           )}
         </View>
@@ -193,11 +202,23 @@ export default function StationScreen() {
   );
 }
 
-function DetailRow({ label, value }: { label: string; value: string }) {
+function DetailRow({
+  label,
+  value,
+  isLast,
+}: {
+  label: string;
+  value: string;
+  isLast: boolean;
+}) {
   return (
-    <View className="flex-row items-center justify-between py-2">
+    <View
+      className={`flex-row items-center justify-between py-3 ${!isLast ? "border-b border-border" : ""}`}
+    >
       <Text className="text-[13px] text-text-secondary">{label}</Text>
-      <Text className="text-[13px] font-medium text-foreground">{value}</Text>
+      <Text className="ml-4 flex-1 text-right text-[13px] font-medium text-foreground">
+        {value}
+      </Text>
     </View>
   );
 }

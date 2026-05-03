@@ -3,13 +3,13 @@ layout: default
 title: Terms of Service
 ---
 
-> **NOTE:** This is starter boilerplate, not legal advice. Have a lawyer review before public launch.
-
 **Effective date:** 3 May 2026
 
 ## 1. Agreement
 
 By creating an account or using Laba (“the App”), you agree to these Terms of Service. If you do not agree, do not use the App.
+
+You must be at least **13** years old to use the App. If you are between 13 and the age of majority where you live, you may use the App only with the consent of a parent or legal guardian who accepts these terms on your behalf.
 
 ## 2. The service
 
@@ -47,12 +47,16 @@ Trademarks, logos, and broadcast content belong to their respective owners. Laba
 
 ## 9. Changes
 
-We may update these terms by posting a new version on this page. Continued use after changes constitutes acceptance of the updated terms.
+We may update these terms by posting a new version on this page. Continued use after the new effective date constitutes acceptance of the updated terms, except where applicable law requires otherwise.
 
-## 10. Governing law
+## 10. Limitation of liability
+
+To the fullest extent permitted by applicable law, Laba and its operators are not liable for any indirect, incidental, special, consequential, or exemplary damages, or for loss of profits, data, goodwill, or business interruption, arising from your use of the App, third-party streams, or authentication services. Where liability cannot be excluded, it is limited to the greater of (a) the amount you paid us for the App in the twelve (12) months before the claim, or (b) **zero** if the App is provided without charge.
+
+## 11. Governing law
 
 These terms are governed by the laws of **Uganda**, without regard to conflict-of-law rules.
 
-## 11. Contact
+## 12. Contact
 
 **Email:** ywalum@gmail.com

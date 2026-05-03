@@ -104,6 +104,7 @@ constants/           Theme tokens, shared config
 - `pnpm` (recommended) or `npm`
 - Xcode (iOS) and/or Android Studio (Android)
 - A Clerk account for a publishable key
+- A [Google Cloud](https://console.cloud.google.com/) project with OAuth clients if you use **native** Sign in with Google (see below)
 - An Expo account if you want to run EAS builds
 
 ### 1. Install
@@ -114,11 +115,31 @@ pnpm install
 
 ### 2. Configure environment
 
-Create a `.env` file at the project root:
+Create a `.env` file at the project root.
+
+**Clerk (required for any sign-in):**
 
 ```bash
 EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_xxx
 ```
+
+**Google Sign-In on native (iOS / Android)** — the app uses [`useSignInWithGoogle`](https://clerk.com/docs/reference/expo/native-hooks/use-sign-in-with-google) on native and SSO on web. Clerk expects the **Web** and platform **OAuth client IDs** from Google Cloud in your env, not only the Clerk publishable key. Follow Clerk’s [Sign in with Google (Expo)](https://clerk.com/docs/expo/guides/configure/auth-strategies/sign-in-with-google) guide: enable Google under **SSO connections**, turn on **Use custom credentials**, register the Clerk **Authorized redirect URI** on a **Web application** client in Google Cloud, add your app under Clerk **Native applications**, then set:
+
+```bash
+# From your Google Cloud “Web application” OAuth client (same ID you paste into Clerk as Client ID)
+EXPO_PUBLIC_CLERK_GOOGLE_WEB_CLIENT_ID=your-web-client-id.apps.googleusercontent.com
+
+# Android — from the Android OAuth client in Google Cloud
+EXPO_PUBLIC_CLERK_GOOGLE_ANDROID_CLIENT_ID=your-android-client-id.apps.googleusercontent.com
+
+# iOS — from the iOS OAuth client in Google Cloud
+EXPO_PUBLIC_CLERK_GOOGLE_IOS_CLIENT_ID=your-ios-client-id.apps.googleusercontent.com
+
+# iOS only — reversed client id for the URL scheme (prefix + numeric part before .apps.googleusercontent.com)
+EXPO_PUBLIC_CLERK_GOOGLE_IOS_URL_SCHEME=com.googleusercontent.apps.your-ios-client-id
+```
+
+For **iOS**, you can also set `EXPO_PUBLIC_CLERK_GOOGLE_IOS_URL_SCHEME` in `eas.json` build profiles instead of only `.env`. Native Google sign-in needs a **development build** or **prebuild**; it is not supported in **Expo Go** (see the Clerk guide above).
 
 ### 3. Run the app
 
