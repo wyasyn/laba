@@ -10,7 +10,7 @@ export default function RadioScreen() {
         header={
           <ScreenHeader
             title="Radio Stations"
-            subtitle="Live Ugandan radio streams"
+            subtitle="Live free-to-air radio streams"
           />
         }
       />

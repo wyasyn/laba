@@ -61,15 +61,12 @@ const UGANDA_NAMES_LOWER = UGANDA_CHANNEL_NAMES.map((n) => n.toLowerCase());
 // (YouTube proxies, etc.) but are known to work on devices. These are always
 // merged into the final output — they supplement rather than replace API results.
 
-// NOTE: NBS TV, NTV Uganda, UBC TV, Sanyuka TV, Spark TV, Urban TV, Pearl Magic,
-// and BBS TV stream exclusively via YouTube. There are no public direct HLS CDN
-// URLs for these channels. They are NOT listed here to avoid broken entries.
-// See station-builder/README.md for options to support YouTube-based channels.
+// NBS, NTV, UBC, Sanyuka, Spark, Urban, Pearl Magic, BBS, Record: YouTube Live only.
+// Each youtubeChannelId is checked at build time (must be live) before inclusion.
 
 const SUPPLEMENT_TV_STATIONS = [
   // ── Uganda channels (YouTube Live) ──────────────────────────────────────────
-  // These channels stream exclusively via YouTube. The app uses YouTubePlayer
-  // for any station that has a youtubeChannelId field.
+  // The app uses YouTubePlayer for any station that has a youtubeChannelId field.
   {
     id: "nbs-tv", name: "NBS TV", type: "tv",
     logo: "https://i.imgur.com/DmM8jH6.png",
@@ -167,7 +164,7 @@ const SUPPLEMENT_TV_STATIONS = [
   },
   {
     id: "euronews-english", name: "Euronews English", type: "tv",
-    streamUrl: "https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/euronews/euronews-en.m3u8",
+    streamUrl: "https://dash4.antik.sk/live/test_euronews/playlist.m3u8",
     description: "European news and current affairs in English",
     language: "English", country: "FR", categories: ["news"],
     website: "https://www.euronews.com", isFeatured: false,
@@ -214,49 +211,228 @@ function inferType(categories) {
 
 // ─── Stream URL validation ────────────────────────────────────────────────────
 
-const STREAM_CONTENT_TYPES = [
-  "audio", "video", "mpegurl", "ogg", "mpeg",
-  "opus", "aac", "mp2t", "mp4",
-];
+const BAD_CT_SUBSTR = ["text/html", "application/xhtml", "application/json"];
 
-async function checkUrl(url, timeoutMs) {
+function contentTypeIsBad(ct) {
+  const c = (ct ?? "").toLowerCase();
+  return BAD_CT_SUBSTR.some((b) => c.includes(b));
+}
+
+function contentTypeOkForStream(ct, type) {
+  const c = (ct ?? "").toLowerCase();
+  if (!c || contentTypeIsBad(ct)) return false;
+  if (type === "radio") {
+    if (c.startsWith("audio/")) return true;
+    if (c.includes("application/ogg")) return true;
+    if (c.includes("application/vnd.apple.mpegurl")) return true;
+    if (c.includes("video/mp2t")) return true;
+    if (c.includes("application/octet-stream")) return true;
+    return false;
+  }
+  // TV
+  if (c.includes("application/vnd.apple.mpegurl")) return true;
+  if (c.startsWith("video/")) return true;
+  if (c.includes("mpegurl")) return true;
+  if (c.includes("mp2t")) return true;
+  if (c.includes("mp4")) return true;
+  if (c.startsWith("audio/")) return true;
+  if (c.includes("application/octet-stream")) return true;
+  return false;
+}
+
+function isLikelyM3u8Url(url) {
+  try {
+    const path = new URL(url).pathname.toLowerCase();
+    return path.endsWith(".m3u8") || path.endsWith(".m3u");
+  } catch {
+    const u = String(url).split("?")[0].toLowerCase();
+    return u.endsWith(".m3u8") || u.endsWith(".m3u");
+  }
+}
+
+async function probeStreamBody(url, timeoutMs) {
   try {
     const res = await fetch(url, {
-      method: "HEAD",
+      method: "GET",
+      headers: { Range: "bytes=0-1023" },
       signal: AbortSignal.timeout(timeoutMs),
+      redirect: "follow",
     });
-    if (res.status >= 200 && res.status < 300) return true;
+    if (!res.ok && res.status !== 206) return { ok: false, chunk: null, ct: "" };
+    const ct = res.headers.get("content-type") ?? "";
+    const ab = await res.arrayBuffer();
+    const chunk = new Uint8Array(ab).slice(0, 512);
+    return { ok: true, chunk, ct };
+  } catch {
+    return { ok: false, chunk: null, ct: "" };
+  }
+}
 
-    if (res.status === 405) {
-      const getRes = await fetch(url, {
-        method: "GET",
-        signal: AbortSignal.timeout(timeoutMs),
-      });
-      const ct = getRes.headers.get("content-type") ?? "";
-      return (
-        (getRes.status >= 200 && getRes.status < 300) ||
-        STREAM_CONTENT_TYPES.some((t) => ct.toLowerCase().includes(t))
-      );
+async function verifyM3u8Playlist(url, timeoutMs) {
+  const { ok, chunk, ct } = await probeStreamBody(url, timeoutMs);
+  if (!ok || !chunk) return false;
+  if (contentTypeIsBad(ct)) return false;
+  const text = new TextDecoder("utf-8", { fatal: false }).decode(chunk).trimStart();
+  return text.startsWith("#EXTM3U");
+}
+
+async function verifyBodyNotHtml(url, timeoutMs) {
+  const { ok, chunk, ct } = await probeStreamBody(url, timeoutMs);
+  if (!ok || !chunk) return false;
+  if (contentTypeIsBad(ct)) return false;
+  const text = new TextDecoder("utf-8", { fatal: false }).decode(chunk).trimStart().toLowerCase();
+  if (text.startsWith("<!doctype") || text.startsWith("<html")) return false;
+  return true;
+}
+
+/**
+ * Many Icecast/SHOUTcast URLs omit Content-Type on HEAD; probe the body instead.
+ */
+async function verifyRadioStreamBody(url, timeoutMs) {
+  const { ok, chunk, ct } = await probeStreamBody(url, timeoutMs);
+  if (!ok || !chunk || chunk.byteLength < 2) return false;
+  const c = (ct ?? "").toLowerCase();
+  if (contentTypeIsBad(ct)) return false;
+  if (c.startsWith("audio/")) return true;
+  if (c.includes("application/vnd.apple.mpegurl")) return true;
+  if (c.includes("application/ogg")) return true;
+  if (c.includes("video/mp2t")) return true;
+
+  const utf = new TextDecoder("utf-8", { fatal: false }).decode(chunk).trimStart();
+  if (utf.startsWith("#EXTM3U")) return true;
+  const low = utf.toLowerCase();
+  if (low.startsWith("<!doctype") || low.startsWith("<html")) return false;
+
+  if (c.includes("application/octet-stream") || !c) {
+    const b0 = chunk[0];
+    const b1 = chunk[1];
+    const b2 = chunk[2];
+    const b3 = chunk[3];
+    // ID3 tag or MPEG frame sync (common for MP3 streams)
+    if (b0 === 0x49 && b1 === 0x44 && b2 === 0x33) return true;
+    if (b0 === 0xff && (b1 & 0xe0) === 0xe0) return true;
+    // Ogg
+    if (b0 === 0x4f && b1 === 0x67 && b2 === 0x67 && b3 === 0x53) return true;
+  }
+  return false;
+}
+
+/**
+ * @param {string} url
+ * @param {number} timeoutMs
+ * @param {"tv" | "radio"} type
+ */
+async function checkUrl(url, timeoutMs, type = "tv") {
+  try {
+    // HLS / M3U playlists: always require #EXTM3U at start (HEAD is often wrong).
+    if (isLikelyM3u8Url(url)) {
+      return await verifyM3u8Playlist(url, timeoutMs);
     }
 
+    let res = await fetch(url, {
+      method: "HEAD",
+      signal: AbortSignal.timeout(timeoutMs),
+      redirect: "follow",
+    });
+
+    if (res.status === 405 || res.status === 501) {
+      res = await fetch(url, {
+        method: "GET",
+        headers: { Range: "bytes=0-0" },
+        signal: AbortSignal.timeout(timeoutMs),
+        redirect: "follow",
+      });
+    }
+
+    if (!(res.status >= 200 && res.status < 300)) return false;
+
     const ct = res.headers.get("content-type") ?? "";
-    return STREAM_CONTENT_TYPES.some((t) => ct.toLowerCase().includes(t));
+    if (contentTypeIsBad(ct)) return false;
+
+    if (!contentTypeOkForStream(ct, type)) {
+      if (type === "radio") {
+        return await verifyRadioStreamBody(url, timeoutMs);
+      }
+      return false;
+    }
+
+    if (type === "radio" || ct.toLowerCase().includes("octet-stream")) {
+      return await verifyBodyNotHtml(url, timeoutMs);
+    }
+
+    return true;
   } catch {
     return false;
   }
+}
+
+/**
+ * True only when the channel is broadcasting live right now (strict list policy).
+ */
+async function isYouTubeChannelLive(channelId, timeoutMs = 12000) {
+  try {
+    const res = await fetch(
+      `https://www.youtube.com/embed/live_stream?channel=${encodeURIComponent(channelId)}`,
+      {
+        headers: { "User-Agent": "Mozilla/5.0 (Linux; Android 13)" },
+        signal: AbortSignal.timeout(timeoutMs),
+        redirect: "follow",
+      }
+    );
+    if (!res.ok) return false;
+    const body = await res.text();
+    if (
+      /LIVE_STREAM_OFFLINE|OFFLINE_PLACEHOLDER|"status":"ERROR"/.test(body)
+    ) {
+      return false;
+    }
+    const m = body.match(/"videoId":"([a-zA-Z0-9_-]{11})"/);
+    return !!m && m[1] !== "live_stream";
+  } catch {
+    return false;
+  }
+}
+
+async function validateYouTubeSupplements(stations, concurrency = 5, timeoutMs = 12000) {
+  const valid = [];
+  const total = stations.length;
+  let done = 0;
+
+  for (let i = 0; i < stations.length; i += concurrency) {
+    const batch = stations.slice(i, i + concurrency);
+    const results = await Promise.all(
+      batch.map(async (station) => ({
+        station,
+        ok: await isYouTubeChannelLive(station.youtubeChannelId, timeoutMs),
+      }))
+    );
+    for (const { station, ok } of results) {
+      if (ok) valid.push(station);
+    }
+    done += batch.length;
+    process.stdout.write(`  YouTube ${done}/${total} checked (${valid.length} live)\r`);
+  }
+  process.stdout.write("\n");
+  return valid;
 }
 
 async function validateStreamUrls(stations, batchSize = 50, timeoutMs = 8000) {
   const valid = [];
   const total = stations.length;
   let done = 0;
+  // GET-based checks + some CDNs rate-limit heavy parallelism
+  const effectiveBatch = Math.min(batchSize, 8);
 
-  for (let i = 0; i < stations.length; i += batchSize) {
-    const batch = stations.slice(i, i + batchSize);
+  for (let i = 0; i < stations.length; i += effectiveBatch) {
+    const batch = stations.slice(i, i + effectiveBatch);
     const results = await Promise.all(
       batch.map(async (station) => ({
         station,
-        ok: await checkUrl(station.streamUrl, timeoutMs),
+        ok: await checkUrl(
+          station.streamUrl,
+          timeoutMs,
+          station.type === "radio" ? "radio" : "tv"
+        ),
       }))
     );
     for (const { station, ok } of results) {
@@ -613,17 +789,39 @@ async function main() {
     `  Radio: ${validRadio.length}/${rawRadio.length} streams working\n`
   );
 
-  // Merge supplement stations — these always appear regardless of validation.
-  // They supplement the API results: if a station was already found via iptv-org
-  // or M3U (and passed validation), we keep that version and skip the supplement.
+  // Merge supplement stations — only after validation (YouTube = live now;
+  // direct CDN = same stream checks as API results).
   const validatedIds = new Set([...validTv, ...validRadio].map((s) => s.id));
-  const validatedUrls = new Set([...validTv, ...validRadio].map((s) => s.streamUrl));
-  const supplemented = SUPPLEMENT_TV_STATIONS.filter(
-    (s) => !validatedIds.has(s.id) && (!s.streamUrl || !validatedUrls.has(s.streamUrl))
+  const validatedUrls = new Set(
+    [...validTv, ...validRadio].map((s) => s.streamUrl).filter(Boolean)
   );
-  if (supplemented.length > 0) {
-    console.log(`  Supplement: adding ${supplemented.length} hardcoded stations not found via API`);
-  }
+
+  const youtubeSupp = SUPPLEMENT_TV_STATIONS.filter((s) => s.youtubeChannelId);
+  const directSupp = SUPPLEMENT_TV_STATIONS.filter(
+    (s) => s.streamUrl && !s.youtubeChannelId
+  );
+
+  const youtubeCandidates = youtubeSupp.filter((s) => !validatedIds.has(s.id));
+  const directCandidates = directSupp.filter(
+    (s) => !validatedIds.has(s.id) && !validatedUrls.has(s.streamUrl)
+  );
+
+  // Run direct CDN and YouTube checks sequentially with modest concurrency so
+  // we don't exhaust sockets right after validating hundreds of radio streams.
+  console.log("Validating supplement stations (direct CDN, then YouTube live)...");
+  const validDirectSupp = await validateStreamUrls(directCandidates, 3, 15000);
+  const validYoutubeSupp = await validateYouTubeSupplements(
+    youtubeCandidates,
+    3,
+    12000
+  );
+
+  console.log(
+    `  Supplement: ${validYoutubeSupp.length}/${youtubeCandidates.length} YouTube live, ` +
+      `${validDirectSupp.length}/${directCandidates.length} direct CDN working\n`
+  );
+
+  const supplemented = [...validYoutubeSupp, ...validDirectSupp];
 
   const all = [...validTv, ...supplemented, ...validRadio];
   const ugTv = all.filter((s) => s.type === "tv" && s.country === "UG");

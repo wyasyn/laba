@@ -1,8 +1,7 @@
 import { useTheme } from "@/lib/useTheme";
 import { useFavouritesStore } from "@/stores/useFavouritesStore";
 import { useThemeStore, type ThemeMode } from "@/stores/useThemeStore";
-import { useUser, useUserProfileModal } from "@clerk/expo";
-import { UserButton } from "@clerk/expo/native";
+import { useUser } from "@clerk/expo";
 import {
   ArrowLeft01Icon,
   ArrowRight01Icon,
@@ -18,6 +17,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import Constants from "expo-constants";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { Linking, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -54,7 +54,6 @@ export default function SettingsScreen() {
   const favouriteCount = useFavouritesStore((s) => s.ids.length);
   const router = useRouter();
   const { user } = useUser();
-  const { presentUserProfile } = useUserProfileModal();
 
   const primaryEmail = user?.primaryEmailAddress?.emailAddress ?? "";
   const displayName =
@@ -170,7 +169,22 @@ export default function SettingsScreen() {
                 className="h-11 w-11 overflow-hidden rounded-full bg-surface-light"
                 style={{ borderRadius: 22 }}
               >
-                <UserButton />
+                {user?.imageUrl ? (
+                  <Image
+                    source={{ uri: user.imageUrl }}
+                    style={{ width: "100%", height: "100%" }}
+                    contentFit="cover"
+                    transition={200}
+                  />
+                ) : (
+                  <View className="flex-1 items-center justify-center">
+                    <HugeiconsIcon
+                      icon={UserIcon}
+                      size={22}
+                      color={colors.textSecondary}
+                    />
+                  </View>
+                )}
               </View>
               <View className="flex-1">
                 <Text
@@ -192,9 +206,7 @@ export default function SettingsScreen() {
             <View className={DIVIDER_CLASS} />
             <Pressable
               className={ROW_CLASS}
-              onPress={() => {
-                presentUserProfile();
-              }}
+              onPress={() => router.push("/account")}
             >
               <HugeiconsIcon
                 icon={UserIcon}
@@ -202,7 +214,7 @@ export default function SettingsScreen() {
                 color={colors.textSecondary}
               />
               <Text className="flex-1 text-[15px] text-foreground">
-                Manage profile
+                Manage account
               </Text>
               <HugeiconsIcon
                 icon={ArrowRight01Icon}
@@ -290,7 +302,8 @@ export default function SettingsScreen() {
           </View>
 
           <Text className="mt-4 text-center text-xs leading-[18px] text-text-secondary">
-            Laba streams free-to-air Ugandan TV and radio.{"\n"}
+            Laba streams free-to-air TV and radio — Uganda focus, plus
+            international channels.{"\n"}
             Made with care in Uganda.
           </Text>
         </View>

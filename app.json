@@ -9,7 +9,10 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.yasinwalum.laba"
+      "bundleIdentifier": "com.yasinwalum.laba",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Allow Laba to use your photos to set a profile picture."
+      }
     },
     "android": {
       "adaptiveIcon": {

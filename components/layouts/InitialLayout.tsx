@@ -105,6 +105,14 @@ function InitialLayout() {
               animation: "slide_from_right",
             }}
           />
+          <Stack.Screen
+            name="account"
+            options={{
+              presentation: "card",
+              headerShown: false,
+              animation: "slide_from_right",
+            }}
+          />
         </Stack.Protected>
       </Stack>
     </View>

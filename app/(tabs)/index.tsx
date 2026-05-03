@@ -63,7 +63,7 @@ export default function HomeScreen() {
           <View className="flex-1">
             <Text className="text-3xl font-bold text-foreground">Laba</Text>
             <Text className="mt-1 text-sm text-text-secondary">
-              Live Uganda TV & Radio
+              Live TV & radio — Uganda & beyond
             </Text>
             <View className="mt-2">
               <RefreshIndicator />

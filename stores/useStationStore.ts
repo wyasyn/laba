@@ -105,12 +105,11 @@ export const useStationStore = create<StationStore>((set, get) => ({
       return;
     }
 
-    // 2. No cache → show bundled fallback (TV only — radio URLs may be stale)
+    // 2. No cache → show bundled fallback (TV-only JSON; radios come from remote build)
     const fallback = loadFallbackStations();
-    const tvOnly = fallback.filter((s) => s.type !== "radio");
     set({
-      stations: tvOnly,
-      ...deriveSlices(tvOnly),
+      stations: fallback,
+      ...deriveSlices(fallback),
       isLoading: false,
     });
 
