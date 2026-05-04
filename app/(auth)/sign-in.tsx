@@ -5,6 +5,7 @@ import { Image } from "expo-image";
 import { useCallback, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   KeyboardAvoidingView,
   Linking,
   Platform,
@@ -21,9 +22,9 @@ import { useTheme } from "@/lib/useTheme";
 
 const APP_NAME = Constants.expoConfig?.name ?? "Laba";
 
-/** GitHub Pages legal docs (see docs/GITHUB-PAGES-AND-CLERK.md). */
-const LEGAL_TERMS_URL = "https://wyasyn.github.io/laba/terms";
-const LEGAL_PRIVACY_URL = "https://wyasyn.github.io/laba/privacy";
+/** Legal docs on laba.yasinwalum.com (see docs/GITHUB-PAGES-AND-CLERK.md). */
+const LEGAL_TERMS_URL = "https://laba.yasinwalum.com/terms";
+const LEGAL_PRIVACY_URL = "https://laba.yasinwalum.com/privacy";
 
 const LOGO_SOURCE = require("@/assets/images/icon.png");
 const LOGO_SIZE = 96;
@@ -92,6 +93,20 @@ function isSignUpIfMissingTransfer(error: unknown): boolean {
   return errs?.[0]?.code === "sign_up_if_missing_transfer";
 }
 
+function googleSignInErrorMessage(err: unknown): string {
+  if (err instanceof Error && err.message) return err.message;
+  if (typeof err === "object" && err !== null && "message" in err) {
+    const m = (err as { message?: unknown }).message;
+    if (typeof m === "string" && m.length > 0) return m;
+  }
+  if (typeof err === "object" && err !== null && "errors" in err) {
+    const errs = (err as { errors?: Array<{ message?: string }> }).errors;
+    const first = errs?.[0]?.message;
+    if (first) return first;
+  }
+  return "Something went wrong during Google sign-in.";
+}
+
 export default function SignInScreen() {
   const { colors } = useTheme();
   const { signIn, errors: signInErrors, fetchStatus: signInFetch } = useSignIn();
@@ -106,10 +121,12 @@ export default function SignInScreen() {
   const [showMissingRequirements, setShowMissingRequirements] = useState(false);
   const [legalAccepted, setLegalAccepted] = useState(false);
   const [googleBusy, setGoogleBusy] = useState(false);
+  const [googleError, setGoogleError] = useState<string | null>(null);
 
   const fetching = signInFetch === "fetching" || signUpFetch === "fetching";
 
   const signInWithGoogle = useCallback(async () => {
+    setGoogleError(null);
     setGoogleBusy(true);
     try {
       if (Platform.OS === "web") {
@@ -120,13 +137,25 @@ export default function SignInScreen() {
           await setActive({ session: createdSessionId });
         }
       } else {
-        const { createdSessionId, setActive } =
+        const { createdSessionId, setActive, signUp: flowSignUp } =
           await startGoogleAuthenticationFlow();
         if (createdSessionId && setActive) {
           await setActive({ session: createdSessionId });
+        } else if (flowSignUp?.status === "missing_requirements") {
+          setShowMissingRequirements(true);
         }
       }
-    } catch (err) {
+    } catch (err: unknown) {
+      const code =
+        typeof err === "object" && err !== null && "code" in err
+          ? String((err as { code?: unknown }).code)
+          : undefined;
+      if (code === "SIGN_IN_CANCELLED" || code === "-5") {
+        return;
+      }
+      const message = googleSignInErrorMessage(err);
+      setGoogleError(message);
+      Alert.alert("Error", message);
       console.error("Google sign-in error:", err);
     } finally {
       setGoogleBusy(false);
@@ -523,6 +552,9 @@ export default function SignInScreen() {
               </>
             )}
           </Pressable>
+          {googleError ? (
+            <Text className="mt-2 text-sm text-error">{googleError}</Text>
+          ) : null}
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

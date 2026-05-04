@@ -63,6 +63,17 @@ function InitialLayout() {
   const ready = authLoaded && fontReady && themeLoaded;
 
   useEffect(() => {
+    if (__DEV__) {
+      console.log("[InitialLayout] ready gate", {
+        authLoaded,
+        fontReady,
+        themeLoaded,
+        ready,
+      });
+    }
+  }, [authLoaded, fontReady, themeLoaded, ready]);
+
+  useEffect(() => {
     if (ready) SplashScreen.hideAsync();
   }, [ready]);
 
@@ -79,10 +90,11 @@ function InitialLayout() {
   }
 
   return (
-    <View style={themeVars} className="flex-1">
+    <View style={themeVars} className="flex-1 bg-background">
       <StatusBar style={resolved === "light" ? "dark" : "light"} />
       {!warmupDone && <VideoWarmup onReady={() => setWarmupDone(true)} />}
       <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="index" options={{ animation: "fade" }} />
         <Stack.Protected guard={!isSignedIn}>
           <Stack.Screen name="(auth)" options={{ animation: "fade" }} />
         </Stack.Protected>

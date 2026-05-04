@@ -2,10 +2,9 @@
  * Pre-validated stations JSON, built and published automatically by GitHub Actions.
  * See station-builder/ and .github/workflows/build-stations.yml.
  *
- * After enabling GitHub Pages on your repo, replace this URL with:
- *   https://<your-username>.github.io/<your-repo>/stations.json
+ * Published on the custom domain (GitHub Pages gh-pages branch).
  */
-export const STATIONS_URL = "https://wyasyn.github.io/laba/stations.json";
+export const STATIONS_URL = "https://laba.yasinwalum.com/stations.json";
 
 export const CACHE_KEYS = {
   STATIONS: "@laba/stations",
