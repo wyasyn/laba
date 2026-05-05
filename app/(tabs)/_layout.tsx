@@ -6,13 +6,17 @@ import {
   Tv01Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
+import { BlurView } from "expo-blur";
 import { Tabs } from "expo-router";
+import { useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
-  const { colors } = useTheme();
-  const tabBarHeight = 62;
+  const { width } = useWindowDimensions();
+  const { colors, resolved } = useTheme();
+  const tabBarHeight = 70;
+  const horizontalMargin = width >= 430 ? 20 : width >= 380 ? 16 : 10;
 
   return (
     <Tabs
@@ -20,17 +24,29 @@ export default function TabLayout() {
         headerShown: false,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textSecondary,
-        tabBarShowLabel: false,
+        tabBarShowLabel: true,
+        tabBarLabelStyle: {
+          fontSize: 11,
+          marginTop: 2,
+        },
+        tabBarBackground: () => (
+          <BlurView
+            intensity={70}
+            tint={resolved === "dark" ? "dark" : "light"}
+            style={{ flex: 1, borderRadius: 55 }}
+          />
+        ),
         tabBarStyle: {
           position: "absolute",
-          left: 16,
-          right: 16,
+          marginLeft: horizontalMargin,
+          marginRight: horizontalMargin,
           bottom: insets.bottom + 10,
-          backgroundColor: colors.surface,
+          backgroundColor: `${colors.surface}B3`,
           borderTopWidth: 0,
           borderWidth: 1,
-          borderColor: colors.border,
-          borderRadius: 22,
+          borderColor: `${colors.border}CC`,
+          borderRadius: 55,
+          overflow: "hidden",
           height: tabBarHeight,
           paddingBottom: 8,
           paddingTop: 8,

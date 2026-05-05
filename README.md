@@ -21,7 +21,7 @@
 
 **Laba** is a universal mobile and web app that gives users one place to discover and stream free-to-air live TV and radio stations — with a strong focus on Ugandan broadcasters alongside a curated international catalog. Every stream in the app is verified by an automated build pipeline, so listeners and viewers don't have to fight broken links.
 
-The project is built to a production bar end-to-end: typed routes, schema-validated data, offline fallback, dual media engines, secure authentication, animated UI, and an automated CI-style data pipeline that ships a fresh, validated station index on every build.
+The project is built to a production bar end-to-end: typed routes, schema-validated data, offline fallback, dual media engines, animated UI, and an automated CI-style data pipeline that ships a fresh, validated station index on every build.
 
 Targets **iOS**, **Android**, and **Web** from a single Expo codebase.
 
@@ -43,7 +43,7 @@ Targets **iOS**, **Android**, and **Web** from a single Expo codebase.
 
 - **Dual media engines** — HLS live TV via `react-native-video`, live radio via `expo-audio`, each with its own player state machine.
 - **Background audio** — continues radio playback when the app is backgrounded, using an Android foreground media service and the required runtime permissions.
-- **Secure authentication** — Clerk sign-in/sign-up flows backed by `expo-secure-store` for token storage.
+- **Simple first-launch onboarding** — a lightweight welcome flow appears on first launch only, then routes directly into the app.
 - **Offline-first data** — stations cached in `AsyncStorage` with a 24-hour TTL, plus a bundled fallback catalog that guarantees the app works on first launch or without a network.
 - **Automated stream validation** — a Node-based builder probes every TV and radio URL before a release, so dead links never ship.
 - **Search and favorites** — instant client-side search across all stations; favorites persist locally with optimistic updates.
@@ -63,7 +63,6 @@ Targets **iOS**, **Android**, and **Web** from a single Expo codebase.
 ![NativeWind](https://img.shields.io/badge/NativeWind_4-06B6D4?logo=tailwindcss&logoColor=white)
 ![Zustand](https://img.shields.io/badge/Zustand_5-443E38?logo=react&logoColor=white)
 ![Zod](https://img.shields.io/badge/Zod_4-3E67B1?logo=zod&logoColor=white)
-![Clerk](https://img.shields.io/badge/Clerk_Auth-6C47FF?logo=clerk&logoColor=white)
 ![react-native-video](https://img.shields.io/badge/react--native--video-FF4154)
 ![expo-audio](https://img.shields.io/badge/expo--audio-000020?logo=expo&logoColor=white)
 ![Reanimated](https://img.shields.io/badge/Reanimated_4-FF4154?logo=react&logoColor=white)
@@ -77,10 +76,10 @@ Targets **iOS**, **Android**, and **Web** from a single Expo codebase.
 ## Architecture
 
 ```
-app/                 File-based routes (Expo Router) — auth layout + tab layout
+app/                 File-based routes (Expo Router) — onboarding entry + tab layout
 components/          Reusable UI: player controls, station cards, waveform, etc.
 stores/              Zustand stores: player, stations, favorites, theme
-lib/                 Fetching, caching, Clerk token cache, helpers
+lib/                 Fetching, caching, and helpers
 data/                Bundled fallback station catalog (Zod-validated)
 station-builder/     Node pipeline: fetch → validate → emit stations.json
 assets/              Icons, splash, fonts, screenshots
@@ -89,7 +88,7 @@ constants/           Theme tokens, shared config
 
 ### Highlights
 
-- **File-based routing** — `app/` is split into an authentication stack and a main tab layout (Home, TV, Radio, Favorites, Settings), with typed routes enabled in `app.json`.
+- **File-based routing** — `app/` uses an onboarding entry route and a main tab layout (Home, TV, Radio, Favorites, Settings), with typed routes enabled in `app.json`.
 - **Zustand stores** — `stores/` holds separate `player`, `stations`, `favorites`, and `theme` stores. Derived lists (featured / international / per-type) are computed once per fetch rather than per render, keeping subscriptions cheap and stable.
 - **Data pipeline** — `station-builder/` is a standalone Node script that pulls from IPTV-org and Radio-Browser, probes every stream with a timeout, and writes a single `stations.json`. The app consumes that index, caches it for 24 hours, and falls back to the bundled `data/` catalog when offline or on first launch. Everything that crosses the network boundary is parsed through Zod, so invalid payloads never reach the UI.
 - **Pending-station pattern** — when a user taps a station, the player store captures a "pending" station so playback can warm up before the detail screen is even mounted, shaving perceived latency off every tune-in.
@@ -103,8 +102,6 @@ constants/           Theme tokens, shared config
 - Node.js 20+
 - `pnpm` (recommended) or `npm`
 - Xcode (iOS) and/or Android Studio (Android)
-- A Clerk account for a publishable key
-- A [Google Cloud](https://console.cloud.google.com/) project with OAuth clients if you use **native** Sign in with Google (see below)
 - An Expo account if you want to run EAS builds
 
 ### 1. Install
@@ -113,37 +110,7 @@ constants/           Theme tokens, shared config
 pnpm install
 ```
 
-### 2. Configure environment
-
-Create a `.env` file at the project root.
-
-**Clerk (required for any sign-in):**
-
-```bash
-EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_xxx
-```
-
-**Google Sign-In on native (iOS / Android)** — the app uses [`useSignInWithGoogle`](https://clerk.com/docs/reference/expo/native-hooks/use-sign-in-with-google) on native and SSO on web. Clerk expects the **Web** and platform **OAuth client IDs** from Google Cloud in your env, not only the Clerk publishable key. Follow Clerk’s [Sign in with Google (Expo)](https://clerk.com/docs/expo/guides/configure/auth-strategies/sign-in-with-google) guide: enable Google under **SSO connections**, turn on **Use custom credentials**, register the Clerk **Authorized redirect URI** on a **Web application** client in Google Cloud, add your app under Clerk **Native applications**, then set:
-
-```bash
-# From your Google Cloud “Web application” OAuth client (same ID you paste into Clerk as Client ID)
-EXPO_PUBLIC_CLERK_GOOGLE_WEB_CLIENT_ID=your-web-client-id.apps.googleusercontent.com
-
-# Android — from the Android OAuth client in Google Cloud
-EXPO_PUBLIC_CLERK_GOOGLE_ANDROID_CLIENT_ID=your-android-client-id.apps.googleusercontent.com
-
-# iOS — from the iOS OAuth client in Google Cloud
-EXPO_PUBLIC_CLERK_GOOGLE_IOS_CLIENT_ID=your-ios-client-id.apps.googleusercontent.com
-
-# iOS only — reversed client id for the URL scheme (prefix + numeric part before .apps.googleusercontent.com)
-EXPO_PUBLIC_CLERK_GOOGLE_IOS_URL_SCHEME=com.googleusercontent.apps.your-ios-client-id
-```
-
-For **iOS**, you can also set `EXPO_PUBLIC_CLERK_GOOGLE_IOS_URL_SCHEME` in `eas.json` build profiles instead of only `.env`. Native Google sign-in needs a **development build** or **prebuild**; it is not supported in **Expo Go** (see the Clerk guide above).
-
-**Android (this repo)** — step-by-step fingerprints, Google Cloud Android OAuth client, Clerk Native Applications, and verification: [docs/GOOGLE_SIGNIN_ANDROID.md](docs/GOOGLE_SIGNIN_ANDROID.md). **EAS Build env vars:** [docs/EAS_BUILD_ENV.md](docs/EAS_BUILD_ENV.md).
-
-### 3. Run the app
+### 2. Run the app
 
 ```bash
 pnpm start        # Metro dev server (Expo Dev Client / Expo Go)
@@ -152,7 +119,7 @@ pnpm ios          # build & run on iOS simulator/device
 pnpm web          # run in the browser
 ```
 
-### 4. Native builds
+### 3. Native builds
 
 ```bash
 pnpm prebuild        # generate native projects
@@ -160,7 +127,7 @@ pnpm prebuild:clean  # regenerate from scratch
 pnpm build           # EAS build
 ```
 
-### 5. Regenerate the station catalog (optional)
+### 4. Regenerate the station catalog (optional)
 
 ```bash
 node station-builder/build.js

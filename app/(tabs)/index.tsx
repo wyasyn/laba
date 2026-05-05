@@ -8,12 +8,11 @@ import { selectHeroStations } from "@/lib/selectHeroStations";
 import { useDebounce } from "@/lib/useDebounce";
 import { useTheme } from "@/lib/useTheme";
 import { useStationStore } from "@/stores/useStationStore";
-import { useUser } from "@clerk/expo";
 import { UserIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { useRouter } from "expo-router";
 import { useMemo, useState } from "react";
-import { Image, Pressable, ScrollView, View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useShallow } from "zustand/react/shallow";
 
@@ -31,7 +30,6 @@ function matchesQuery(s: Station, q: string) {
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { user } = useUser();
   const { colors } = useTheme();
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedQuery = useDebounce(searchQuery, 250);
@@ -97,15 +95,7 @@ export default function HomeScreen() {
       accessibilityLabel="Open settings"
       className="h-9 w-9 items-center justify-center overflow-hidden rounded-full border border-border bg-surface active:opacity-70"
     >
-      {user?.imageUrl ? (
-        <Image
-          source={{ uri: user.imageUrl }}
-          className="h-9 w-9"
-          style={{ borderRadius: 18 }}
-        />
-      ) : (
-        <HugeiconsIcon icon={UserIcon} size={18} color={colors.textPrimary} />
-      )}
+      <HugeiconsIcon icon={UserIcon} size={18} color={colors.textPrimary} />
     </Pressable>
   );
 

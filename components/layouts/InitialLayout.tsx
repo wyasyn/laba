@@ -6,7 +6,6 @@ import { View } from "react-native";
 import { useFavouritesStore } from "@/stores/useFavouritesStore";
 import { useStationStore } from "@/stores/useStationStore";
 import { useThemeStore } from "@/stores/useThemeStore";
-import { useAuth } from "@clerk/expo";
 import {
   Inter_400Regular,
   Inter_500Medium,
@@ -23,9 +22,6 @@ function InitialLayout() {
   const { resolved } = useTheme();
   const themeVars = useThemeVars();
   const themeLoaded = useThemeStore((s) => s.isLoaded);
-  const { isLoaded: authLoaded, isSignedIn } = useAuth({
-    treatPendingAsSignedOut: false,
-  });
 
   const [warmupDone, setWarmupDone] = useState(false);
   const [fontTimedOut, setFontTimedOut] = useState(false);
@@ -60,18 +56,17 @@ function InitialLayout() {
 
   const fontFailed = !!fontError || fontTimedOut;
   const fontReady = fontsLoaded || fontFailed;
-  const ready = authLoaded && fontReady && themeLoaded;
+  const ready = fontReady && themeLoaded;
 
   useEffect(() => {
     if (__DEV__) {
       console.log("[InitialLayout] ready gate", {
-        authLoaded,
         fontReady,
         themeLoaded,
         ready,
       });
     }
-  }, [authLoaded, fontReady, themeLoaded, ready]);
+  }, [fontReady, themeLoaded, ready]);
 
   useEffect(() => {
     if (ready) SplashScreen.hideAsync();
@@ -95,37 +90,31 @@ function InitialLayout() {
       {!warmupDone && <VideoWarmup onReady={() => setWarmupDone(true)} />}
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" options={{ animation: "fade" }} />
-        <Stack.Protected guard={!isSignedIn}>
-          <Stack.Screen name="(auth)" options={{ animation: "fade" }} />
-        </Stack.Protected>
-
-        <Stack.Protected guard={!!isSignedIn}>
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen
-            name="station/[id]"
-            options={{
-              presentation: "card",
-              headerShown: false,
-              animation: "slide_from_right",
-            }}
-          />
-          <Stack.Screen
-            name="settings"
-            options={{
-              presentation: "card",
-              headerShown: false,
-              animation: "slide_from_right",
-            }}
-          />
-          <Stack.Screen
-            name="account"
-            options={{
-              presentation: "card",
-              headerShown: false,
-              animation: "slide_from_right",
-            }}
-          />
-        </Stack.Protected>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen
+          name="station/[id]"
+          options={{
+            presentation: "card",
+            headerShown: false,
+            animation: "slide_from_right",
+          }}
+        />
+        <Stack.Screen
+          name="settings"
+          options={{
+            presentation: "card",
+            headerShown: false,
+            animation: "slide_from_right",
+          }}
+        />
+        <Stack.Screen
+          name="account"
+          options={{
+            presentation: "card",
+            headerShown: false,
+            animation: "slide_from_right",
+          }}
+        />
       </Stack>
     </View>
   );

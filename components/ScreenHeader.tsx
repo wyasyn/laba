@@ -12,7 +12,7 @@ export function ScreenHeader({ title, subtitle }: ScreenHeaderProps) {
       <View className="flex-row items-start justify-between">
         <View className="flex-1 pr-3">
           <Text className="text-2xl font-bold text-foreground">{title}</Text>
-          <Text className="mt-1 text-sm text-text-secondary">{subtitle}</Text>
+          <Text className="mt-1 text-text-secondary">{subtitle}</Text>
         </View>
         <View className="pt-1">
           <RefreshIndicator />
