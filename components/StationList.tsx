@@ -5,7 +5,7 @@ import { ReactElement, useCallback, useMemo, useRef, useState } from "react";
 import { FlatList, TextInput, View } from "react-native";
 import { EmptyState } from "./EmptyState";
 import { SearchBar } from "./SearchBar";
-import { SkeletonCard } from "./SkeletonCard";
+import { SkeletonRowCard } from "./SkeletonCard";
 import { StationCard } from "./StationCard";
 
 interface StationListProps {
@@ -16,7 +16,7 @@ interface StationListProps {
 const COLUMN_WRAPPER_STYLE = {
   justifyContent: "space-between",
   paddingHorizontal: 16,
-  marginBottom: 12,
+  marginBottom: 10,
 } as const;
 
 const CONTENT_CONTAINER_STYLE = { paddingBottom: 20 } as const;
@@ -71,11 +71,12 @@ export function StationList({ type, header }: StationListProps) {
           value={searchQuery}
           onChangeText={setSearchQuery}
           placeholder={placeholder}
+          variant="pill"
         />
-        <View className="flex-row flex-wrap justify-between px-4 pt-4">
+        <View className="flex-row flex-wrap justify-between px-4 pt-6">
           {Array.from({ length: 6 }).map((_, i) => (
             <View key={i} className="w-[48%]">
-              <SkeletonCard />
+              <SkeletonRowCard />
             </View>
           ))}
         </View>
@@ -103,7 +104,9 @@ export function StationList({ type, header }: StationListProps) {
               value={searchQuery}
               onChangeText={setSearchQuery}
               placeholder={placeholder}
+              variant="pill"
             />
+            <View className="h-2" />
           </>
         }
         ListEmptyComponent={<EmptyState />}

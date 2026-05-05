@@ -42,7 +42,6 @@ Browse featured picks, search every station, save favourites, and play with a cl
 - **Favourites** — Save stations you return to; choices stay on your device.
 - **Themes** — Light and dark appearance so the app feels right day or night.
 - **Background radio** — On **Android**, keep listening when you switch apps or lock the screen (uses a foreground playback service where required).
-- **Sign-in (optional)** — Create an account with email or Google for a consistent profile across devices; managed securely with Clerk.
 - **Offline-friendly catalog** — Station lists are cached so browsing stays usable when the network is weak; playback still needs a connection to the station’s servers.
 
 ## Why Laba

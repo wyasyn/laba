@@ -1,7 +1,6 @@
 import { useTheme } from "@/lib/useTheme";
 import { useFavouritesStore } from "@/stores/useFavouritesStore";
 import { useThemeStore, type ThemeMode } from "@/stores/useThemeStore";
-import { useUser } from "@clerk/expo";
 import {
   ArrowLeft01Icon,
   ArrowRight01Icon,
@@ -13,11 +12,9 @@ import {
   SmartPhone01Icon,
   StarIcon,
   Sun03Icon,
-  UserIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import Constants from "expo-constants";
-import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { Linking, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -53,14 +50,6 @@ export default function SettingsScreen() {
   const setMode = useThemeStore((s) => s.setMode);
   const favouriteCount = useFavouritesStore((s) => s.ids.length);
   const router = useRouter();
-  const { user } = useUser();
-
-  const primaryEmail = user?.primaryEmailAddress?.emailAddress ?? "";
-  const displayName =
-    user?.fullName ||
-    [user?.firstName, user?.lastName].filter(Boolean).join(" ") ||
-    primaryEmail ||
-    "Signed in";
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
@@ -165,42 +154,16 @@ export default function SettingsScreen() {
           <Text className={SECTION_TITLE_CLASS}>Account</Text>
           <View className={CARD_CLASS}>
             <View className={ROW_CLASS}>
-              <View
-                className="h-11 w-11 overflow-hidden rounded-full bg-surface-light"
-                style={{ borderRadius: 22 }}
-              >
-                {user?.imageUrl ? (
-                  <Image
-                    source={{ uri: user.imageUrl }}
-                    style={{ width: "100%", height: "100%" }}
-                    contentFit="cover"
-                    transition={200}
-                  />
-                ) : (
-                  <View className="flex-1 items-center justify-center">
-                    <HugeiconsIcon
-                      icon={UserIcon}
-                      size={22}
-                      color={colors.textSecondary}
-                    />
-                  </View>
-                )}
-              </View>
               <View className="flex-1">
                 <Text
                   numberOfLines={1}
                   className="text-[15px] font-semibold text-foreground"
                 >
-                  {displayName}
+                  Local profile
                 </Text>
-                {!!primaryEmail && (
-                  <Text
-                    numberOfLines={1}
-                    className="mt-0.5 text-xs text-text-secondary"
-                  >
-                    {primaryEmail}
-                  </Text>
-                )}
+                <Text numberOfLines={1} className="mt-0.5 text-xs text-text-secondary">
+                  Account features are currently placeholder-only.
+                </Text>
               </View>
             </View>
             <View className={DIVIDER_CLASS} />
@@ -209,7 +172,7 @@ export default function SettingsScreen() {
               onPress={() => router.push("/account")}
             >
               <HugeiconsIcon
-                icon={UserIcon}
+                icon={Settings01Icon}
                 size={22}
                 color={colors.textSecondary}
               />

@@ -35,7 +35,7 @@ export const CategoryRow = memo(function CategoryRow({
   const renderItem: ListRenderItem<Station> = useCallback(
     ({ item }) => (
       <View className="w-44 shrink-0">
-        <StationCard station={item} layout="stacked" />
+        <StationCard station={item} />
       </View>
     ),
     [],
@@ -58,7 +58,7 @@ export const CategoryRow = memo(function CategoryRow({
             accessibilityRole="button"
             accessibilityLabel={`See all ${title}`}
           >
-            <Text className="text-sm text-text-secondary">See all</Text>
+            <Text className="text-text-secondary">See all</Text>
           </Pressable>
         ) : null}
       </View>
