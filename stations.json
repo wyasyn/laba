@@ -1,5 +1,19 @@
 [
   {
+    "id": "alpha-digital",
+    "name": "Alpha Digital",
+    "type": "tv",
+    "streamUrl": "https://streamfi-alphatvdgtl1.zettawiseroutes.com:8181/hls/stream.m3u8",
+    "description": "religious",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "religious"
+    ],
+    "website": "http://imc.ug/",
+    "isFeatured": true
+  },
+  {
     "id": "ark-tv",
     "name": "Ark TV",
     "type": "tv",
@@ -14,17 +28,59 @@
     "isFeatured": true
   },
   {
-    "id": "fort-tv",
-    "name": "FORT TV",
+    "id": "btv",
+    "name": "BTV",
     "type": "tv",
-    "streamUrl": "https://fort.co-works.org/memfs/87017643-274a-4bc0-a786-7767a0d159c2.m3u8",
+    "streamUrl": "https://streamfi-alphadgtl1.zettawiseroutes.com:8181/hls/stream.m3u8",
     "description": "entertainment",
     "language": "English",
     "country": "UG",
     "categories": [
       "entertainment"
     ],
-    "website": "https://fort-tv.com/",
+    "website": "https://imc.ug/",
+    "isFeatured": true
+  },
+  {
+    "id": "bukedde-tv-1",
+    "name": "Bukedde TV 1",
+    "type": "tv",
+    "streamUrl": "https://stream.hydeinnovations.com/bukedde1flussonic/index.m3u8",
+    "description": "general",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "general"
+    ],
+    "website": "https://www.bukedde.co.ug/",
+    "isFeatured": true
+  },
+  {
+    "id": "bukedde-tv-2",
+    "name": "Bukedde TV 2",
+    "type": "tv",
+    "streamUrl": "https://stream.hydeinnovations.com/bukedde2flussonic/index.m3u8",
+    "description": "general",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "general"
+    ],
+    "website": "https://www.bukedde.co.ug/",
+    "isFeatured": true
+  },
+  {
+    "id": "dream-tv",
+    "name": "Dream TV",
+    "type": "tv",
+    "streamUrl": "https://streamfi-dreamtv1.zettawiseroutes.com:8181/hls/stream.m3u8",
+    "description": "religious",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "religious"
+    ],
+    "website": "http://www.imc.ug/",
     "isFeatured": true
   },
   {
@@ -153,6 +209,23 @@
     "isFeatured": true
   },
   {
+    "id": "radio-104-1-favour-fm-gulu-104-1-fm-ug",
+    "name": "104.1 Favour FM - Gulu - 104.1 FM",
+    "type": "radio",
+    "streamUrl": "http://us5new.listen2myradio.com:2199/listen.php?port=8138&type=ice&mount=stream",
+    "logo": "https://i.ibb.co/P6b03Fx/image.webp",
+    "description": "christian, gospel, religious",
+    "language": "english,luganda,swahili",
+    "country": "UG",
+    "categories": [
+      "christian",
+      "gospel",
+      "religious"
+    ],
+    "website": "https://www.favourfm.org/",
+    "isFeatured": true
+  },
+  {
     "id": "radio-95-1-kiss-fm-jakarta-ug",
     "name": "95.1 Kiss FM Jakarta",
     "type": "radio",
@@ -193,21 +266,6 @@
       "rock"
     ],
     "website": "http://www.gztv.com/",
-    "isFeatured": true
-  },
-  {
-    "id": "radio-cbn-christmas-channel-ug",
-    "name": "CBN Christmas Channel",
-    "type": "radio",
-    "streamUrl": "https://streams.cbnradio.com/christmas-128K?%20Title1=CBN%20Christmas",
-    "logo": "http://www1.cbn.com/favicon.ico",
-    "description": "christian",
-    "language": "english",
-    "country": "UG",
-    "categories": [
-      "christian"
-    ],
-    "website": "http://www1.cbn.com/radio/christmas",
     "isFeatured": true
   },
   {
@@ -292,6 +350,39 @@
       "rock"
     ],
     "website": "https://www.islandsfm.org/",
+    "isFeatured": true
+  },
+  {
+    "id": "radio-joy-hits-ug",
+    "name": "JOY HITS",
+    "type": "radio",
+    "streamUrl": "http://joyhits.online/joyhitshq.mp3",
+    "description": "variety",
+    "language": "english",
+    "country": "UG",
+    "categories": [
+      "variety"
+    ],
+    "website": "https://joyhits.online/",
+    "isFeatured": true
+  },
+  {
+    "id": "radio-my-radio-ug",
+    "name": "My Radio",
+    "type": "radio",
+    "streamUrl": "http://myradioug.duckdns.org:8000/radio.mp3",
+    "logo": "https://econews.digital/wp-content/uploads/2025/11/cropped-WhatsApp-Image-2025-11-14-at-15.21.28_a76b6284.jpg",
+    "description": "christian-gospel, gospel, gospel pop, smoothest songs, urban gospel",
+    "language": "english",
+    "country": "UG",
+    "categories": [
+      "christian-gospel",
+      "gospel",
+      "gospel pop",
+      "smoothest songs",
+      "urban gospel"
+    ],
+    "website": "https://econews.digital/home/myradio/",
     "isFeatured": true
   },
   {
@@ -478,6 +569,26 @@
       "sixties"
     ],
     "website": "https://somafm.com/secretagent/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-npr-24-hour-program-stream-us",
+    "name": "NPR 24 Hour Program Stream",
+    "type": "radio",
+    "streamUrl": "http://npr-ice.streamguys1.com/live.mp3",
+    "logo": "https://static-assets.npr.org/static/images/favicon/favicon-96x96.png",
+    "description": "news, news talk, political talk, politics, public radio, talk",
+    "language": "english",
+    "country": "US",
+    "categories": [
+      "news",
+      "news talk",
+      "political talk",
+      "politics",
+      "public radio",
+      "talk"
+    ],
+    "website": "https://www.npr.org/2016/04/05/472557877/npr-program-stream",
     "isFeatured": false
   },
   {
