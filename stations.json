@@ -28,6 +28,20 @@
     "isFeatured": true
   },
   {
+    "id": "bbs-tv",
+    "name": "BBS TV",
+    "type": "tv",
+    "streamUrl": "https://bbstv.ug/hls/ch01/index.m3u8",
+    "description": "general",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "general"
+    ],
+    "website": "https://www.bbstv.ug/",
+    "isFeatured": true
+  },
+  {
     "id": "btv",
     "name": "BTV",
     "type": "tv",
@@ -81,6 +95,20 @@
       "religious"
     ],
     "website": "http://www.imc.ug/",
+    "isFeatured": true
+  },
+  {
+    "id": "fort-tv",
+    "name": "FORT TV",
+    "type": "tv",
+    "streamUrl": "https://fort.co-works.org/memfs/87017643-274a-4bc0-a786-7767a0d159c2.m3u8",
+    "description": "entertainment",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "entertainment"
+    ],
+    "website": "https://fort-tv.com/",
     "isFeatured": true
   },
   {
@@ -381,20 +409,6 @@
     "isFeatured": true
   },
   {
-    "id": "radio-christian-fm-ug",
-    "name": "Christian fm",
-    "type": "radio",
-    "streamUrl": "http://stream.dar.fm/27203",
-    "description": "christian",
-    "language": "english",
-    "country": "UG",
-    "categories": [
-      "christian"
-    ],
-    "website": "https://www.christianhits.net/",
-    "isFeatured": true
-  },
-  {
     "id": "radio-ejazz-xtra-ug",
     "name": "EJAZZ Xtra",
     "type": "radio",
@@ -433,6 +447,20 @@
       "rock"
     ],
     "website": "https://www.islandsfm.org/",
+    "isFeatured": true
+  },
+  {
+    "id": "radio-joy-hits-ug",
+    "name": "JOY HITS",
+    "type": "radio",
+    "streamUrl": "http://joyhits.online/joyhitshq.mp3",
+    "description": "variety",
+    "language": "english",
+    "country": "UG",
+    "categories": [
+      "variety"
+    ],
+    "website": "https://joyhits.online/",
     "isFeatured": true
   },
   {
@@ -637,7 +665,7 @@
     "id": "radio-977-the-mix-us",
     "name": ".977 The Mix",
     "type": "radio",
-    "streamUrl": "http://24293.live.streamtheworld.com:3690/977_MIX_SC",
+    "streamUrl": "http://24293.live.streamtheworld.com/977_MIX_SC",
     "description": "80s, 90s, hits, today",
     "language": "english",
     "country": "US",
@@ -668,6 +696,26 @@
       "sixties"
     ],
     "website": "https://somafm.com/secretagent/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-npr-24-hour-program-stream-us",
+    "name": "NPR 24 Hour Program Stream",
+    "type": "radio",
+    "streamUrl": "http://npr-ice.streamguys1.com/live.mp3",
+    "logo": "https://static-assets.npr.org/static/images/favicon/favicon-96x96.png",
+    "description": "news, news talk, political talk, politics, public radio, talk",
+    "language": "english",
+    "country": "US",
+    "categories": [
+      "news",
+      "news talk",
+      "political talk",
+      "politics",
+      "public radio",
+      "talk"
+    ],
+    "website": "https://www.npr.org/2016/04/05/472557877/npr-program-stream",
     "isFeatured": false
   },
   {
@@ -716,7 +764,7 @@
     "id": "radio-somafm-space-station-soma-128k-aac-us",
     "name": "SomaFM Space Station Soma (128k AAC)",
     "type": "radio",
-    "streamUrl": "https://ice5.somafm.com/spacestation-128-aac",
+    "streamUrl": "https://ice6.somafm.com/spacestation-128-aac",
     "logo": "https://somafm.com/img3/spacestation-400.png",
     "description": "ambient, electronica, mid-tempo",
     "language": "english",
@@ -926,7 +974,7 @@
     "id": "radio-977-comedy-us",
     "name": ".977 Comedy",
     "type": "radio",
-    "streamUrl": "http://17633.live.streamtheworld.com/977_COMEDY_SC",
+    "streamUrl": "http://26433.live.streamtheworld.com:3690/977_COMEDY_SC",
     "description": "comedy",
     "language": "english",
     "country": "US",
