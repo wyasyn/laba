@@ -140,6 +140,20 @@
     "isFeatured": true
   },
   {
+    "id": "rwenzori-tv",
+    "name": "Rwenzori TV",
+    "type": "tv",
+    "streamUrl": "https://stream.rwenzoritv.com:3232/live/rwenzoritvlive.m3u8",
+    "description": "general",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "general"
+    ],
+    "website": "https://rwenzoritv.com/",
+    "isFeatured": true
+  },
+  {
     "id": "tayari-west-tv",
     "name": "Tayari West TV",
     "type": "tv",
@@ -362,20 +376,6 @@
       "news"
     ],
     "website": "http://chinaplus.cri.cn/",
-    "isFeatured": true
-  },
-  {
-    "id": "radio-christian-fm-ug",
-    "name": "Christian fm",
-    "type": "radio",
-    "streamUrl": "http://stream.dar.fm/27203",
-    "description": "christian",
-    "language": "english",
-    "country": "UG",
-    "categories": [
-      "christian"
-    ],
-    "website": "https://www.christianhits.net/",
     "isFeatured": true
   },
   {
@@ -615,7 +615,7 @@
     "id": "radio-somafm-groove-salad-128k-mp3-us",
     "name": "SomaFM Groove Salad (128k MP3)",
     "type": "radio",
-    "streamUrl": "https://ice5.somafm.com/groovesalad-128-mp3",
+    "streamUrl": "https://ice6.somafm.com/groovesalad-128-mp3",
     "logo": "https://somafm.com/img3/groovesalad-400.jpg",
     "description": "ambient, chillout, downtempo, groove, lounge, sleep",
     "language": "english",
@@ -669,10 +669,30 @@
     "isFeatured": false
   },
   {
+    "id": "radio-npr-24-hour-program-stream-us",
+    "name": "NPR 24 Hour Program Stream",
+    "type": "radio",
+    "streamUrl": "http://npr-ice.streamguys1.com/live.mp3",
+    "logo": "https://static-assets.npr.org/static/images/favicon/favicon-96x96.png",
+    "description": "news, news talk, political talk, politics, public radio, talk",
+    "language": "english",
+    "country": "US",
+    "categories": [
+      "news",
+      "news talk",
+      "political talk",
+      "politics",
+      "public radio",
+      "talk"
+    ],
+    "website": "https://www.npr.org/2016/04/05/472557877/npr-program-stream",
+    "isFeatured": false
+  },
+  {
     "id": "radio-somafm-underground-80s-128k-mp3-us",
     "name": "SomaFM Underground 80s (128k MP3)",
     "type": "radio",
-    "streamUrl": "https://ice6.somafm.com/u80s-128-mp3",
+    "streamUrl": "https://ice2.somafm.com/u80s-128-mp3",
     "logo": "https://somafm.com/img3/u80s-400.png",
     "description": "80s, new wave, uk synthpop",
     "language": "english",
