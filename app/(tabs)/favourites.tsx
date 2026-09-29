@@ -1,53 +1,80 @@
 import { EmptyState } from "@/components/EmptyState";
+import { HeaderActions } from "@/components/HeaderActions";
 import { StationCard } from "@/components/StationCard";
+import { GridCell, LIST_BOTTOM_PADDING } from "@/components/StationList";
+import { CompactHeader, LargeTitle, useCollapsingHeader } from "@/components/ui/CollapsingHeader";
+import type { Station } from "@/lib/schemas";
 import { useFavouritesStore } from "@/stores/useFavouritesStore";
 import { useStationStore } from "@/stores/useStationStore";
 import { FavouriteIcon } from "@hugeicons/core-free-icons";
-import { FlatList, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { FlashList, type ListRenderItemInfo } from "@shopify/flash-list";
+import { useRouter } from "expo-router";
+import { useMemo } from "react";
+import { View } from "react-native";
+import Animated from "react-native-reanimated";
+
+const AnimatedFlashList = Animated.createAnimatedComponent(FlashList<Station>);
+
+function keyExtractor(item: Station) {
+  return item.id;
+}
+
+function renderItem({ item, index }: ListRenderItemInfo<Station>) {
+  return (
+    <GridCell index={index}>
+      <StationCard station={item} />
+    </GridCell>
+  );
+}
 
 export default function FavouritesTabScreen() {
+  const router = useRouter();
+  const { scrollY, onScroll } = useCollapsingHeader();
   const ids = useFavouritesStore((s) => s.ids);
   const stations = useStationStore((s) => s.stations);
 
-  const favouriteStations = stations.filter((s) => ids.includes(s.id));
+  // Most recently saved first.
+  const favouriteStations = useMemo(() => {
+    const byId = new Map(stations.map((s) => [s.id, s]));
+    const out: Station[] = [];
+    for (let i = ids.length - 1; i >= 0; i--) {
+      const s = byId.get(ids[i]);
+      if (s) out.push(s);
+    }
+    return out;
+  }, [ids, stations]);
+
+  const count = favouriteStations.length;
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
-      <View className="px-4 pb-2 pt-4">
-        <Text className="text-[26px] font-bold text-foreground">
-          Favourites
-        </Text>
-        <Text className="mt-0.5 text-sm text-text-secondary">
-          {favouriteStations.length} saved station
-          {favouriteStations.length !== 1 ? "s" : ""}
-        </Text>
-      </View>
-
-      <FlatList
+    <View className="flex-1 bg-background">
+      <AnimatedFlashList
         data={favouriteStations}
-        keyExtractor={(item) => item.id}
+        keyExtractor={keyExtractor}
         numColumns={2}
-        columnWrapperStyle={{
-          justifyContent: "space-between",
-          paddingHorizontal: 16,
-          marginBottom: 12,
-        }}
-        renderItem={({ item }) => (
-          <View className="w-[48%]">
-            <StationCard station={item} />
-          </View>
-        )}
+        renderItem={renderItem}
+        ListHeaderComponent={
+          <LargeTitle
+            title="Favourites"
+            subtitle={count > 0 ? `${count} saved station${count === 1 ? "" : "s"}` : "Your saved stations"}
+            scrollY={scrollY}
+          />
+        }
         ListEmptyComponent={
           <EmptyState
-            title="No favourites yet"
-            message="Tap the heart icon on any station to save it here"
+            title="Nothing saved yet"
+            message="Tap the heart on any station and it will be waiting for you here."
             icon={FavouriteIcon}
+            actionLabel="Browse stations"
+            onAction={() => router.navigate("/(tabs)")}
           />
         }
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 20, paddingTop: 8 }}
+        contentContainerStyle={{ paddingBottom: LIST_BOTTOM_PADDING }}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
       />
-    </SafeAreaView>
+      <CompactHeader title="Favourites" scrollY={scrollY} right={<HeaderActions />} />
+    </View>
   );
 }

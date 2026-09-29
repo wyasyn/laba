@@ -1,178 +1,79 @@
+import { FavouriteButton } from "@/components/FavouriteButton";
 import { StationArtwork } from "@/components/StationArtwork";
+import { openStation } from "@/components/StationCard";
+import { PressableScale } from "@/components/ui/PressableScale";
+import { Text } from "@/components/ui/Text";
+import { TypePill } from "@/components/ui/TypePill";
 import { HERO_MAX_ITEMS } from "@/lib/selectHeroStations";
-import { Station } from "@/lib/schemas";
+import type { Station } from "@/lib/schemas";
 import { useTheme } from "@/lib/useTheme";
-import { usePlayerStore } from "@/stores/usePlayerStore";
-import * as Haptics from "expo-haptics";
-import { router } from "expo-router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  Dimensions,
-  FlatList,
-  ListRenderItem,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  Pressable,
-  Text,
-  View,
-} from "react-native";
+import { PlayIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
+import { useMemo } from "react";
+import { StyleSheet, View, useWindowDimensions } from "react-native";
+import Animated, {
+  Extrapolation,
+  interpolate,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+  type SharedValue,
+} from "react-native-reanimated";
 
-const SCREEN_WIDTH = Dimensions.get("window").width;
-/** Narrower than screen so adjacent hero cards peek at the sides. */
-const CARD_WIDTH = Math.round(SCREEN_WIDTH * 0.76);
-/** Gutter between cards (uses page background). */
-const CARD_GAP = 24;
-const ITEM_STRIDE = CARD_WIDTH + CARD_GAP;
-const SIDE_INSET = (SCREEN_WIDTH - CARD_WIDTH) / 2;
-const CARD_HEIGHT = 220;
-const HERO_IMAGE_RADIUS = 28;
+const SIDE = 20;
+const GAP = 12;
+const PARALLAX = 36;
+const SCRIM = ["rgba(0,0,0,0)", "rgba(0,0,0,0.35)", "rgba(0,0,0,0.9)"] as const;
+const SCRIM_LOCATIONS = [0.25, 0.55, 1] as const;
 
-/** Third card (1-based) is the default focus when there are at least three slides. */
-function getHeroFocusIndex(length: number) {
-  if (length <= 0) return 0;
-  if (length < 3) return 0;
-  return 2;
+export function useHeroSize() {
+  const { width } = useWindowDimensions();
+  const cardWidth = Math.min(width - SIDE * 2, 520);
+  return { cardWidth, cardHeight: Math.round(cardWidth * 0.7), stride: cardWidth + GAP };
 }
 
-type ThemeColors = ReturnType<typeof useTheme>["colors"];
+export function HeroSection({ featuredStations }: { featuredStations: Station[] }) {
+  const { cardWidth, cardHeight, stride } = useHeroSize();
+  const scrollX = useSharedValue(0);
 
-export function HeroSection({
-  featuredStations,
-}: {
-  featuredStations: Station[];
-}) {
-  const { colors } = useTheme();
-  const listRef = useRef<FlatList<Station>>(null);
-  const scrollToFocusAttempt = useRef(0);
+  const items = useMemo(() => featuredStations.slice(0, HERO_MAX_ITEMS), [featuredStations]);
 
-  const items = useMemo(
-    () => featuredStations.slice(0, HERO_MAX_ITEMS),
-    [featuredStations],
-  );
-
-  const itemIdsKey = useMemo(() => items.map((s) => s.id).join(","), [items]);
-
-  const focusIndex = useMemo(() => getHeroFocusIndex(items.length), [items.length]);
-
-  const [activeIndex, setActiveIndex] = useState(() =>
-    getHeroFocusIndex(featuredStations.slice(0, HERO_MAX_ITEMS).length),
-  );
-
-  useEffect(() => {
-    setActiveIndex(focusIndex);
-  }, [focusIndex, itemIdsKey]);
-
-  useEffect(() => {
-    if (items.length < 3 || focusIndex >= items.length) return;
-    scrollToFocusAttempt.current = 0;
-    const id = requestAnimationFrame(() => {
-      listRef.current?.scrollToIndex({
-        index: focusIndex,
-        viewPosition: 0.5,
-        animated: false,
-      });
-    });
-    return () => cancelAnimationFrame(id);
-  }, [itemIdsKey, items.length, focusIndex]);
-
-  const onMomentumScrollEnd = useCallback(
-    (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const x = e.nativeEvent.contentOffset.x;
-      const idx = Math.round(x / ITEM_STRIDE);
-      setActiveIndex(Math.min(Math.max(0, idx), items.length - 1));
-    },
-    [items.length],
-  );
-
-  const renderItem: ListRenderItem<Station> = useCallback(
-    ({ item }) => (
-      <View style={{ width: CARD_WIDTH }}>
-        <HeroSlide station={item} colors={colors} />
-      </View>
-    ),
-    [colors],
-  );
-
-  const keyExtractor = useCallback((item: Station) => item.id, []);
-
-  const ItemSeparator = useCallback(
-    () => (
-      <View
-        pointerEvents="none"
-        style={{
-          width: CARD_GAP,
-          alignSelf: "stretch",
-          minHeight: CARD_HEIGHT + 44,
-          backgroundColor: colors.background,
-        }}
-      />
-    ),
-    [colors.background],
-  );
-
-  const onScrollToIndexFailed = useCallback(
-    (info: { index: number; averageItemLength: number }) => {
-      scrollToFocusAttempt.current += 1;
-      if (scrollToFocusAttempt.current > 8) return;
-      setTimeout(() => {
-        listRef.current?.scrollToIndex({
-          index: info.index,
-          viewPosition: 0.5,
-          animated: false,
-        });
-      }, 120);
-    },
-    [],
-  );
+  const onScroll = useAnimatedScrollHandler((e) => {
+    scrollX.set(e.contentOffset.x);
+  });
 
   if (items.length === 0) return null;
 
   return (
-    <View style={{ marginBottom: 12 }}>
-      <FlatList
-        ref={listRef}
+    <View className="mb-8">
+      <Animated.FlatList
         data={items}
-        keyExtractor={keyExtractor}
+        keyExtractor={(item) => item.id}
         horizontal
         showsHorizontalScrollIndicator={false}
         decelerationRate="fast"
-        snapToInterval={ITEM_STRIDE}
-        snapToAlignment="start"
+        snapToInterval={stride}
         disableIntervalMomentum
-        ItemSeparatorComponent={ItemSeparator}
-        contentContainerStyle={{
-          paddingLeft: SIDE_INSET,
-          paddingRight: SIDE_INSET,
-        }}
-        renderItem={renderItem}
-        onMomentumScrollEnd={onMomentumScrollEnd}
-        onScrollToIndexFailed={onScrollToIndexFailed}
-        initialNumToRender={HERO_MAX_ITEMS}
-        maxToRenderPerBatch={HERO_MAX_ITEMS}
-        windowSize={5}
-        removeClippedSubviews={false}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
+        contentContainerStyle={{ paddingHorizontal: SIDE, gap: GAP }}
+        renderItem={({ item, index }) => (
+          <HeroSlide
+            station={item}
+            index={index}
+            scrollX={scrollX}
+            width={cardWidth}
+            height={cardHeight}
+            stride={stride}
+          />
+        )}
       />
       {items.length > 1 ? (
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 6,
-            marginTop: 10,
-          }}
-        >
-          {items.map((_, i) => (
-            <View
-              key={i}
-              style={{
-                width: i === activeIndex ? 8 : 6,
-                height: i === activeIndex ? 8 : 6,
-                borderRadius: 999,
-                backgroundColor:
-                  i === activeIndex ? colors.primary : colors.textSecondary + "55",
-              }}
-            />
+        <View className="mt-4 flex-row items-center justify-center gap-1.5">
+          {items.map((item, i) => (
+            <Dot key={item.id} index={i} scrollX={scrollX} stride={stride} />
           ))}
         </View>
       ) : null}
@@ -180,58 +81,125 @@ export function HeroSection({
   );
 }
 
-function HeroSlide({
-  station,
-  colors,
-}: {
+interface HeroSlideProps {
   station: Station;
-  colors: ThemeColors;
-}) {
-  const handlePress = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    usePlayerStore.getState().setPending(station.id);
-    router.push({
-      pathname: "/station/[id]" as const,
-      params: { id: station.id },
-    } as never);
-  }, [station.id]);
+  index: number;
+  scrollX: SharedValue<number>;
+  width: number;
+  height: number;
+  stride: number;
+}
+
+function HeroSlide({ station, index, scrollX, width, height, stride }: HeroSlideProps) {
+  const router = useRouter();
+
+  const cardStyle = useAnimatedStyle(() => {
+    const d = scrollX.get() / stride - index;
+    return {
+      transform: [{ scale: interpolate(Math.abs(d), [0, 1], [1, 0.92], Extrapolation.CLAMP) }],
+      opacity: interpolate(Math.abs(d), [0, 1], [1, 0.6], Extrapolation.CLAMP),
+    };
+  });
+
+  // Artwork drifts slower than the card for a parallax depth effect.
+  const artStyle = useAnimatedStyle(() => {
+    const d = scrollX.get() / stride - index;
+    return {
+      transform: [{ translateX: interpolate(d, [-1, 0, 1], [-PARALLAX, 0, PARALLAX], Extrapolation.CLAMP) }],
+    };
+  });
 
   return (
-    <Pressable
-      onPress={handlePress}
-      accessibilityRole="button"
-      accessibilityLabel={`Play ${station.name}`}
-      style={({ pressed }) => [{ width: CARD_WIDTH, opacity: pressed ? 0.92 : 1 }]}
-    >
-      <View
-        style={{
-          height: CARD_HEIGHT,
-          borderRadius: HERO_IMAGE_RADIUS,
-          overflow: "hidden",
-          backgroundColor: colors.surface,
-          shadowColor: "#000",
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 4,
-          elevation: 3,
-        }}
+    <Animated.View style={[{ width, height }, cardStyle]}>
+      <PressableScale
+        onPress={() => openStation(router, station)}
+        accessibilityRole="button"
+        accessibilityLabel={`Play ${station.name}`}
+        scaleTo={0.98}
+        style={[styles.card, { width, height }]}
       >
-        <StationArtwork station={station} variant="hero" style={{ flex: 1 }} />
-      </View>
-      <Text
-        numberOfLines={2}
-        style={{
-          paddingTop: 18,
-          textAlign: "center",
-          color: colors.textPrimary,
-          fontSize: 14,
-          fontWeight: "600",
-          letterSpacing: 0.2,
-          paddingHorizontal: 4,
-        }}
-      >
-        {station.name}
-      </Text>
-    </Pressable>
+        <Animated.View
+          style={[
+            { position: "absolute", top: 0, bottom: 0, left: -PARALLAX, width: width + PARALLAX * 2 },
+            artStyle,
+          ]}
+        >
+          <StationArtwork station={station} variant="hero" />
+        </Animated.View>
+        <LinearGradient
+          colors={SCRIM}
+          locations={SCRIM_LOCATIONS}
+          style={StyleSheet.absoluteFill}
+          pointerEvents="none"
+        />
+
+        <View className="flex-row items-start justify-between p-4">
+          <View className="rounded-full bg-black/45 px-2.5 py-1">
+            <Text className="text-[10px] font-bold uppercase tracking-widest text-white">
+              Featured
+            </Text>
+          </View>
+          <FavouriteButton stationId={station.id} size={17} />
+        </View>
+
+        <View className="mt-auto flex-row items-end gap-3 p-4">
+          <View className="flex-1 gap-1.5">
+            <TypePill type={station.type} variant="solid" />
+            <Text numberOfLines={1} className="text-2xl font-bold tracking-tight text-white">
+              {station.name}
+            </Text>
+            {station.description ? (
+              <Text numberOfLines={1} className="text-[13px] text-white/75">
+                {station.description}
+              </Text>
+            ) : null}
+          </View>
+          <PlayChip />
+        </View>
+      </PressableScale>
+    </Animated.View>
   );
 }
+
+function PlayChip() {
+  const { colors } = useTheme();
+  return (
+    <View
+      className="h-12 w-12 items-center justify-center rounded-full bg-white"
+      style={styles.playShadow}
+    >
+      <HugeiconsIcon icon={PlayIcon} size={20} color={colors.primary} fill={colors.primary} />
+    </View>
+  );
+}
+
+function Dot({ index, scrollX, stride }: { index: number; scrollX: SharedValue<number>; stride: number }) {
+  const { colors } = useTheme();
+  const style = useAnimatedStyle(() => {
+    const d = Math.abs(scrollX.get() / stride - index);
+    return {
+      width: interpolate(d, [0, 1], [22, 6], Extrapolation.CLAMP),
+      opacity: interpolate(d, [0, 1], [1, 0.35], Extrapolation.CLAMP),
+    };
+  });
+  return (
+    <Animated.View
+      style={[{ height: 6, borderRadius: 3, backgroundColor: colors.textPrimary }, style]}
+    />
+  );
+}
+
+const styles = StyleSheet.create({
+  card: {
+    borderRadius: 28,
+    borderCurve: "continuous",
+    overflow: "hidden",
+  },
+  playShadow: {
+    shadowColor: "#000",
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 6,
+  },
+});

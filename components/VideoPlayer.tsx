@@ -1,5 +1,10 @@
+import { LiveDot } from "@/components/ui/LiveDot";
+import { Slider } from "@/components/ui/Slider";
+import { Text } from "@/components/ui/Text";
+import { duration } from "@/lib/motion";
 import { useTheme } from "@/lib/useTheme";
 import {
+  ArrowDown01Icon,
   ArrowLeft01Icon,
   FullscreenIcon,
   MinimizeScreenIcon,
@@ -13,22 +18,19 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import * as Haptics from "expo-haptics";
 import * as ScreenOrientation from "expo-screen-orientation";
-import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Modal,
   Pressable,
   StatusBar,
-  Text,
   View,
 } from "react-native";
-import {
-  Gesture,
-  GestureDetector,
-  GestureHandlerRootView,
-} from "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, {
+  FadeIn,
+  FadeOut,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
@@ -49,7 +51,6 @@ interface VideoPlayerProps {
 }
 
 const CONTROLS_TIMEOUT = 4000;
-const VOLUME_SLIDER_WIDTH = 120;
 const HIT_SLOP = 16;
 
 type PlaybackStatus =
@@ -114,27 +115,31 @@ export function VideoPlayer({ streamUrl, onError, onReady, borderless = false, o
     if (hideTimer.current) clearTimeout(hideTimer.current);
     hideTimer.current = setTimeout(() => {
       if (!mountedRef.current) return;
-      controlsOpacity.value = withTiming(0, { duration: 300 }, (finished) => {
-        "worklet";
-        if (finished) runOnJS(safeSetControlsVisible)(false);
-      });
+      controlsOpacity.set(
+        withTiming(0, { duration: 300 }, (finished) => {
+          "worklet";
+          if (finished) runOnJS(safeSetControlsVisible)(false);
+        })
+      );
       setShowVolumeSlider(false);
     }, CONTROLS_TIMEOUT);
   }, [controlsOpacity, safeSetControlsVisible]);
 
   const showControls = useCallback(() => {
     safeSetControlsVisible(true);
-    controlsOpacity.value = withTiming(1, { duration: 200 });
+    controlsOpacity.set(withTiming(1, { duration: 200 }));
     scheduleHide();
   }, [controlsOpacity, scheduleHide, safeSetControlsVisible]);
 
   const toggleControls = useCallback(() => {
     if (controlsVisible) {
       if (hideTimer.current) clearTimeout(hideTimer.current);
-      controlsOpacity.value = withTiming(0, { duration: 300 }, (finished) => {
-        "worklet";
-        if (finished) runOnJS(safeSetControlsVisible)(false);
-      });
+      controlsOpacity.set(
+        withTiming(0, { duration: 300 }, (finished) => {
+          "worklet";
+          if (finished) runOnJS(safeSetControlsVisible)(false);
+        })
+      );
       setShowVolumeSlider(false);
     } else {
       showControls();
@@ -214,21 +219,10 @@ export function VideoPlayer({ streamUrl, onError, onReady, borderless = false, o
     showControls();
   }, [showControls]);
 
-  // Volume slider gesture — memoized so it isn't recreated each render
-  const volumeGesture = useMemo(
-    () =>
-      Gesture.Pan()
-        .onUpdate((e) => {
-          "worklet";
-          const pct = Math.min(1, Math.max(0, e.x / VOLUME_SLIDER_WIDTH));
-          runOnJS(setVolume)(pct);
-        })
-        .onEnd(() => {
-          "worklet";
-          runOnJS(scheduleHide)();
-        }),
-    [scheduleHide],
-  );
+  // Keep controls up while the volume is being adjusted
+  useEffect(() => {
+    if (showVolumeSlider) scheduleHide();
+  }, [volume, showVolumeSlider, scheduleHide]);
 
   const volumeIcon =
     volume === 0
@@ -271,8 +265,8 @@ export function VideoPlayer({ streamUrl, onError, onReady, borderless = false, o
             accessibilityRole="button"
             accessibilityLabel="Retry loading stream"
           >
-            <HugeiconsIcon icon={ReloadIcon} size={18} color="#fff" />
-            <Text className="font-semibold text-white">Retry</Text>
+            <HugeiconsIcon icon={ReloadIcon} size={18} color={colors.onPrimary} />
+            <Text className="font-semibold text-primary-foreground">Retry</Text>
           </Pressable>
         </View>
       )}
@@ -305,10 +299,10 @@ export function VideoPlayer({ streamUrl, onError, onReady, borderless = false, o
                       className="rounded-full bg-black/50 p-2"
                       hitSlop={HIT_SLOP}
                       accessibilityRole="button"
-                      accessibilityLabel="Go back"
+                      accessibilityLabel="Close player"
                     >
                       <HugeiconsIcon
-                        icon={ArrowLeft01Icon}
+                        icon={ArrowDown01Icon}
                         size={20}
                         color="#fff"
                       />
@@ -332,37 +326,21 @@ export function VideoPlayer({ streamUrl, onError, onReady, borderless = false, o
 
                 {/* Volume slider */}
                 {showVolumeSlider && (
-                  <View className="absolute right-14 top-3.5 flex-row items-center">
-                    <View className="h-8 w-[120px] overflow-hidden rounded-full bg-black/60">
-                      <GestureDetector gesture={volumeGesture}>
-                        <Pressable
-                          onPress={(e) => {
-                            const pct = Math.min(
-                              1,
-                              Math.max(0, e.nativeEvent.locationX / VOLUME_SLIDER_WIDTH),
-                            );
-                            setVolume(pct);
-                            showControls();
-                          }}
-                          className="h-8 w-[120px] justify-center"
-                        >
-                          <View className="mx-2 h-1 rounded-full bg-white/30">
-                            <View
-                              className="h-1 rounded-full bg-primary"
-                              style={{ width: `${volume * 100}%` }}
-                            />
-                          </View>
-                          <View
-                            className="absolute h-4 w-4 rounded-full bg-white"
-                            style={{
-                              left: 8 + volume * (VOLUME_SLIDER_WIDTH - 24),
-                              top: 8,
-                            }}
-                          />
-                        </Pressable>
-                      </GestureDetector>
-                    </View>
-                  </View>
+                  <Animated.View
+                    entering={FadeIn.duration(duration.fast)}
+                    exiting={FadeOut.duration(duration.fast)}
+                    className="absolute right-14 top-3 h-9 w-[140px] flex-row items-center rounded-full bg-black/60 px-3"
+                  >
+                    <Slider
+                      value={volume}
+                      onChange={(v) => {
+                        setVolume(v);
+                        showControls();
+                      }}
+                      trackColor="rgba(255,255,255,0.3)"
+                      height={36}
+                    />
+                  </Animated.View>
                 )}
 
                 {/* Center play/pause */}
@@ -385,9 +363,9 @@ export function VideoPlayer({ streamUrl, onError, onReady, borderless = false, o
 
                 {/* Bottom bar — live badge + fullscreen */}
                 <View className="flex-row items-center justify-between px-4 pb-3">
-                  <View className="flex-row items-center gap-2">
-                    <View className="h-2 w-2 rounded-full bg-primary" />
-                    <Text className="text-xs font-semibold uppercase text-white">
+                  <View className="flex-row items-center gap-1.5 rounded-md bg-error px-2 py-1">
+                    <LiveDot color="#FFFFFF" size={6} />
+                    <Text className="text-[11px] font-bold uppercase tracking-widest text-white">
                       Live
                     </Text>
                   </View>

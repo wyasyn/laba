@@ -16,7 +16,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#0A0A0F",
+        "backgroundColor": "#0F172A",
         "foregroundImage": "./assets/images/icon.png",
         "monochromeImage": "./assets/images/icon-monochrome.png"
       },
@@ -43,11 +43,52 @@
           "image": "./assets/images/splash.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#0A0A0F"
+          "backgroundColor": "#0F172A"
         }
       ],
       "expo-secure-store",
-      "expo-audio"
+      "expo-audio",
+      [
+        "expo-font",
+        {
+          "ios": {
+            "fonts": [
+              "./assets/fonts/Inter_400Regular.ttf",
+              "./assets/fonts/Inter_500Medium.ttf",
+              "./assets/fonts/Inter_600SemiBold.ttf",
+              "./assets/fonts/Inter_700Bold.ttf"
+            ]
+          },
+          "android": {
+            "fonts": [
+              {
+                "fontFamily": "Inter",
+                "fontDefinitions": [
+                  {
+                    "path": "./assets/fonts/Inter_400Regular.ttf",
+                    "weight": 400
+                  },
+                  {
+                    "path": "./assets/fonts/Inter_500Medium.ttf",
+                    "weight": 500
+                  },
+                  {
+                    "path": "./assets/fonts/Inter_600SemiBold.ttf",
+                    "weight": 600
+                  },
+                  {
+                    "path": "./assets/fonts/Inter_700Bold.ttf",
+                    "weight": 700
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "expo-image",
+      "expo-status-bar",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,
