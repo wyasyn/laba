@@ -7,7 +7,7 @@ import { useRouter } from "expo-router";
 import { memo } from "react";
 import { View } from "react-native";
 import Animated from "react-native-reanimated";
-import { StationCard } from "./StationCard";
+import { CARD_META_HEIGHT, StationCard } from "./StationCard";
 
 interface CategoryRowProps {
   title: string;
@@ -18,8 +18,8 @@ interface CategoryRowProps {
   index?: number;
 }
 
-const CARD_WIDTH = 150;
-const ROW_HEIGHT = (CARD_WIDTH * 4) / 3 + 12;
+const CARD_WIDTH = 148;
+const ROW_HEIGHT = CARD_WIDTH + CARD_META_HEIGHT + 12;
 const CONTENT_CONTAINER_STYLE = { paddingHorizontal: 20, paddingTop: 12 } as const;
 
 function Gap() {

@@ -1,87 +1,113 @@
 import { FavouriteButton } from "@/components/FavouriteButton";
+import { StationTypeIcon } from "@/components/icons/StationTypeIcon";
 import { StationArtwork } from "@/components/StationArtwork";
-import { LiveDot } from "@/components/ui/LiveDot";
+import { Equalizer } from "@/components/ui/Equalizer";
 import { PressableScale } from "@/components/ui/PressableScale";
 import { Text } from "@/components/ui/Text";
-import { TypePill } from "@/components/ui/TypePill";
 import type { Station } from "@/lib/schemas";
+import { useTheme } from "@/lib/useTheme";
 import { usePlayerStore } from "@/stores/usePlayerStore";
-import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { memo } from "react";
 import { StyleSheet, View } from "react-native";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 interface StationCardProps {
   station: Station;
   /** Show the favourite toggle on the artwork. */
   showFavourite?: boolean;
-  aspectRatio?: number;
 }
 
-const RADIUS = 22;
-const SCRIM = ["transparent", "rgba(0,0,0,0.25)", "rgba(0,0,0,0.85)"] as const;
-const SCRIM_LOCATIONS = [0.35, 0.6, 1] as const;
+export const CARD_RADIUS = 20;
+/** Height of the name and meta lines under the artwork. Rows size themselves from this. */
+export const CARD_META_HEIGHT = 50;
 
 export function openStation(router: ReturnType<typeof useRouter>, station: Station) {
   usePlayerStore.getState().setPending(station.id);
   router.push({ pathname: "/station/[id]", params: { id: station.id } });
 }
 
-export const StationCard = memo(function StationCard({
-  station,
-  showFavourite = true,
-  aspectRatio = 3 / 4,
-}: StationCardProps) {
+function metaLabel(station: Station) {
+  const kind = station.type === "tv" ? "Live TV" : "Radio";
+  const category = station.categories[0];
+  return category ? `${kind} · ${category.charAt(0).toUpperCase()}${category.slice(1)}` : kind;
+}
+
+export const StationCard = memo(function StationCard({ station, showFavourite = true }: StationCardProps) {
   const router = useRouter();
+  const { colors } = useTheme();
   const isOnAir = usePlayerStore(
     (s) => s.currentStation?.id === station.id && s.status === "playing",
   );
+  const accent = station.type === "tv" ? colors.primary : colors.success;
 
   return (
     <PressableScale
       onPress={() => openStation(router, station)}
       accessibilityRole="button"
-      accessibilityLabel={`Play ${station.name}`}
+      accessibilityLabel={`Play ${station.name}, ${station.type === "tv" ? "TV channel" : "radio station"}`}
       scaleTo={0.965}
-      style={[styles.card, { aspectRatio }]}
     >
-      <StationArtwork station={station} variant="tile" style={StyleSheet.absoluteFill} />
-      <LinearGradient
-        colors={SCRIM}
-        locations={SCRIM_LOCATIONS}
-        style={StyleSheet.absoluteFill}
-        pointerEvents="none"
-      />
+      <View style={[styles.art, { backgroundColor: colors.surfaceLight }]}>
+        <StationArtwork station={station} variant="tile" />
 
-      <View className="flex-row items-start justify-between p-2.5">
+        <View style={StyleSheet.absoluteFill} className="flex-row items-start justify-between p-2">
+          {isOnAir ? (
+            <Animated.View
+              entering={FadeIn.duration(200)}
+              exiting={FadeOut.duration(200)}
+              className="h-7 flex-row items-center gap-1.5 rounded-full px-2.5"
+              style={{ backgroundColor: colors.primary }}
+            >
+              <Equalizer size={10} color={colors.onPrimary} />
+              <Text className="text-[11px] font-bold text-primary-foreground">Playing</Text>
+            </Animated.View>
+          ) : (
+            <View />
+          )}
+          {showFavourite ? <FavouriteButton stationId={station.id} size={14} /> : null}
+        </View>
+
+        {/* On-air ring sits above the artwork so it is never clipped by it. */}
         {isOnAir ? (
-          <View className="flex-row items-center gap-1.5 rounded-full bg-black/55 px-2 py-1">
-            <LiveDot size={6} />
-            <Text className="text-[10px] font-bold uppercase tracking-widest text-white">
-              On air
-            </Text>
-          </View>
-        ) : (
-          <View />
-        )}
-        {showFavourite ? <FavouriteButton stationId={station.id} size={15} /> : null}
+          <View
+            pointerEvents="none"
+            style={[StyleSheet.absoluteFill, styles.ring, { borderColor: colors.primary }]}
+          />
+        ) : null}
       </View>
 
-      <View className="mt-auto gap-1.5 p-3">
-        <TypePill type={station.type} variant="solid" />
-        <Text numberOfLines={2} className="text-[15px] font-bold leading-[19px] text-white">
+      <View style={styles.meta}>
+        <Text numberOfLines={1} className="text-[15px] font-semibold leading-5 tracking-tight">
           {station.name}
         </Text>
+        <View className="mt-1 flex-row items-center gap-1.5">
+          <StationTypeIcon type={station.type} size={13} color={accent} strokeWidth={2} />
+          <Text numberOfLines={1} className="flex-1 text-[12px] font-medium leading-4 text-text-secondary">
+            {metaLabel(station)}
+          </Text>
+        </View>
       </View>
     </PressableScale>
   );
 });
 
 const styles = StyleSheet.create({
-  card: {
+  art: {
     width: "100%",
-    borderRadius: RADIUS,
-    overflow: "hidden",
+    aspectRatio: 1,
+    borderRadius: CARD_RADIUS,
     borderCurve: "continuous",
+    overflow: "hidden",
+  },
+  ring: {
+    borderRadius: CARD_RADIUS,
+    borderCurve: "continuous",
+    borderWidth: 2.5,
+  },
+  meta: {
+    height: CARD_META_HEIGHT,
+    paddingTop: 9,
+    paddingHorizontal: 2,
   },
 });

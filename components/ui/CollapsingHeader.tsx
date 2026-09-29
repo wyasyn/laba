@@ -32,10 +32,13 @@ export function CompactHeader({
   title,
   scrollY,
   right,
+  divider = true,
 }: {
   title: string;
   scrollY: SharedValue<number>;
   right?: ReactNode;
+  /** Hairline under the bar. Turn off when something pins directly below it. */
+  divider?: boolean;
 }) {
   const insets = useSafeAreaInsets();
 
@@ -59,14 +62,17 @@ export function CompactHeader({
     >
       <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill, bgStyle]}>
         <GlassView style={StyleSheet.absoluteFill} intensity={60} />
-        <View className="absolute bottom-0 left-0 right-0 h-px bg-border" />
+        {divider ? <View className="absolute bottom-0 left-0 right-0 h-px bg-border" /> : null}
       </Animated.View>
       <View pointerEvents="box-none" className="flex-1 flex-row items-center justify-between px-5">
-        <View className="w-10" />
+        {/* Equal flexible sides keep the title centred whatever sits on the right. */}
+        <View className="flex-1" />
         <Animated.View style={titleStyle}>
           <Text className="text-[16px] font-semibold">{title}</Text>
         </Animated.View>
-        <View className="w-10 items-end">{right}</View>
+        <View pointerEvents="box-none" className="flex-1 flex-row items-center justify-end gap-2">
+          {right}
+        </View>
       </View>
     </View>
   );

@@ -4,35 +4,37 @@
 
 /* Web fallback only. Native reads these from constants/theme.ts via useThemeVars. */
 :root {
-  --background: 245 245 248;
+  --background: 248 250 252;
   --surface: 255 255 255;
-  --surface-light: 237 237 242;
+  --surface-light: 229 231 235;
   --surface-elevated: 255 255 255;
-  --primary: 229 9 20;
-  --primary-light: 255 45 56;
-  --text-primary: 11 11 16;
-  --text-secondary: 95 95 116;
-  --text-tertiary: 154 154 171;
-  --border: 227 227 234;
-  --success: 22 163 74;
+  --primary: 99 102 241;
+  --primary-light: 129 140 248;
+  --on-primary: 255 255 255;
+  --text-primary: 30 41 59;
+  --text-secondary: 107 114 128;
+  --text-tertiary: 156 163 175;
+  --border: 209 213 219;
+  --success: 16 185 129;
   --warning: 217 119 6;
-  --error: 220 38 38;
+  --error: 239 68 68;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: 9 9 13;
-    --surface: 19 19 25;
-    --surface-light: 27 27 35;
-    --surface-elevated: 34 34 44;
-    --primary: 229 9 20;
-    --primary-light: 255 45 56;
-    --text-primary: 245 245 247;
-    --text-secondary: 154 154 171;
-    --text-tertiary: 98 98 122;
-    --border: 36 36 47;
-    --success: 34 197 94;
-    --warning: 245 158 11;
+    --background: 15 23 42;
+    --surface: 30 41 59;
+    --surface-light: 45 55 72;
+    --surface-elevated: 55 65 81;
+    --primary: 129 140 248;
+    --primary-light: 165 180 252;
+    --on-primary: 15 23 42;
+    --text-primary: 226 232 240;
+    --text-secondary: 156 163 175;
+    --text-tertiary: 107 114 128;
+    --border: 55 65 81;
+    --success: 52 211 153;
+    --warning: 251 191 36;
     --error: 239 68 68;
   }
 }

@@ -127,7 +127,7 @@ export function AudioPlayer({ station }: { station: Station }) {
           onPress={togglePlayback}
           size={80}
           background={colors.primary}
-          color="#FFFFFF"
+          color={colors.onPrimary}
         />
         <IconButton
           icon={StopIcon}
@@ -140,9 +140,8 @@ export function AudioPlayer({ station }: { station: Station }) {
       </View>
 
       <View className="mt-8 w-full flex-row items-center gap-3 px-8">
-        <HugeiconsIcon icon={VolumeLowIcon} size={16} color={colors.textSecondary} />
+        <HugeiconsIcon icon={volumeIcon} size={18} color={colors.textSecondary} />
         <Slider value={volume} onChange={setVolume} accessibilityLabel="Volume" />
-        <HugeiconsIcon icon={VolumeHighIcon} size={16} color={colors.textSecondary} />
       </View>
 
       {status === "error" ? (
