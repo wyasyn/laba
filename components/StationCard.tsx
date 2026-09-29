@@ -61,7 +61,7 @@ export const StationCard = memo(function StationCard({
           <StationArtwork
             station={station}
             variant="tile"
-            style={StyleSheet.absoluteFillObject}
+            style={StyleSheet.absoluteFill}
           />
         </View>
       </Pressable>

@@ -96,30 +96,22 @@ export function AudioPlayer({ station, onError }: AudioPlayerProps) {
   const isPlaying = status.playing;
   const isLoading = !status.isLoaded || status.isBuffering;
 
-  // Reload stream when URL changes, then auto-play
+  // Auto-play on mount. The parent keys this component by station, so a new
+  // stream remounts it with fresh state and a fresh player.
   useEffect(() => {
-    setHasError(false);
-    setErrorMessage(null);
-    setIsStopped(false);
-    try {
-      player.replace({ uri: streamUrl });
-      player.play();
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : "Stream failed to load";
-      setHasError(true);
-      setErrorMessage(msg);
-      onError?.(msg);
-    }
+    player.play();
     return () => {
       try {
         player.pause();
       } catch {}
     };
-  }, [streamUrl, player, onError]);
+  }, [player]);
 
   // Sync volume
   useEffect(() => {
     try {
+      // expo-audio only exposes volume as a settable property on the player
+      // eslint-disable-next-line react-hooks/immutability
       player.volume = volume;
     } catch {}
   }, [volume, player]);
@@ -252,12 +244,12 @@ export function AudioPlayer({ station, onError }: AudioPlayerProps) {
           style={discStyle}
         >
           <Animated.View
-            style={[StyleSheet.absoluteFillObject, discInnerStyle]}
+            style={[StyleSheet.absoluteFill, discInnerStyle]}
           >
             <StationArtwork
               station={station}
               variant="disc"
-              style={StyleSheet.absoluteFillObject}
+              style={StyleSheet.absoluteFill}
             />
           </Animated.View>
 

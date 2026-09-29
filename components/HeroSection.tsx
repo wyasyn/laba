@@ -54,13 +54,14 @@ export function HeroSection({
 
   const focusIndex = useMemo(() => getHeroFocusIndex(items.length), [items.length]);
 
-  const [activeIndex, setActiveIndex] = useState(() =>
-    getHeroFocusIndex(featuredStations.slice(0, HERO_MAX_ITEMS).length),
-  );
+  const [activeIndex, setActiveIndex] = useState(focusIndex);
+  const [prevItemIdsKey, setPrevItemIdsKey] = useState(itemIdsKey);
 
-  useEffect(() => {
+  // Reset the active slide during render when the slide set changes
+  if (prevItemIdsKey !== itemIdsKey) {
+    setPrevItemIdsKey(itemIdsKey);
     setActiveIndex(focusIndex);
-  }, [focusIndex, itemIdsKey]);
+  }
 
   useEffect(() => {
     if (items.length < 3 || focusIndex >= items.length) return;

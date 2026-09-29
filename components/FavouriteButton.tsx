@@ -34,9 +34,8 @@ export function FavouriteButton({
   }));
 
   const handlePress = () => {
-    scale.value = withSequence(
-      withSpring(1.3, { damping: 4 }),
-      withSpring(1, { damping: 6 })
+    scale.set(
+      withSequence(withSpring(1.3, { damping: 4 }), withSpring(1, { damping: 6 }))
     );
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     toggle(stationId);

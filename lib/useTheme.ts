@@ -11,7 +11,7 @@ export interface Theme {
 }
 
 function useResolvedScheme(mode: ThemeMode): "light" | "dark" {
-  const [systemScheme, setSystemScheme] = useState<ColorSchemeName>(
+  const [systemScheme, setSystemScheme] = useState<ColorSchemeName | null | undefined>(
     Appearance.getColorScheme()
   );
 

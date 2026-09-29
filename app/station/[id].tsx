@@ -33,6 +33,17 @@ export default function StationScreen() {
     return () => stop();
   }, [station, play, stop]);
 
+  const relatedStations = useMemo(() => {
+    if (!station) return [];
+    return stations
+      .filter((candidate) => {
+        if (candidate.id === station.id) return false;
+        if (candidate.type !== station.type) return false;
+        return candidate.categories.some((cat) => station.categories.includes(cat));
+      })
+      .slice(0, 10);
+  }, [stations, station]);
+
   if (!station) {
     return (
       <SafeAreaView className="flex-1 items-center justify-center bg-background">
@@ -46,17 +57,6 @@ export default function StationScreen() {
 
   const isTv = station.type === "tv";
   const badgeColor = isTv ? colors.primary : colors.success;
-  const relatedStations = useMemo(
-    () =>
-      stations
-        .filter((candidate) => {
-          if (candidate.id === station.id) return false;
-          if (candidate.type !== station.type) return false;
-          return candidate.categories.some((cat) => station.categories.includes(cat));
-        })
-        .slice(0, 10),
-    [stations, station],
-  );
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={isTv ? ["top"] : undefined}>
@@ -124,7 +124,7 @@ export default function StationScreen() {
           )
         ) : (
           <View className="px-4">
-            <AudioPlayer station={station} />
+            <AudioPlayer key={station.id} station={station} />
           </View>
         )}
 
