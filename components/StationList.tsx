@@ -1,120 +1,139 @@
+import { CompactHeader, COMPACT_BAR_HEIGHT, LargeTitle, useCollapsingHeader } from "@/components/ui/CollapsingHeader";
+import { FilterChips } from "@/components/ui/FilterChips";
+import { ShimmerGroup } from "@/components/ui/Shimmer";
 import type { Station, StationType } from "@/lib/schemas";
+import { hasCategory, matchesQuery, topCategories } from "@/lib/search";
 import { useDebounce } from "@/lib/useDebounce";
+import { useTheme } from "@/lib/useTheme";
 import { useStationStore } from "@/stores/useStationStore";
-import { ReactElement, useCallback, useMemo, useRef, useState } from "react";
-import { FlatList, TextInput, View } from "react-native";
+import { FlashList, type ListRenderItemInfo } from "@shopify/flash-list";
+import { useMemo, useState, type ReactNode } from "react";
+import { RefreshControl, View } from "react-native";
+import Animated from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { EmptyState } from "./EmptyState";
+import { RefreshIndicator } from "./RefreshIndicator";
 import { SearchBar } from "./SearchBar";
-import { SkeletonRowCard } from "./SkeletonCard";
+import { SkeletonCard } from "./SkeletonCard";
 import { StationCard } from "./StationCard";
 
+const AnimatedFlashList = Animated.createAnimatedComponent(FlashList<Station>);
+
 interface StationListProps {
-  header: ReactElement;
   type: StationType;
+  title: string;
+  subtitle: string;
 }
 
-const COLUMN_WRAPPER_STYLE = {
-  justifyContent: "space-between",
-  paddingHorizontal: 16,
-  marginBottom: 10,
-} as const;
+/** Bottom padding so the last row clears the tab bar and the mini-player. */
+export const LIST_BOTTOM_PADDING = 180;
 
-const CONTENT_CONTAINER_STYLE = { paddingBottom: 20 } as const;
+function keyExtractor(item: Station) {
+  return item.id;
+}
 
-export function StationList({ type, header }: StationListProps) {
+/** Two-column cell with even gutters (20 outside, 12 between). */
+export function GridCell({ index, children }: { index: number; children: ReactNode }) {
+  const left = index % 2 === 0;
+  return (
+    <View style={{ paddingLeft: left ? 20 : 6, paddingRight: left ? 6 : 20, paddingBottom: 12 }}>
+      {children}
+    </View>
+  );
+}
+
+function renderItem({ item, index }: ListRenderItemInfo<Station>) {
+  return (
+    <GridCell index={index}>
+      <StationCard station={item} />
+    </GridCell>
+  );
+}
+
+export function StationList({ type, title, subtitle }: StationListProps) {
+  const { colors } = useTheme();
+  const insets = useSafeAreaInsets();
+  const { scrollY, onScroll } = useCollapsingHeader();
+
   const isLoading = useStationStore((s) => s.isLoading);
   const isRefreshing = useStationStore((s) => s.isRefreshing);
   const refreshStations = useStationStore((s) => s.refreshStations);
-  const sourceStations = useStationStore((s) =>
-    type === "tv" ? s.tvStations : s.radioStations,
-  );
+  const sourceStations = useStationStore((s) => (type === "tv" ? s.tvStations : s.radioStations));
 
   const [searchQuery, setSearchQuery] = useState("");
-  const debouncedQuery = useDebounce(searchQuery, 250);
-  const searchRef = useRef<TextInput>(null);
+  const [category, setCategory] = useState<string | null>(null);
+  const debouncedQuery = useDebounce(searchQuery, 200);
 
-  const stations = useMemo(() => {
-    const q = debouncedQuery.toLowerCase().trim();
-    if (!q) return sourceStations;
-    return sourceStations.filter(
-      (s) =>
-        s.name.toLowerCase().includes(q) ||
-        s.description.toLowerCase().includes(q) ||
-        s.categories.some((c) => c.toLowerCase().includes(q)),
-    );
-  }, [sourceStations, debouncedQuery]);
+  const categories = useMemo(() => topCategories(sourceStations), [sourceStations]);
 
-  const keyExtractor = useCallback((item: Station) => item.id, []);
-
-  const renderItem = useCallback(
-    ({ item }: { item: Station }) => (
-      <View className="w-[48%]">
-        <StationCard station={item} />
-      </View>
-    ),
-    [],
+  const stations = useMemo(
+    () =>
+      sourceStations.filter(
+        (s) => matchesQuery(s, debouncedQuery) && (category === null || hasCategory(s, category)),
+      ),
+    [sourceStations, debouncedQuery, category],
   );
 
-  const placeholder = useMemo(
-    () => `Search ${type === "tv" ? "TV" : "radio"} stations...`,
-    [type],
-  );
+  const showSkeleton = isLoading && sourceStations.length === 0;
 
-  const listHeader = useMemo(() => <View>{header}</View>, [header]);
-
-  if (isLoading && stations.length === 0) {
-    return (
-      <View className="flex-1 bg-background">
-        {header}
-        <SearchBar
-          ref={searchRef}
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          placeholder={placeholder}
-          variant="pill"
-        />
-        <View className="flex-row flex-wrap justify-between px-4 pt-6">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <View key={i} className="w-[48%]">
-              <SkeletonRowCard />
-            </View>
-          ))}
-        </View>
+  const header = (
+    <View>
+      <LargeTitle
+        title={title}
+        subtitle={subtitle}
+        scrollY={scrollY}
+        accessory={<RefreshIndicator />}
+      />
+      <SearchBar
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        placeholder={`Search ${type === "tv" ? "TV channels" : "radio stations"}`}
+      />
+      <View className="pb-4 pt-3">
+        <FilterChips options={categories} selected={category} onSelect={setCategory} />
       </View>
-    );
-  }
+      {showSkeleton ? (
+        <ShimmerGroup>
+          <View className="flex-row flex-wrap">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <View key={i} style={{ width: "50%" }}>
+                <GridCell index={i}>
+                  <SkeletonCard />
+                </GridCell>
+              </View>
+            ))}
+          </View>
+        </ShimmerGroup>
+      ) : null}
+    </View>
+  );
 
   return (
     <View className="flex-1 bg-background">
-      <FlatList
-        data={stations}
+      <AnimatedFlashList
+        data={showSkeleton ? [] : stations}
         keyExtractor={keyExtractor}
         numColumns={2}
-        columnWrapperStyle={COLUMN_WRAPPER_STYLE}
         renderItem={renderItem}
-        initialNumToRender={8}
-        maxToRenderPerBatch={8}
-        windowSize={5}
-        removeClippedSubviews
-        ListHeaderComponent={
-          <>
-            {listHeader}
-            <SearchBar
-              ref={searchRef}
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              placeholder={placeholder}
-              variant="pill"
-            />
-            <View className="h-2" />
-          </>
-        }
-        ListEmptyComponent={<EmptyState />}
+        ListHeaderComponent={header}
+        ListEmptyComponent={showSkeleton ? null : <EmptyState />}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={CONTENT_CONTAINER_STYLE}
-        refreshing={isRefreshing}
-        onRefresh={refreshStations}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingBottom: LIST_BOTTOM_PADDING }}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={refreshStations}
+            tintColor={colors.primary}
+            colors={[colors.primary]}
+            progressViewOffset={insets.top + COMPACT_BAR_HEIGHT}
+          />
+        }
       />
+      <CompactHeader title={title} scrollY={scrollY} />
     </View>
   );
 }

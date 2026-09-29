@@ -1,366 +1,221 @@
-import type { ThemePalette } from "@/constants/theme";
 import { StationArtwork } from "@/components/StationArtwork";
+import { IconButton } from "@/components/ui/IconButton";
+import { LiveDot } from "@/components/ui/LiveDot";
+import { PlayPauseButton } from "@/components/ui/PlayPauseButton";
+import { Slider } from "@/components/ui/Slider";
+import { Text } from "@/components/ui/Text";
+import { duration, spring } from "@/lib/motion";
 import type { Station } from "@/lib/schemas";
 import { useTheme } from "@/lib/useTheme";
+import { usePlayerStore } from "@/stores/usePlayerStore";
 import {
-  PauseIcon,
-  PlayCircleIcon,
   StopIcon,
   VolumeHighIcon,
   VolumeLowIcon,
   VolumeMuteIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
-import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { useEffect } from "react";
+import { StyleSheet, View, useWindowDimensions } from "react-native";
 import Animated, {
-  cancelAnimation,
   Easing,
-  runOnJS,
+  FadeIn,
+  FadeOut,
+  cancelAnimation,
   useAnimatedStyle,
   useSharedValue,
-  withDelay,
   withRepeat,
-  withSequence,
+  withSpring,
   withTiming,
+  type SharedValue,
 } from "react-native-reanimated";
 
-interface AudioPlayerProps {
-  station: Station;
-  onError?: (error: string) => void;
-}
+const BAR_COUNT = 32;
+// Deterministic per-bar variation so the waveform looks organic but stable.
+const BARS = Array.from({ length: BAR_COUNT }, (_, i) => ({
+  seed: ((i * 37) % 100) / 100,
+  freq: 1 + (i % 3),
+  amp: 0.55 + (((i * 53) % 45) / 100),
+}));
 
-const BAR_COUNT = 40;
-const VOLUME_SLIDER_WIDTH = 200;
-
-const WaveformBar = memo(function WaveformBar({
-  index,
-  isPlaying,
-  colors,
-}: {
-  index: number;
-  isPlaying: boolean;
-  colors: ThemePalette;
-}) {
-  const height = useSharedValue(8);
-
-  useEffect(() => {
-    if (isPlaying) {
-      const minH = 6 + Math.random() * 6;
-      const maxH = 18 + Math.random() * 22;
-      const duration = 300 + Math.random() * 400;
-      height.value = withDelay(
-        index * 25,
-        withRepeat(
-          withSequence(
-            withTiming(maxH, { duration, easing: Easing.inOut(Easing.sin) }),
-            withTiming(minH, { duration: duration * 0.8, easing: Easing.inOut(Easing.sin) })
-          ),
-          -1,
-          true
-        )
-      );
-    } else {
-      cancelAnimation(height);
-      height.value = withTiming(8, { duration: 400 });
-    }
-  }, [isPlaying, height, index]);
-
-  const barStyle = useAnimatedStyle(() => ({
-    height: height.value,
-  }));
-
-  return (
-    <Animated.View
-      className="mx-px w-[3px] rounded-[1.5px]"
-      style={[
-        barStyle,
-        { backgroundColor: isPlaying ? colors.primary : colors.textSecondary },
-      ]}
-    />
-  );
-});
-
-export function AudioPlayer({ station, onError }: AudioPlayerProps) {
-  const streamUrl = station.streamUrl!;
+/**
+ * Full-size radio controls. Playback itself lives in AudioEngine; this view
+ * only reads and drives usePlayerStore, so leaving the screen keeps the music on.
+ */
+export function AudioPlayer({ station }: { station: Station }) {
   const { colors } = useTheme();
-  const player = useAudioPlayer({ uri: streamUrl });
-  const status = useAudioPlayerStatus(player);
-  const [isStopped, setIsStopped] = useState(false);
-  const [volume, setVolume] = useState(1);
-  const [hasError, setHasError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { width } = useWindowDimensions();
+  const status = usePlayerStore((s) => s.status);
+  const error = usePlayerStore((s) => s.error);
+  const volume = usePlayerStore((s) => s.volume);
+  const togglePlayback = usePlayerStore((s) => s.togglePlayback);
+  const stop = usePlayerStore((s) => s.stop);
+  const setVolume = usePlayerStore((s) => s.setVolume);
+  const toggleMute = usePlayerStore((s) => s.toggleMute);
 
-  const isPlaying = status.playing;
-  const isLoading = !status.isLoaded || status.isBuffering;
+  const isPlaying = status === "playing";
+  const artSize = Math.min(width - 72, 340);
 
-  // Auto-play on mount. The parent keys this component by station, so a new
-  // stream remounts it with fresh state and a fresh player.
+  // Artwork breathes to full size while playing and settles back when paused.
+  const artScale = useSharedValue(isPlaying ? 1 : 0.9);
   useEffect(() => {
-    player.play();
-    return () => {
-      try {
-        player.pause();
-      } catch {}
-    };
-  }, [player]);
-
-  // Sync volume
-  useEffect(() => {
-    try {
-      // expo-audio only exposes volume as a settable property on the player
-      // eslint-disable-next-line react-hooks/immutability
-      player.volume = volume;
-    } catch {}
-  }, [volume, player]);
-
-  // Disc rotation animation
-  const rotation = useSharedValue(0);
-
-  useEffect(() => {
-    if (isPlaying) {
-      rotation.value = withRepeat(
-        withTiming(360, { duration: 8000, easing: Easing.linear }),
-        -1,
-        false
-      );
-    } else {
-      cancelAnimation(rotation);
-    }
-  }, [isPlaying, rotation]);
-
-  const discStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${rotation.value}deg` }],
+    artScale.set(withSpring(isPlaying ? 1 : 0.9, spring.gentle));
+  }, [isPlaying, artScale]);
+  const artStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: artScale.get() }],
   }));
 
-  const discInnerStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${-rotation.value}deg` }],
-  }));
+  const statusText =
+    status === "loading"
+      ? "Connecting…"
+      : status === "playing"
+        ? "Live now"
+        : status === "error"
+          ? "Stream unavailable"
+          : status === "idle"
+            ? "Stopped"
+            : "Paused";
 
-  // Glow pulse
-  const glowOpacity = useSharedValue(0);
-
-  useEffect(() => {
-    if (isPlaying) {
-      glowOpacity.value = withRepeat(
-        withTiming(0.6, { duration: 1500 }),
-        -1,
-        true
-      );
-    } else {
-      cancelAnimation(glowOpacity);
-      glowOpacity.value = withTiming(0);
-    }
-  }, [isPlaying, glowOpacity]);
-
-  const glowStyle = useAnimatedStyle(() => ({
-    opacity: glowOpacity.value,
-  }));
-
-  const togglePlayback = useCallback(() => {
-    if (isPlaying) {
-      player.pause();
-    } else {
-      setIsStopped(false);
-      player.play();
-    }
-  }, [isPlaying, player]);
-
-  const stop = useCallback(() => {
-    player.pause();
-    setIsStopped(true);
-  }, [player]);
-
-  const retry = useCallback(() => {
-    try {
-      setHasError(false);
-      setErrorMessage(null);
-      setIsStopped(false);
-      player.replace({ uri: streamUrl });
-      player.play();
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : "Stream failed to load";
-      setHasError(true);
-      setErrorMessage(msg);
-      onError?.(msg);
-    }
-  }, [streamUrl, player, onError]);
-
-  const statusText = isLoading
-    ? "Connecting..."
-    : isPlaying
-      ? "Live"
-      : hasError
-        ? "Stream unavailable"
-        : isStopped
-          ? "Stopped"
-          : "Paused";
-
-  const statusClass = isPlaying
-    ? "text-primary"
-    : hasError
-      ? "text-error"
-      : "text-text-secondary";
-
-  const dotClass = isPlaying
-    ? "bg-primary"
-    : hasError
-      ? "bg-error"
-      : "bg-text-secondary";
-
-  const volumeIcon =
-    volume === 0
-      ? VolumeMuteIcon
-      : volume < 0.5
-        ? VolumeLowIcon
-        : VolumeHighIcon;
-
-  const volumeGesture = useMemo(
-    () =>
-      Gesture.Pan().onUpdate((e) => {
-        "worklet";
-        const pct = Math.min(1, Math.max(0, e.x / VOLUME_SLIDER_WIDTH));
-        runOnJS(setVolume)(pct);
-      }),
-    [],
-  );
-
-  const barIndices = useMemo(() => Array.from({ length: BAR_COUNT }, (_, i) => i), []);
+  const volumeIcon = volume === 0 ? VolumeMuteIcon : volume < 0.5 ? VolumeLowIcon : VolumeHighIcon;
 
   return (
-    <View className="items-center px-4 py-5">
-      {/* Artwork disc */}
-      <View className="relative mb-6 items-center justify-center">
-        {/* Glow ring */}
-        <Animated.View
-          className="absolute h-60 w-60 rounded-full bg-primary"
-          style={glowStyle}
-        />
-
-        <Animated.View
-          className="h-56 w-56 overflow-hidden rounded-full bg-surface-light"
-          style={discStyle}
-        >
-          <Animated.View
-            style={[StyleSheet.absoluteFill, discInnerStyle]}
-          >
-            <StationArtwork
-              station={station}
-              variant="disc"
-              style={StyleSheet.absoluteFill}
-            />
-          </Animated.View>
-
-          {/* Vinyl hole overlay */}
-          <View className="absolute h-10 w-10 rounded-full bg-background" />
-        </Animated.View>
-      </View>
-
-      {/* Status indicator */}
-      <View className="mb-5 flex-row items-center gap-2">
-        {isPlaying && <View className={`h-2 w-2 rounded-full ${dotClass}`} />}
-        <Text className={`text-center text-sm font-medium ${statusClass}`}>
-          {statusText}
-        </Text>
-      </View>
-
-      {/* Waveform visualizer */}
-      <View className="mb-8 h-12 flex-row items-center justify-center">
-        {barIndices.map((i) => (
-          <WaveformBar key={i} index={i} isPlaying={isPlaying} colors={colors} />
-        ))}
-      </View>
-
-      {/* Main controls */}
-      <View className="mb-6 flex-row items-center gap-6">
-        <Pressable
-          onPress={stop}
-          disabled={!isPlaying && !isLoading}
-          className={`rounded-full bg-surface p-4 ${isPlaying || isLoading ? "" : "opacity-40"}`}
-        >
-          <HugeiconsIcon icon={StopIcon} size={28} color={colors.textPrimary} />
-        </Pressable>
-
-        <Pressable
-          onPress={hasError ? retry : togglePlayback}
-          className="rounded-full bg-primary p-6 active:scale-95"
-        >
-          {isLoading ? (
-            <ActivityIndicator size={36} color="#fff" />
-          ) : (
-            <HugeiconsIcon
-              icon={isPlaying ? PauseIcon : PlayCircleIcon}
-              size={36}
-              color="#fff"
-            />
-          )}
-        </Pressable>
-
-        <Pressable
-          onPress={() => setVolume((v) => (v > 0 ? 0 : 1))}
-          className="rounded-full bg-surface p-4"
-        >
-          <HugeiconsIcon icon={volumeIcon} size={28} color={colors.textPrimary} />
-        </Pressable>
-      </View>
-
-      {/* Volume slider */}
-      <View className="w-full flex-row items-center justify-center gap-3 px-4">
-        <HugeiconsIcon icon={VolumeLowIcon} size={16} color={colors.textSecondary} />
-        <View className="h-9 w-[200px] overflow-hidden rounded-full bg-surface">
-          <GestureDetector gesture={volumeGesture}>
-            <Pressable
-              onPress={(e) => {
-                const pct = Math.min(
-                  1,
-                  Math.max(0, e.nativeEvent.locationX / VOLUME_SLIDER_WIDTH)
-                );
-                setVolume(pct);
-              }}
-              className="h-9 w-[200px] justify-center"
-            >
-              {/* Track */}
-              <View className="mx-3 h-1.5 rounded-full bg-border">
-                <View
-                  className="h-1.5 rounded-full bg-primary"
-                  style={{ width: `${volume * 100}%` }}
-                />
-              </View>
-              {/* Thumb */}
-              <View
-                className="absolute h-4 w-4 rounded-full bg-white"
-                style={{
-                  left: 12 + volume * (VOLUME_SLIDER_WIDTH - 32),
-                  top: 10,
-                }}
-              />
-            </Pressable>
-          </GestureDetector>
+    <View className="items-center">
+      <Animated.View
+        style={[
+          styles.artShadow,
+          { width: artSize, height: artSize, borderRadius: 32, shadowColor: colors.primary, backgroundColor: colors.surfaceLight },
+          artStyle,
+        ]}
+      >
+        <View style={[StyleSheet.absoluteFill, { borderRadius: 32, overflow: "hidden", borderCurve: "continuous" }]}>
+          <StationArtwork station={station} variant="disc" />
         </View>
+      </Animated.View>
+
+      <View className="mt-8 w-full px-6">
+        <Text numberOfLines={2} className="text-center text-[26px] font-bold tracking-tight">
+          {station.name}
+        </Text>
+        <View className="mt-2 flex-row items-center justify-center gap-2">
+          {isPlaying ? <LiveDot color={colors.primary} /> : null}
+          <Text
+            className={
+              isPlaying
+                ? "text-sm font-semibold text-primary"
+                : status === "error"
+                  ? "text-sm font-medium text-error"
+                  : "text-sm font-medium text-text-secondary"
+            }
+          >
+            {statusText}
+          </Text>
+        </View>
+      </View>
+
+      <Waveform active={isPlaying} color={colors.primary} idleColor={colors.border} />
+
+      <View className="mt-2 flex-row items-center gap-8">
+        <IconButton
+          icon={volumeIcon}
+          onPress={toggleMute}
+          accessibilityLabel={volume === 0 ? "Unmute" : "Mute"}
+          size={52}
+          iconSize={22}
+        />
+        <PlayPauseButton
+          status={status}
+          onPress={togglePlayback}
+          size={80}
+          background={colors.primary}
+          color="#FFFFFF"
+        />
+        <IconButton
+          icon={StopIcon}
+          onPress={stop}
+          accessibilityLabel="Stop"
+          size={52}
+          iconSize={22}
+          disabled={status === "idle"}
+        />
+      </View>
+
+      <View className="mt-8 w-full flex-row items-center gap-3 px-8">
+        <HugeiconsIcon icon={VolumeLowIcon} size={16} color={colors.textSecondary} />
+        <Slider value={volume} onChange={setVolume} accessibilityLabel="Volume" />
         <HugeiconsIcon icon={VolumeHighIcon} size={16} color={colors.textSecondary} />
       </View>
 
-      {hasError && (
-        <View className="mt-6 items-center px-6">
-          {errorMessage && (
-            <Text className="mb-1 text-center text-sm text-text-secondary">
-              {errorMessage}
-            </Text>
-          )}
-          <Text className="mb-3 text-center text-xs text-text-secondary">
-            Check your connection and try again
+      {status === "error" ? (
+        <Animated.View
+          entering={FadeIn.duration(duration.base)}
+          exiting={FadeOut.duration(duration.fast)}
+          className="mx-6 mt-6 w-auto rounded-2xl border border-error/30 bg-error/10 px-4 py-3"
+        >
+          <Text className="text-center text-sm font-medium">{error ?? "The stream failed to load."}</Text>
+          <Text className="mt-1 text-center text-xs text-text-secondary">
+            Check your connection, then tap play to try again.
           </Text>
-          <Pressable
-            onPress={retry}
-            accessibilityRole="button"
-            accessibilityLabel="Retry loading stream"
-          >
-            <Text className="font-semibold text-primary">Retry</Text>
-          </Pressable>
-        </View>
-      )}
+        </Animated.View>
+      ) : null}
     </View>
   );
 }
+
+function Waveform({ active, color, idleColor }: { active: boolean; color: string; idleColor: string }) {
+  // One clock and one energy value drive every bar.
+  const clock = useSharedValue(0);
+  const energy = useSharedValue(active ? 1 : 0);
+
+  useEffect(() => {
+    if (active) {
+      clock.set(withRepeat(withTiming(1, { duration: 2400, easing: Easing.linear }), -1, false));
+      energy.set(withTiming(1, { duration: duration.slow }));
+    } else {
+      energy.set(
+        withTiming(0, { duration: duration.slow }, (finished) => {
+          if (finished) cancelAnimation(clock);
+        }),
+      );
+    }
+  }, [active, clock, energy]);
+
+  return (
+    <View className="my-7 h-10 flex-row items-center justify-center gap-[3px]">
+      {BARS.map((bar, i) => (
+        <Bar key={i} {...bar} clock={clock} energy={energy} color={active ? color : idleColor} />
+      ))}
+    </View>
+  );
+}
+
+function Bar({
+  seed,
+  freq,
+  amp,
+  clock,
+  energy,
+  color,
+}: {
+  seed: number;
+  freq: number;
+  amp: number;
+  clock: SharedValue<number>;
+  energy: SharedValue<number>;
+  color: string;
+}) {
+  const style = useAnimatedStyle(() => {
+    // Integer frequencies keep the loop seamless when the clock wraps 1 → 0.
+    const wave = Math.abs(Math.sin(2 * Math.PI * (clock.get() * freq + seed)));
+    return { height: 4 + energy.get() * amp * 36 * wave };
+  });
+  return <Animated.View style={[{ width: 3, borderRadius: 2, backgroundColor: color }, style]} />;
+}
+
+const styles = StyleSheet.create({
+  artShadow: {
+    shadowOpacity: 0.35,
+    shadowRadius: 30,
+    shadowOffset: { width: 0, height: 16 },
+    elevation: 16,
+  },
+});

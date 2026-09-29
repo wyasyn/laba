@@ -1,7 +1,7 @@
 import type { Station } from "@/lib/schemas";
 import { useTheme } from "@/lib/useTheme";
-import { Image } from "expo-image";
-import { memo, useCallback, useEffect, useState } from "react";
+import { Image, type ImageProps } from "expo-image";
+import { memo, useState } from "react";
 import { StyleSheet, View, type StyleProp, type ViewStyle } from "react-native";
 
 export type StationArtworkVariant = "tile" | "hero" | "disc";
@@ -10,48 +10,40 @@ interface StationArtworkProps {
   station: Station;
   variant: StationArtworkVariant;
   style?: StyleProp<ViewStyle>;
+  /** Blur the image (used for ambient backgrounds). */
+  blurRadius?: number;
+  transition?: ImageProps["transition"];
 }
 
 const DEFAULT_TV = require("@/assets/images/tv.jpg");
 const DEFAULT_RADIO = require("@/assets/images/radio.jpg");
 
-export const StationArtwork = memo(function StationArtwork(
-  props: StationArtworkProps,
-) {
-  const { station, style } = props;
+export const StationArtwork = memo(function StationArtwork({
+  station,
+  style,
+  blurRadius,
+  transition = 220,
+}: StationArtworkProps) {
   const { colors } = useTheme();
-  const [logoFailed, setLogoFailed] = useState(false);
+  // Remember which logo URL failed rather than a boolean, so a recycled list
+  // cell showing a different station never inherits the failure.
+  const [failedLogo, setFailedLogo] = useState<string | null>(null);
 
-  useEffect(() => {
-    setLogoFailed(false);
-  }, [station.id, station.logo]);
-
-  const showRemote = Boolean(station.logo) && !logoFailed;
-  const onError = useCallback(() => setLogoFailed(true), []);
-
-  const isTv = station.type === "tv";
-  const fallbackSource = isTv ? DEFAULT_TV : DEFAULT_RADIO;
+  const showRemote = Boolean(station.logo) && failedLogo !== station.logo;
+  const fallbackSource = station.type === "tv" ? DEFAULT_TV : DEFAULT_RADIO;
 
   return (
-    <View style={[styles.fill, { backgroundColor: colors.background }, style]}>
-      {showRemote ? (
-        <Image
-          source={{ uri: station.logo }}
-          style={StyleSheet.absoluteFill}
-          contentFit="cover"
-          cachePolicy="memory-disk"
-          transition={200}
-          onError={onError}
-        />
-      ) : (
-        <Image
-          source={fallbackSource}
-          style={StyleSheet.absoluteFill}
-          contentFit="cover"
-          cachePolicy="memory-disk"
-          transition={200}
-        />
-      )}
+    <View style={[styles.fill, { backgroundColor: colors.surfaceLight }, style]}>
+      <Image
+        source={showRemote ? { uri: station.logo } : fallbackSource}
+        recyclingKey={station.id}
+        style={StyleSheet.absoluteFill}
+        contentFit="cover"
+        cachePolicy="memory-disk"
+        transition={transition}
+        blurRadius={blurRadius}
+        onError={showRemote ? () => setFailedLogo(station.logo ?? null) : undefined}
+      />
     </View>
   );
 });

@@ -1,113 +1,87 @@
+import { FavouriteButton } from "@/components/FavouriteButton";
 import { StationArtwork } from "@/components/StationArtwork";
+import { LiveDot } from "@/components/ui/LiveDot";
+import { PressableScale } from "@/components/ui/PressableScale";
+import { Text } from "@/components/ui/Text";
+import { TypePill } from "@/components/ui/TypePill";
 import type { Station } from "@/lib/schemas";
-import { useTheme } from "@/lib/useTheme";
 import { usePlayerStore } from "@/stores/usePlayerStore";
-import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import { memo, useCallback } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { memo } from "react";
+import { StyleSheet, View } from "react-native";
 
 interface StationCardProps {
   station: Station;
-  size?: "small" | "large";
+  /** Show the favourite toggle on the artwork. */
+  showFavourite?: boolean;
+  aspectRatio?: number;
 }
 
-const STACKED_RADIUS = 26;
-const STACKED_TITLE_ROW_PAD_H = 12;
+const RADIUS = 22;
+const SCRIM = ["transparent", "rgba(0,0,0,0.25)", "rgba(0,0,0,0.85)"] as const;
+const SCRIM_LOCATIONS = [0.35, 0.6, 1] as const;
+
+export function openStation(router: ReturnType<typeof useRouter>, station: Station) {
+  usePlayerStore.getState().setPending(station.id);
+  router.push({ pathname: "/station/[id]", params: { id: station.id } });
+}
 
 export const StationCard = memo(function StationCard({
   station,
-  size = "small",
+  showFavourite = true,
+  aspectRatio = 3 / 4,
 }: StationCardProps) {
   const router = useRouter();
-  const { colors } = useTheme();
-
-  const isLarge = size === "large";
-  const handlePress = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    usePlayerStore.getState().setPending(station.id);
-    router.push({
-      pathname: "/station/[id]" as const,
-      params: { id: station.id },
-    } as never);
-  }, [station.id, router]);
-
-  const aspectRatio = isLarge ? 4 / 5 : 3 / 4;
-  const titleSize = isLarge ? 15 : 13;
+  const isOnAir = usePlayerStore(
+    (s) => s.currentStation?.id === station.id && s.status === "playing",
+  );
 
   return (
-    <View style={styles.stackedRoot}>
-      <Pressable
-        onPress={handlePress}
-        accessibilityRole="button"
-        accessibilityLabel={`Play ${station.name}`}
-        style={({ pressed }) => [pressed && styles.pressed]}
-      >
-        <View
-          style={[
-            styles.stackedArtWrap,
-            {
-              aspectRatio,
-              borderRadius: STACKED_RADIUS,
-              backgroundColor: colors.background,
-              shadowColor: "#000",
-              shadowOffset: { width: 0, height: 1 },
-              shadowOpacity: 0.08,
-              shadowRadius: 4,
-              elevation: 2,
-            },
-          ]}
-        >
-          <StationArtwork
-            station={station}
-            variant="tile"
-            style={StyleSheet.absoluteFill}
-          />
-        </View>
-      </Pressable>
-      <Pressable
-        onPress={handlePress}
-        accessibilityRole="button"
-        accessibilityLabel={`Play ${station.name}`}
-        style={({ pressed }) => [
-          styles.stackedTitleWrap,
-          {
-            paddingHorizontal: STACKED_TITLE_ROW_PAD_H,
-            paddingTop: 18,
-          },
-          pressed && styles.pressed,
-        ]}
-      >
-        <Text
-          numberOfLines={2}
-          style={[styles.stackedTitle, { fontSize: titleSize, color: colors.textPrimary }]}
-        >
+    <PressableScale
+      onPress={() => openStation(router, station)}
+      accessibilityRole="button"
+      accessibilityLabel={`Play ${station.name}`}
+      scaleTo={0.965}
+      style={[styles.card, { aspectRatio }]}
+    >
+      <StationArtwork station={station} variant="tile" style={StyleSheet.absoluteFill} />
+      <LinearGradient
+        colors={SCRIM}
+        locations={SCRIM_LOCATIONS}
+        style={StyleSheet.absoluteFill}
+        pointerEvents="none"
+      />
+
+      <View className="flex-row items-start justify-between p-2.5">
+        {isOnAir ? (
+          <View className="flex-row items-center gap-1.5 rounded-full bg-black/55 px-2 py-1">
+            <LiveDot size={6} />
+            <Text className="text-[10px] font-bold uppercase tracking-widest text-white">
+              On air
+            </Text>
+          </View>
+        ) : (
+          <View />
+        )}
+        {showFavourite ? <FavouriteButton stationId={station.id} size={15} /> : null}
+      </View>
+
+      <View className="mt-auto gap-1.5 p-3">
+        <TypePill type={station.type} variant="solid" />
+        <Text numberOfLines={2} className="text-[15px] font-bold leading-[19px] text-white">
           {station.name}
         </Text>
-      </Pressable>
-    </View>
+      </View>
+    </PressableScale>
   );
 });
 
 const styles = StyleSheet.create({
-  pressed: {
-    opacity: 0.88,
-  },
-  stackedRoot: {
+  card: {
     width: "100%",
-  },
-  stackedArtWrap: {
-    width: "100%",
+    borderRadius: RADIUS,
     overflow: "hidden",
-  },
-  stackedTitleWrap: {
-    alignItems: "center",
-  },
-  stackedTitle: {
-  
-    letterSpacing: 0.2,
-    textAlign: "center",
-    width: "100%",
-    marginTop: 10,
+    borderCurve: "continuous",
   },
 });

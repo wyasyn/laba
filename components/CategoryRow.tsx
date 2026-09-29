@@ -1,79 +1,72 @@
+import { SectionHeader } from "@/components/ui/SectionHeader";
+import { enterFromBelow } from "@/lib/motion";
 import type { Station } from "@/lib/schemas";
+import { FlashList } from "@shopify/flash-list";
 import type { Href } from "expo-router";
 import { useRouter } from "expo-router";
-import { memo, useCallback } from "react";
-import {
-  FlatList,
-  ListRenderItem,
-  Pressable,
-  Text,
-  View,
-} from "react-native";
+import { memo } from "react";
+import { View } from "react-native";
+import Animated from "react-native-reanimated";
 import { StationCard } from "./StationCard";
 
 interface CategoryRowProps {
   title: string;
+  subtitle?: string;
   stations: Station[];
   seeAllHref?: Href;
+  /** Position on the page, used to stagger the entrance. */
+  index?: number;
 }
 
-const CONTENT_CONTAINER_STYLE = {
-  paddingHorizontal: 16,
-  paddingVertical: 12,
-  gap: 12,
-} as const;
+const CARD_WIDTH = 150;
+const ROW_HEIGHT = (CARD_WIDTH * 4) / 3 + 12;
+const CONTENT_CONTAINER_STYLE = { paddingHorizontal: 20, paddingTop: 12 } as const;
+
+function Gap() {
+  return <View style={{ width: 12 }} />;
+}
+
+function keyExtractor(item: Station) {
+  return item.id;
+}
+
+function renderItem({ item }: { item: Station }) {
+  return (
+    <View style={{ width: CARD_WIDTH }}>
+      <StationCard station={item} />
+    </View>
+  );
+}
 
 export const CategoryRow = memo(function CategoryRow({
   title,
+  subtitle,
   stations,
   seeAllHref,
+  index = 0,
 }: CategoryRowProps) {
   const router = useRouter();
-
-  const keyExtractor = useCallback((item: Station) => item.id, []);
-
-  const renderItem: ListRenderItem<Station> = useCallback(
-    ({ item }) => (
-      <View className="w-44 shrink-0">
-        <StationCard station={item} />
-      </View>
-    ),
-    [],
-  );
-
-  const onSeeAll = useCallback(() => {
-    if (seeAllHref != null) router.push(seeAllHref);
-  }, [router, seeAllHref]);
 
   if (stations.length === 0) return null;
 
   return (
-    <View className="mb-5">
-      <View className="mb-2.5 flex-row items-baseline justify-between px-4">
-        <Text className="font-inter-bold text-lg text-foreground">{title}</Text>
-        {seeAllHref != null ? (
-          <Pressable
-            onPress={onSeeAll}
-            hitSlop={8}
-            accessibilityRole="button"
-            accessibilityLabel={`See all ${title}`}
-          >
-            <Text className="text-text-secondary">See all</Text>
-          </Pressable>
-        ) : null}
-      </View>
-      <FlatList
+    <Animated.View entering={enterFromBelow(index)} className="mb-8">
+      <SectionHeader
+        title={title}
+        subtitle={subtitle}
+        onSeeAll={seeAllHref != null ? () => router.push(seeAllHref) : undefined}
+      />
+      <View style={{ height: ROW_HEIGHT }}>
+        <FlashList
         data={stations}
         keyExtractor={keyExtractor}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={CONTENT_CONTAINER_STYLE}
+        ItemSeparatorComponent={Gap}
         renderItem={renderItem}
-        initialNumToRender={4}
-        maxToRenderPerBatch={4}
-        windowSize={3}
-        removeClippedSubviews={false}
-      />
-    </View>
+        />
+      </View>
+    </Animated.View>
   );
 });
