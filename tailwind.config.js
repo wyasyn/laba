@@ -18,6 +18,7 @@ module.exports = {
         primary: {
           DEFAULT: "rgb(var(--primary) / <alpha-value>)",
           light: "rgb(var(--primary-light) / <alpha-value>)",
+          foreground: "rgb(var(--on-primary) / <alpha-value>)",
         },
         foreground: "rgb(var(--text-primary) / <alpha-value>)",
         "text-primary": "rgb(var(--text-primary) / <alpha-value>)",

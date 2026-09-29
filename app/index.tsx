@@ -92,8 +92,8 @@ function Onboarding() {
             className="h-14 flex-row items-center justify-center gap-2 rounded-2xl bg-primary"
             style={styles.ctaShadow}
           >
-            <Text className="text-base font-semibold text-white">Get started</Text>
-            <HugeiconsIcon icon={ArrowRight01Icon} size={18} color="#FFFFFF" />
+            <Text className="text-base font-semibold text-primary-foreground">Get started</Text>
+            <HugeiconsIcon icon={ArrowRight01Icon} size={18} color={colors.onPrimary} />
           </PressableScale>
         </Animated.View>
       </View>
@@ -155,7 +155,7 @@ function DriftColumn({ stations, tile, reverse }: { stations: Station[]; tile: n
 
 const styles = StyleSheet.create({
   ctaShadow: {
-    shadowColor: "#E50914",
+    shadowColor: "#6366F1",
     shadowOpacity: 0.4,
     shadowRadius: 16,
     shadowOffset: { width: 0, height: 8 },

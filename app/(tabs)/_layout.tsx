@@ -29,12 +29,14 @@ export default function TabLayout() {
         tintColor={colors.primary}
         iconColor={{ default: colors.textSecondary, selected: colors.primary }}
         labelStyle={{
-          default: { color: colors.textSecondary, fontSize: 11, fontFamily: FONT_FAMILY, fontWeight: "500" },
-          selected: { color: colors.primary, fontSize: 11, fontFamily: FONT_FAMILY, fontWeight: "600" },
+          default: { color: colors.textSecondary, fontSize: 11, fontFamily: FONT_FAMILY, fontWeight: "600" },
+          selected: { color: colors.primary, fontSize: 11, fontFamily: FONT_FAMILY, fontWeight: "700" },
         }}
         // iOS uses the system (Liquid Glass) material; Android needs an explicit surface
         backgroundColor={Platform.OS === "android" ? colors.surface : undefined}
         indicatorColor={`${colors.primary}26`}
+        // Android defaults to "auto" (labels only on the selected tab once there are 4+ tabs)
+        labelVisibilityMode="labeled"
         minimizeBehavior="onScrollDown"
       >
         {HAS_NATIVE_ACCESSORY && hasStation ? (
@@ -43,12 +45,11 @@ export default function TabLayout() {
           </NativeTabs.BottomAccessory>
         ) : null}
 
-        {/* iOS renders the SF Symbols. Android renders the Material Symbols PNGs
-            (outline by default, filled when selected) from assets/images/tabs. */}
+        {/* Custom icon set on both platforms (outline by default, filled when
+            selected). Sources live in assets/images/tabs/svg. */}
         <NativeTabs.Trigger name="index">
           <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
           <NativeTabs.Trigger.Icon
-            sf={{ default: "house", selected: "house.fill" }}
             src={{
               default: require("@/assets/images/tabs/home.png"),
               selected: require("@/assets/images/tabs/home-filled.png"),
@@ -58,7 +59,6 @@ export default function TabLayout() {
         <NativeTabs.Trigger name="tv">
           <NativeTabs.Trigger.Label>TV</NativeTabs.Trigger.Label>
           <NativeTabs.Trigger.Icon
-            sf={{ default: "tv", selected: "tv.fill" }}
             src={{
               default: require("@/assets/images/tabs/live_tv.png"),
               selected: require("@/assets/images/tabs/live_tv-filled.png"),
@@ -68,7 +68,6 @@ export default function TabLayout() {
         <NativeTabs.Trigger name="radio">
           <NativeTabs.Trigger.Label>Radio</NativeTabs.Trigger.Label>
           <NativeTabs.Trigger.Icon
-            sf={{ default: "radio", selected: "radio.fill" }}
             src={{
               default: require("@/assets/images/tabs/radio.png"),
               selected: require("@/assets/images/tabs/radio-filled.png"),
@@ -78,7 +77,6 @@ export default function TabLayout() {
         <NativeTabs.Trigger name="favourites">
           <NativeTabs.Trigger.Label>Favourites</NativeTabs.Trigger.Label>
           <NativeTabs.Trigger.Icon
-            sf={{ default: "heart", selected: "heart.fill" }}
             src={{
               default: require("@/assets/images/tabs/favorite.png"),
               selected: require("@/assets/images/tabs/favorite-filled.png"),

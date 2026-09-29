@@ -1,4 +1,5 @@
 import { EmptyState } from "@/components/EmptyState";
+import { HeaderActions } from "@/components/HeaderActions";
 import { StationCard } from "@/components/StationCard";
 import { GridCell, LIST_BOTTOM_PADDING } from "@/components/StationList";
 import { CompactHeader, LargeTitle, useCollapsingHeader } from "@/components/ui/CollapsingHeader";
@@ -73,7 +74,7 @@ export default function FavouritesTabScreen() {
         onScroll={onScroll}
         scrollEventThrottle={16}
       />
-      <CompactHeader title="Favourites" scrollY={scrollY} />
+      <CompactHeader title="Favourites" scrollY={scrollY} right={<HeaderActions />} />
     </View>
   );
 }

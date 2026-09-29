@@ -20,12 +20,15 @@ interface SearchBarProps {
   placeholder?: string;
   /** Shown after the input; clear still appears when there is text. */
   trailingAccessory?: ReactNode;
+  /** Shorter field for use inside a toolbar. */
+  compact?: boolean;
+  autoFocus?: boolean;
   className?: string;
 }
 
 export const SearchBar = memo(
   forwardRef<TextInput, SearchBarProps>(function SearchBar(
-    { value, onChangeText, placeholder = "Search stations", trailingAccessory, className },
+    { value, onChangeText, placeholder = "Search stations", trailingAccessory, compact, autoFocus, className },
     ref,
   ) {
     const { colors } = useTheme();
@@ -45,12 +48,14 @@ export const SearchBar = memo(
       <View className={cn("mx-5 flex-row items-center gap-2", className)}>
         <Animated.View
           style={shellStyle}
-          className="h-12 flex-1 flex-row items-center rounded-2xl border px-4"
+          className={cn("flex-1 flex-row items-center border px-4", compact ? "h-10 rounded-xl" : "h-12 rounded-2xl")}
         >
           <HugeiconsIcon icon={Search01Icon} size={19} color={colors.textSecondary} />
           <TextInput
             ref={ref}
             className="ml-2.5 h-full flex-1 font-sans text-[15px] text-foreground"
+            // Android adds vertical padding and font padding that clip the text in the compact field.
+            style={{ paddingVertical: 0, includeFontPadding: false, textAlignVertical: "center" }}
             value={value}
             onChangeText={onChangeText}
             placeholder={placeholder}
@@ -59,6 +64,7 @@ export const SearchBar = memo(
             autoCapitalize="none"
             autoCorrect={false}
             returnKeyType="search"
+            autoFocus={autoFocus}
             onFocus={() => focus.set(withTiming(1, { duration: duration.fast }))}
             onBlur={() => focus.set(withTiming(0, { duration: duration.base }))}
           />

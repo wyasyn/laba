@@ -60,7 +60,7 @@ export function EmptyState({
           accessibilityRole="button"
           className="mt-6 rounded-full bg-primary px-6 py-3"
         >
-          <Text className="font-semibold text-white">{actionLabel}</Text>
+          <Text className="font-semibold text-primary-foreground">{actionLabel}</Text>
         </PressableScale>
       ) : null}
     </Animated.View>

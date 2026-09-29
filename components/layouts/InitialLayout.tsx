@@ -63,6 +63,7 @@ function InitialLayout() {
             gestureDirection: "vertical",
           }}
         />
+        <Stack.Screen name="search" options={{ animation: "fade" }} />
         <Stack.Screen name="settings" options={{ animation: "slide_from_right" }} />
         <Stack.Screen name="account" options={{ animation: "slide_from_right" }} />
       </Stack>

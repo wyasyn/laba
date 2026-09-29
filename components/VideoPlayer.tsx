@@ -265,8 +265,8 @@ export function VideoPlayer({ streamUrl, onError, onReady, borderless = false, o
             accessibilityRole="button"
             accessibilityLabel="Retry loading stream"
           >
-            <HugeiconsIcon icon={ReloadIcon} size={18} color="#fff" />
-            <Text className="font-semibold text-white">Retry</Text>
+            <HugeiconsIcon icon={ReloadIcon} size={18} color={colors.onPrimary} />
+            <Text className="font-semibold text-primary-foreground">Retry</Text>
           </Pressable>
         </View>
       )}
@@ -363,7 +363,7 @@ export function VideoPlayer({ streamUrl, onError, onReady, borderless = false, o
 
                 {/* Bottom bar — live badge + fullscreen */}
                 <View className="flex-row items-center justify-between px-4 pb-3">
-                  <View className="flex-row items-center gap-1.5 rounded-md bg-primary px-2 py-1">
+                  <View className="flex-row items-center gap-1.5 rounded-md bg-error px-2 py-1">
                     <LiveDot color="#FFFFFF" size={6} />
                     <Text className="text-[11px] font-bold uppercase tracking-widest text-white">
                       Live

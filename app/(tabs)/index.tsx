@@ -1,31 +1,21 @@
 import { CategoryRow } from "@/components/CategoryRow";
-import { EmptyState } from "@/components/EmptyState";
+import { HeaderActions } from "@/components/HeaderActions";
 import { HeroSection, useHeroSize } from "@/components/HeroSection";
 import { RefreshIndicator } from "@/components/RefreshIndicator";
-import { SearchBar } from "@/components/SearchBar";
 import { SkeletonCard, SkeletonHero, SkeletonTitle } from "@/components/SkeletonCard";
-import { StationCard } from "@/components/StationCard";
-import { GridCell, LIST_BOTTOM_PADDING } from "@/components/StationList";
+import { LIST_BOTTOM_PADDING } from "@/components/StationList";
 import { CompactHeader, LargeTitle, useCollapsingHeader } from "@/components/ui/CollapsingHeader";
-import { IconButton } from "@/components/ui/IconButton";
 import { ShimmerGroup } from "@/components/ui/Shimmer";
-import { Text } from "@/components/ui/Text";
 import { duration } from "@/lib/motion";
-import { matchesQuery } from "@/lib/search";
 import { selectHeroStations } from "@/lib/selectHeroStations";
-import { useDebounce } from "@/lib/useDebounce";
-import { useTheme } from "@/lib/useTheme";
 import { useStationStore } from "@/stores/useStationStore";
-import { UserIcon } from "@hugeicons/core-free-icons";
-import { useRouter } from "expo-router";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { RefreshControl, View } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useShallow } from "zustand/react/shallow";
 
 const ROW_LIMIT = 12;
-const SEARCH_LIMIT = 40;
 
 function greeting() {
   const h = new Date().getHours();
@@ -36,19 +26,13 @@ function greeting() {
 }
 
 export default function HomeScreen() {
-  const router = useRouter();
-  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const { cardWidth, cardHeight } = useHeroSize();
   const { scrollY, onScroll } = useCollapsingHeader();
-  const [searchQuery, setSearchQuery] = useState("");
-  const debouncedQuery = useDebounce(searchQuery, 200);
-  const isSearching = debouncedQuery.trim().length > 0;
 
   const {
     stations,
     isLoading,
-    isRefreshing,
     refreshStations,
     tvStations,
     radioStations,
@@ -58,7 +42,6 @@ export default function HomeScreen() {
     useShallow((s) => ({
       stations: s.stations,
       isLoading: s.isLoading,
-      isRefreshing: s.isRefreshing,
       refreshStations: s.refreshStations,
       tvStations: s.tvStations,
       radioStations: s.radioStations,
@@ -72,24 +55,8 @@ export default function HomeScreen() {
     [featuredStations, stations],
   );
 
-  const searchResults = useMemo(
-    () =>
-      isSearching
-        ? stations.filter((s) => matchesQuery(s, debouncedQuery)).slice(0, SEARCH_LIMIT)
-        : [],
-    [stations, debouncedQuery, isSearching],
-  );
-
   const showSkeleton = isLoading && stations.length === 0;
 
-  const profileButton = (
-    <IconButton
-      icon={UserIcon}
-      onPress={() => router.push("/settings")}
-      accessibilityLabel="Open settings"
-      iconSize={18}
-    />
-  );
 
   return (
     <View className="flex-1 bg-background">
@@ -97,15 +64,16 @@ export default function HomeScreen() {
         onScroll={onScroll}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag"
         contentContainerStyle={{ paddingBottom: LIST_BOTTOM_PADDING }}
         refreshControl={
           <RefreshControl
-            refreshing={isRefreshing}
+            // The pull only triggers the refresh. The "Updating" pill in the header is the
+            // single loading state, so the native spinner is released straight away.
+            refreshing={false}
             onRefresh={refreshStations}
-            tintColor={colors.primary}
-            colors={[colors.primary]}
+            tintColor="transparent"
+            colors={["transparent"]}
+            progressBackgroundColor="transparent"
             progressViewOffset={insets.top + 48}
           />
         }
@@ -117,13 +85,6 @@ export default function HomeScreen() {
           accessory={<RefreshIndicator />}
         />
 
-        <SearchBar
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          placeholder="Channels, stations, genres"
-          className="mb-6"
-        />
-
         {showSkeleton ? (
           <ShimmerGroup>
             <SkeletonHero width={cardWidth} height={cardHeight} />
@@ -131,38 +92,13 @@ export default function HomeScreen() {
               <SkeletonTitle />
               <View className="flex-row gap-3 px-5">
                 {Array.from({ length: 3 }).map((_, i) => (
-                  <View key={i} style={{ width: 150 }}>
+                  <View key={i} style={{ width: 148 }}>
                     <SkeletonCard />
                   </View>
                 ))}
               </View>
             </View>
           </ShimmerGroup>
-        ) : isSearching ? (
-          <Animated.View
-            key="results"
-            entering={FadeIn.duration(duration.base)}
-            exiting={FadeOut.duration(duration.fast)}
-          >
-            <Text className="mb-3 px-5 text-[13px] font-semibold uppercase tracking-widest text-text-secondary">
-              {searchResults.length === 0
-                ? "No matches"
-                : `${searchResults.length}${searchResults.length === SEARCH_LIMIT ? "+" : ""} result${searchResults.length === 1 ? "" : "s"}`}
-            </Text>
-            {searchResults.length === 0 ? (
-              <EmptyState message={`Nothing matches "${debouncedQuery.trim()}". Try a genre like news or music.`} />
-            ) : (
-              <View className="flex-row flex-wrap">
-                {searchResults.map((s, i) => (
-                  <View key={s.id} style={{ width: "50%" }}>
-                    <GridCell index={i}>
-                      <StationCard station={s} />
-                    </GridCell>
-                  </View>
-                ))}
-              </View>
-            )}
-          </Animated.View>
         ) : (
           <Animated.View
             key="browse"
@@ -195,7 +131,7 @@ export default function HomeScreen() {
           </Animated.View>
         )}
       </Animated.ScrollView>
-      <CompactHeader title="Laba" scrollY={scrollY} right={profileButton} />
+      <CompactHeader title="Laba" scrollY={scrollY} right={<HeaderActions />} />
     </View>
   );
 }

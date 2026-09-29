@@ -1,3 +1,4 @@
+import { CARD_META_HEIGHT, CARD_RADIUS } from "@/components/StationCard";
 import { Skeleton } from "@/components/ui/Shimmer";
 import { View } from "react-native";
 
@@ -5,8 +6,16 @@ import { View } from "react-native";
  * Placeholder matching StationCard. Render inside a ShimmerGroup so all
  * placeholders sweep together.
  */
-export function SkeletonCard({ aspectRatio = 3 / 4 }: { aspectRatio?: number }) {
-  return <Skeleton style={{ aspectRatio, width: "100%", borderRadius: 22 }} />;
+export function SkeletonCard() {
+  return (
+    <View>
+      <Skeleton style={{ aspectRatio: 1, width: "100%", borderRadius: CARD_RADIUS }} />
+      <View style={{ height: CARD_META_HEIGHT, paddingTop: 11, paddingHorizontal: 2, gap: 7 }}>
+        <Skeleton style={{ width: "78%", height: 12, borderRadius: 6 }} />
+        <Skeleton style={{ width: "52%", height: 10, borderRadius: 5 }} />
+      </View>
+    </View>
+  );
 }
 
 /** Placeholder for the home hero carousel. */

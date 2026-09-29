@@ -38,7 +38,7 @@ export function IconButton({
   const { colors } = useTheme();
   const iconColor =
     color ??
-    (variant === "glass" || variant === "primary" ? "#FFFFFF" : colors.textPrimary);
+    (variant === "primary" ? colors.onPrimary : variant === "glass" ? "#FFFFFF" : colors.textPrimary);
 
   const dims = { width: size, height: size, borderRadius: size / 2 };
   const content = <HugeiconsIcon icon={icon} size={iconSize} color={iconColor} />;

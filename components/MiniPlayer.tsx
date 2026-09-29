@@ -97,7 +97,7 @@ function MiniPlayerRow({ compact = false }: { compact?: boolean }) {
         onPress={togglePlayback}
         size={compact ? 32 : 42}
         background={colors.primary}
-        color="#FFFFFF"
+        color={colors.onPrimary}
       />
       {!compact ? (
         <IconButton
