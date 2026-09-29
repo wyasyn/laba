@@ -14,7 +14,7 @@ import { Text } from "./Text";
 
 export const COMPACT_BAR_HEIGHT = 48;
 /** Scroll distance over which the large title hands off to the compact bar. */
-const HANDOFF = [24, 64];
+const HANDOFF: [number, number] = [24, 64];
 
 export function useCollapsingHeader() {
   const scrollY = useSharedValue(0);
@@ -33,24 +33,27 @@ export function CompactHeader({
   scrollY,
   right,
   divider = true,
+  handoff = HANDOFF,
 }: {
   title: string;
   scrollY: SharedValue<number>;
   right?: ReactNode;
   /** Hairline under the bar. Turn off when something pins directly below it. */
   divider?: boolean;
+  /** Scroll range over which the bar fades in. Defaults to the large title handoff. */
+  handoff?: [number, number];
 }) {
   const insets = useSafeAreaInsets();
 
   const bgStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(scrollY.get(), HANDOFF, [0, 1], Extrapolation.CLAMP),
+    opacity: interpolate(scrollY.get(), handoff, [0, 1], Extrapolation.CLAMP),
   }));
 
   const titleStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(scrollY.get(), [HANDOFF[1] - 10, HANDOFF[1] + 10], [0, 1], Extrapolation.CLAMP),
+    opacity: interpolate(scrollY.get(), [handoff[1] - 10, handoff[1] + 10], [0, 1], Extrapolation.CLAMP),
     transform: [
       {
-        translateY: interpolate(scrollY.get(), [HANDOFF[1] - 10, HANDOFF[1] + 10], [6, 0], Extrapolation.CLAMP),
+        translateY: interpolate(scrollY.get(), [handoff[1] - 10, handoff[1] + 10], [6, 0], Extrapolation.CLAMP),
       },
     ],
   }));

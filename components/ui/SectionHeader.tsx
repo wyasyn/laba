@@ -9,10 +9,41 @@ interface SectionHeaderProps {
   title: string;
   subtitle?: string;
   onSeeAll?: () => void;
+  /** "pill" puts a See all chip on the right; "inline" makes the title itself the link. */
+  variant?: "pill" | "inline";
 }
 
-export function SectionHeader({ title, subtitle, onSeeAll }: SectionHeaderProps) {
+export function SectionHeader({ title, subtitle, onSeeAll, variant = "pill" }: SectionHeaderProps) {
   const { colors } = useTheme();
+
+  if (variant === "inline") {
+    const heading = (
+      <View className="flex-row items-center gap-1">
+        <Text className="text-[22px] font-bold tracking-tight">{title}</Text>
+        {onSeeAll ? (
+          <HugeiconsIcon icon={ArrowRight01Icon} size={22} color={colors.textSecondary} strokeWidth={2.2} />
+        ) : null}
+      </View>
+    );
+    return (
+      <View className="items-start px-5">
+        {onSeeAll ? (
+          <PressableScale
+            onPress={onSeeAll}
+            hitSlop={10}
+            scaleTo={0.97}
+            accessibilityRole="button"
+            accessibilityLabel={`See all ${title}`}
+          >
+            {heading}
+          </PressableScale>
+        ) : (
+          heading
+        )}
+        {subtitle ? <Text className="mt-0.5 text-[13px] text-text-secondary">{subtitle}</Text> : null}
+      </View>
+    );
+  }
 
   return (
     <View className="flex-row items-end justify-between px-5">

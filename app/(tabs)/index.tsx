@@ -1,34 +1,33 @@
-import { CategoryRow } from "@/components/CategoryRow";
 import { HeaderActions } from "@/components/HeaderActions";
-import { HeroSection, useHeroSize } from "@/components/HeroSection";
+import { HomeHero, useHomeHeroHeight } from "@/components/HomeHero";
 import { RefreshIndicator } from "@/components/RefreshIndicator";
 import { SkeletonCard, SkeletonHero, SkeletonTitle } from "@/components/SkeletonCard";
-import { LIST_BOTTOM_PADDING } from "@/components/StationList";
-import { CompactHeader, LargeTitle, useCollapsingHeader } from "@/components/ui/CollapsingHeader";
+import { StationCard } from "@/components/StationCard";
+import { GridCell, LIST_BOTTOM_PADDING } from "@/components/StationList";
+import { COMPACT_BAR_HEIGHT, CompactHeader, useCollapsingHeader } from "@/components/ui/CollapsingHeader";
+import { SectionHeader } from "@/components/ui/SectionHeader";
 import { ShimmerGroup } from "@/components/ui/Shimmer";
-import { duration } from "@/lib/motion";
+import { Text } from "@/components/ui/Text";
+import { duration, enterFromBelow } from "@/lib/motion";
 import { selectHeroStations } from "@/lib/selectHeroStations";
 import { useStationStore } from "@/stores/useStationStore";
-import { useMemo } from "react";
+import { useIsFocused } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { useMemo, useState } from "react";
 import { RefreshControl, View } from "react-native";
-import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import Animated, { FadeIn, FadeOut, useAnimatedReaction } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { scheduleOnRN } from "react-native-worklets";
 import { useShallow } from "zustand/react/shallow";
 
-const ROW_LIMIT = 12;
-
-function greeting() {
-  const h = new Date().getHours();
-  if (h < 5) return "Good night";
-  if (h < 12) return "Good morning";
-  if (h < 17) return "Good afternoon";
-  return "Good evening";
-}
+/** Home shows a taste of each list; the full list is one tap away. */
+const ROW_LIMIT = 6;
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
-  const { cardWidth, cardHeight } = useHeroSize();
+  const heroHeight = useHomeHeroHeight();
   const { scrollY, onScroll } = useCollapsingHeader();
+  const isFocused = useIsFocused();
 
   const {
     stations,
@@ -57,13 +56,30 @@ export default function HomeScreen() {
 
   const showSkeleton = isLoading && stations.length === 0;
 
+  // The frosted bar fades in as the hero's bottom edge reaches it.
+  const barBottom = insets.top + COMPACT_BAR_HEIGHT;
+  const handoff: [number, number] = [heroHeight - barBottom - 80, heroHeight - barBottom];
+
+  // While the bar is still clear the page top is the (dark) hero, so the
+  // status bar and header buttons switch to their light-on-image style.
+  const [overHero, setOverHero] = useState(true);
+  const threshold = (handoff[0] + handoff[1]) / 2;
+  useAnimatedReaction(
+    () => scrollY.get() < threshold,
+    (next, prev) => {
+      if (next !== prev) scheduleOnRN(setOverHero, next);
+    },
+    [threshold],
+  );
 
   return (
     <View className="flex-1 bg-background">
+      {isFocused && overHero ? <StatusBar style="light" /> : null}
       <Animated.ScrollView
         onScroll={onScroll}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
+        contentInsetAdjustmentBehavior="never"
         contentContainerStyle={{ paddingBottom: LIST_BOTTOM_PADDING }}
         refreshControl={
           <RefreshControl
@@ -78,17 +94,10 @@ export default function HomeScreen() {
           />
         }
       >
-        <LargeTitle
-          title={greeting()}
-          subtitle="What are we tuning into?"
-          scrollY={scrollY}
-          accessory={<RefreshIndicator />}
-        />
-
         {showSkeleton ? (
           <ShimmerGroup>
-            <SkeletonHero width={cardWidth} height={cardHeight} />
-            <View className="mt-10 gap-3">
+            <SkeletonHero height={heroHeight} />
+            <View className="mt-8 gap-3">
               <SkeletonTitle />
               <View className="flex-row gap-3 px-5">
                 {Array.from({ length: 3 }).map((_, i) => (
@@ -105,33 +114,50 @@ export default function HomeScreen() {
             entering={FadeIn.duration(duration.base)}
             exiting={FadeOut.duration(duration.fast)}
           >
-            {heroStations.length > 0 ? <HeroSection featuredStations={heroStations} /> : null}
-            <CategoryRow
-              index={0}
-              title="Live TV"
-              subtitle="Popular channels right now"
-              stations={tvStations.slice(0, ROW_LIMIT)}
-              seeAllHref="/tv"
-            />
-            <CategoryRow
-              index={1}
-              title="Radio"
-              subtitle="Tune in, wherever you are"
-              stations={radioStations.slice(0, ROW_LIMIT)}
-              seeAllHref="/radio"
+            <HomeHero
+              tvStations={tvStations}
+              radioStations={radioStations}
+              featuredStations={heroStations}
+              active={isFocused}
+              header={
+                <View
+                  pointerEvents="box-none"
+                  style={{ paddingTop: insets.top, height: barBottom }}
+                  className="flex-row items-center px-5"
+                >
+                  <Text className="text-[28px] font-bold tracking-tighter text-white">Laba</Text>
+                </View>
+              }
             />
             {internationalStations.length > 0 ? (
-              <CategoryRow
-                index={2}
-                title="International"
-                subtitle="News and more from around the world"
-                stations={internationalStations.slice(0, ROW_LIMIT)}
-              />
+              // Same two-column cards as the TV and Radio tabs.
+              <Animated.View entering={enterFromBelow(0)} className="mt-6">
+                <SectionHeader title="Around the world" variant="inline" />
+                <View className="mt-3 flex-row flex-wrap">
+                  {internationalStations.slice(0, ROW_LIMIT).map((station, i) => (
+                    <View key={station.id} style={{ width: "50%" }}>
+                      <GridCell index={i}>
+                        <StationCard station={station} />
+                      </GridCell>
+                    </View>
+                  ))}
+                </View>
+              </Animated.View>
             ) : null}
           </Animated.View>
         )}
       </Animated.ScrollView>
-      <CompactHeader title="Laba" scrollY={scrollY} right={<HeaderActions />} />
+      <CompactHeader
+        title="Home"
+        scrollY={scrollY}
+        handoff={handoff}
+        right={
+          <>
+            <RefreshIndicator />
+            <HeaderActions variant={overHero && !showSkeleton ? "glass" : "surface"} />
+          </>
+        }
+      />
     </View>
   );
 }
