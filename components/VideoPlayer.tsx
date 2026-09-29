@@ -114,27 +114,31 @@ export function VideoPlayer({ streamUrl, onError, onReady, borderless = false, o
     if (hideTimer.current) clearTimeout(hideTimer.current);
     hideTimer.current = setTimeout(() => {
       if (!mountedRef.current) return;
-      controlsOpacity.value = withTiming(0, { duration: 300 }, (finished) => {
-        "worklet";
-        if (finished) runOnJS(safeSetControlsVisible)(false);
-      });
+      controlsOpacity.set(
+        withTiming(0, { duration: 300 }, (finished) => {
+          "worklet";
+          if (finished) runOnJS(safeSetControlsVisible)(false);
+        })
+      );
       setShowVolumeSlider(false);
     }, CONTROLS_TIMEOUT);
   }, [controlsOpacity, safeSetControlsVisible]);
 
   const showControls = useCallback(() => {
     safeSetControlsVisible(true);
-    controlsOpacity.value = withTiming(1, { duration: 200 });
+    controlsOpacity.set(withTiming(1, { duration: 200 }));
     scheduleHide();
   }, [controlsOpacity, scheduleHide, safeSetControlsVisible]);
 
   const toggleControls = useCallback(() => {
     if (controlsVisible) {
       if (hideTimer.current) clearTimeout(hideTimer.current);
-      controlsOpacity.value = withTiming(0, { duration: 300 }, (finished) => {
-        "worklet";
-        if (finished) runOnJS(safeSetControlsVisible)(false);
-      });
+      controlsOpacity.set(
+        withTiming(0, { duration: 300 }, (finished) => {
+          "worklet";
+          if (finished) runOnJS(safeSetControlsVisible)(false);
+        })
+      );
       setShowVolumeSlider(false);
     } else {
       showControls();
@@ -217,18 +221,18 @@ export function VideoPlayer({ streamUrl, onError, onReady, borderless = false, o
   // Volume slider gesture — memoized so it isn't recreated each render
   const volumeGesture = useMemo(
     () =>
-      Gesture.Pan()
-        .onUpdate((e) => {
-          "worklet";
-          const pct = Math.min(1, Math.max(0, e.x / VOLUME_SLIDER_WIDTH));
-          runOnJS(setVolume)(pct);
-        })
-        .onEnd(() => {
-          "worklet";
-          runOnJS(scheduleHide)();
-        }),
-    [scheduleHide],
+      Gesture.Pan().onUpdate((e) => {
+        "worklet";
+        const pct = Math.min(1, Math.max(0, e.x / VOLUME_SLIDER_WIDTH));
+        runOnJS(setVolume)(pct);
+      }),
+    [],
   );
+
+  // Keep controls up while the volume is being adjusted
+  useEffect(() => {
+    if (showVolumeSlider) scheduleHide();
+  }, [volume, showVolumeSlider, scheduleHide]);
 
   const volumeIcon =
     volume === 0
