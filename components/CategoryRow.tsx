@@ -1,19 +1,27 @@
+import { PressableScale } from "@/components/ui/PressableScale";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { Text } from "@/components/ui/Text";
 import { enterFromBelow } from "@/lib/motion";
 import type { Station } from "@/lib/schemas";
+import { useTheme } from "@/lib/useTheme";
+import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react-native";
 import { FlashList } from "@shopify/flash-list";
 import type { Href } from "expo-router";
 import { useRouter } from "expo-router";
 import { memo } from "react";
 import { View } from "react-native";
 import Animated from "react-native-reanimated";
-import { CARD_META_HEIGHT, StationCard } from "./StationCard";
+import { CARD_META_HEIGHT, CARD_RADIUS, StationCard } from "./StationCard";
 
 interface CategoryRowProps {
   title: string;
   subtitle?: string;
   stations: Station[];
   seeAllHref?: Href;
+  /** Size of the full list. When larger than `stations`, a See all tile ends the row. */
+  totalCount?: number;
+  headerVariant?: "pill" | "inline";
   /** Position on the page, used to stagger the entrance. */
   index?: number;
 }
@@ -43,18 +51,24 @@ export const CategoryRow = memo(function CategoryRow({
   subtitle,
   stations,
   seeAllHref,
+  totalCount,
+  headerVariant,
   index = 0,
 }: CategoryRowProps) {
   const router = useRouter();
 
   if (stations.length === 0) return null;
 
+  const onSeeAll = seeAllHref != null ? () => router.push(seeAllHref) : undefined;
+  const remaining = (totalCount ?? 0) - stations.length;
+
   return (
     <Animated.View entering={enterFromBelow(index)} className="mb-8">
       <SectionHeader
         title={title}
         subtitle={subtitle}
-        onSeeAll={seeAllHref != null ? () => router.push(seeAllHref) : undefined}
+        onSeeAll={onSeeAll}
+        variant={headerVariant}
       />
       <View style={{ height: ROW_HEIGHT }}>
         <FlashList
@@ -65,8 +79,39 @@ export const CategoryRow = memo(function CategoryRow({
         contentContainerStyle={CONTENT_CONTAINER_STYLE}
         ItemSeparatorComponent={Gap}
         renderItem={renderItem}
+        ListFooterComponent={
+          onSeeAll && remaining > 0 ? (
+            <SeeAllTile title={title} remaining={remaining} onPress={onSeeAll} />
+          ) : null
+        }
         />
       </View>
     </Animated.View>
   );
 });
+
+function SeeAllTile({ title, remaining, onPress }: { title: string; remaining: number; onPress: () => void }) {
+  const { colors } = useTheme();
+  return (
+    <PressableScale
+      onPress={onPress}
+      scaleTo={0.965}
+      accessibilityRole="button"
+      accessibilityLabel={`See all ${title}, ${remaining} more`}
+      containerStyle={{ width: CARD_WIDTH, marginLeft: 12 }}
+    >
+      <View
+        className="items-center justify-center gap-3 border border-border bg-surface"
+        style={{ width: CARD_WIDTH, height: CARD_WIDTH, borderRadius: CARD_RADIUS, borderCurve: "continuous" }}
+      >
+        <View className="h-12 w-12 items-center justify-center rounded-full bg-surface-light">
+          <HugeiconsIcon icon={ArrowRight01Icon} size={22} color={colors.textPrimary} strokeWidth={2.2} />
+        </View>
+        <View className="items-center">
+          <Text className="text-[15px] font-semibold">See all</Text>
+          <Text className="mt-0.5 text-[12px] font-medium text-text-secondary">{remaining} more</Text>
+        </View>
+      </View>
+    </PressableScale>
+  );
+}

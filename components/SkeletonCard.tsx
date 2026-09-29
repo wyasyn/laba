@@ -18,11 +18,17 @@ export function SkeletonCard() {
   );
 }
 
-/** Placeholder for the home hero carousel. */
-export function SkeletonHero({ width, height }: { width: number; height: number }) {
+/** Placeholder for the full-bleed home hero. */
+export function SkeletonHero({ height }: { height: number }) {
   return (
-    <View className="items-center">
-      <Skeleton style={{ width, height, borderRadius: 28 }} />
+    <View style={{ height }}>
+      <Skeleton style={{ width: "100%", height, borderRadius: 0 }} />
+      <View className="absolute bottom-11 left-5 right-5 gap-3">
+        <Skeleton style={{ width: 84, height: 24, borderRadius: 12 }} />
+        <Skeleton style={{ width: "62%", height: 40, borderRadius: 10 }} />
+        <Skeleton style={{ width: "48%", height: 14, borderRadius: 7 }} />
+        <Skeleton style={{ width: "100%", height: 48, borderRadius: 24, marginTop: 8 }} />
+      </View>
     </View>
   );
 }
