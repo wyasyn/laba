@@ -16,8 +16,8 @@ import { useStationStore } from "@/stores/useStationStore";
 import { ArrowDown01Icon, SignalFull02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useMemo } from "react";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { useCallback, useMemo } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import Animated from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -44,17 +44,26 @@ export default function StationScreen() {
 
   const isTv = station?.type === "tv";
 
-  useEffect(() => {
-    if (!station) return;
-    const player = usePlayerStore.getState();
-    if (station.type === "radio") {
-      // Radio lives in the global engine and keeps playing after this screen closes.
-      player.play(station);
-    } else if (player.currentStation) {
-      // Video has the floor: pause the radio so they don't talk over each other.
-      player.stop();
-    }
-  }, [station]);
+  // Runs on focus, not just mount: a screen restored from the back stack (e.g. after
+  // opening a related station) must take the global player back to its station.
+  useFocusEffect(
+    useCallback(() => {
+      if (!station) return;
+      const player = usePlayerStore.getState();
+      if (station.type === "radio") {
+        // Radio lives in the global engine and keeps playing after this screen closes.
+        // Opening the station that is already loaded (e.g. expanding the mini-player)
+        // keeps its current play/pause intent instead of restarting it.
+        const alreadyLoaded =
+          player.currentStation?.id === station.id && player.status !== "error";
+        if (alreadyLoaded) player.clearPending();
+        else player.play(station);
+      } else if (player.currentStation) {
+        // Video has the floor: pause the radio so they don't talk over each other.
+        player.stop();
+      }
+    }, [station]),
+  );
 
   if (!station) {
     return (

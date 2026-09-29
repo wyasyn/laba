@@ -13,7 +13,7 @@ interface PlayerStore {
   status: PlaybackStatus;
   error: string | null;
   volume: number;
-  /** Bumped by retry() so the engine reloads the stream. */
+  /** Bumped on every new load attempt (play or retry) so the engine reloads the stream. */
   reloadToken: number;
 
   // Actions
@@ -54,13 +54,16 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
       set({ pendingStationId: null, wantsPlaying: true });
       return;
     }
-    set({
+    // A fresh attempt token, so reopening a station that previously timed out gets
+    // its own connect window instead of inheriting the old timeout.
+    set((s) => ({
       currentStation: station,
       pendingStationId: null,
       wantsPlaying: true,
       status: "loading",
       error: null,
-    });
+      reloadToken: s.reloadToken + 1,
+    }));
   },
 
   pause: () => set({ wantsPlaying: false }),
