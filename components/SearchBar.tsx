@@ -1,84 +1,85 @@
+import { duration, haptic } from "@/lib/motion";
 import { useTheme } from "@/lib/useTheme";
+import { cn } from "@/lib/utils";
 import { Cancel01Icon, Search01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
-import { forwardRef, memo, useCallback, type ReactNode } from "react";
+import { forwardRef, memo, type ReactNode } from "react";
 import { Pressable, TextInput, View } from "react-native";
-import { twMerge } from "tailwind-merge";
+import Animated, {
+  ZoomIn,
+  ZoomOut,
+  interpolateColor,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 interface SearchBarProps {
   value: string;
   onChangeText: (text: string) => void;
   placeholder?: string;
-  /** Larger corner radius (e.g. home discovery). */
-  variant?: "default" | "pill";
-  /** Shown after the input (e.g. settings); clear still appears when there is text. */
+  /** Shown after the input; clear still appears when there is text. */
   trailingAccessory?: ReactNode;
   className?: string;
 }
 
 export const SearchBar = memo(
   forwardRef<TextInput, SearchBarProps>(function SearchBar(
-    {
-      value,
-      onChangeText,
-      placeholder = "Search stations...",
-      variant = "default",
-      trailingAccessory,
-      className,
-    },
+    { value, onChangeText, placeholder = "Search stations", trailingAccessory, className },
     ref,
   ) {
     const { colors } = useTheme();
+    const focus = useSharedValue(0);
 
-    const handleClear = useCallback(() => onChangeText(""), [onChangeText]);
-    const handleSubmit = useCallback(() => {
-      if (ref && typeof ref !== "function" && ref.current) {
-        ref.current.blur();
-      }
-    }, [ref]);
-
-    const shellClass =
-      variant === "pill"
-        ? "mx-4 mb-3 flex-row items-center rounded-3xl border border-border bg-surface px-4 py-2"
-        : "mx-4 mb-4 flex-row items-center rounded-2xl bg-surface px-4 py-1";
+    const shellStyle = useAnimatedStyle(() => ({
+      borderColor: interpolateColor(focus.get(), [0, 1], [colors.border, colors.primary]),
+      backgroundColor: interpolateColor(
+        focus.get(),
+        [0, 1],
+        [colors.surface, colors.surfaceElevated],
+      ),
+      transform: [{ scale: 1 + focus.get() * 0.01 }],
+    }));
 
     return (
-      <View className={twMerge(shellClass, className)}>
-        <HugeiconsIcon
-          icon={Search01Icon}
-          size={20}
-          color={colors.textSecondary}
-        />
-        <TextInput
-          ref={ref}
-          className="ml-3 flex-1 py-1 text-base text-foreground"
-          value={value}
-          onChangeText={onChangeText}
-          placeholder={placeholder}
-          placeholderTextColor={colors.textSecondary}
-          autoCapitalize="none"
-          autoCorrect={false}
-          returnKeyType="search"
-          onSubmitEditing={handleSubmit}
-        />
-        {value.length > 0 && (
-          <Pressable
-            onPress={handleClear}
-            hitSlop={12}
-            accessibilityRole="button"
-            accessibilityLabel="Clear search"
-            className="ml-2 rounded-full p-1"
-          >
-            <HugeiconsIcon
-              icon={Cancel01Icon}
-              size={18}
-              color={colors.textSecondary}
-            />
-          </Pressable>
-        )}
-        {trailingAccessory != null ? (
-          <View className="ml-1 shrink-0">{trailingAccessory}</View>
-        ) : null}
+      <View className={cn("mx-5 flex-row items-center gap-2", className)}>
+        <Animated.View
+          style={shellStyle}
+          className="h-12 flex-1 flex-row items-center rounded-2xl border px-4"
+        >
+          <HugeiconsIcon icon={Search01Icon} size={19} color={colors.textSecondary} />
+          <TextInput
+            ref={ref}
+            className="ml-2.5 h-full flex-1 font-sans text-[15px] text-foreground"
+            value={value}
+            onChangeText={onChangeText}
+            placeholder={placeholder}
+            placeholderTextColor={colors.textTertiary}
+            selectionColor={colors.primary}
+            autoCapitalize="none"
+            autoCorrect={false}
+            returnKeyType="search"
+            onFocus={() => focus.set(withTiming(1, { duration: duration.fast }))}
+            onBlur={() => focus.set(withTiming(0, { duration: duration.base }))}
+          />
+          {value.length > 0 ? (
+            <Animated.View entering={ZoomIn.duration(duration.fast)} exiting={ZoomOut.duration(duration.fast)}>
+              <Pressable
+                onPress={() => {
+                  haptic.select();
+                  onChangeText("");
+                }}
+                hitSlop={12}
+                accessibilityRole="button"
+                accessibilityLabel="Clear search"
+                className="h-6 w-6 items-center justify-center rounded-full bg-surface-light"
+              >
+                <HugeiconsIcon icon={Cancel01Icon} size={13} color={colors.textSecondary} />
+              </Pressable>
+            </Animated.View>
+          ) : null}
+        </Animated.View>
+        {trailingAccessory != null ? <View className="shrink-0">{trailingAccessory}</View> : null}
       </View>
     );
   }),

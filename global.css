@@ -2,15 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Web fallback only. Native reads these from constants/theme.ts via useThemeVars. */
 :root {
-  --background: 242 242 245;
+  --background: 245 245 248;
   --surface: 255 255 255;
-  --surface-light: 247 247 250;
+  --surface-light: 237 237 242;
+  --surface-elevated: 255 255 255;
   --primary: 229 9 20;
   --primary-light: 255 45 56;
-  --text-primary: 10 10 15;
-  --text-secondary: 107 107 123;
-  --border: 224 224 230;
+  --text-primary: 11 11 16;
+  --text-secondary: 95 95 116;
+  --text-tertiary: 154 154 171;
+  --border: 227 227 234;
   --success: 22 163 74;
   --warning: 217 119 6;
   --error: 220 38 38;
@@ -18,14 +21,16 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: 10 10 15;
-    --surface: 22 22 30;
-    --surface-light: 30 30 42;
+    --background: 9 9 13;
+    --surface: 19 19 25;
+    --surface-light: 27 27 35;
+    --surface-elevated: 34 34 44;
     --primary: 229 9 20;
     --primary-light: 255 45 56;
-    --text-primary: 255 255 255;
-    --text-secondary: 160 160 176;
-    --border: 42 42 58;
+    --text-primary: 245 245 247;
+    --text-secondary: 154 154 171;
+    --text-tertiary: 98 98 122;
+    --border: 36 36 47;
     --success: 34 197 94;
     --warning: 245 158 11;
     --error: 239 68 68;
