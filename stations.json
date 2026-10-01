@@ -56,31 +56,17 @@
     "isFeatured": true
   },
   {
-    "id": "bukedde-tv-1",
-    "name": "Bukedde TV 1",
+    "id": "dream-tv",
+    "name": "Dream TV",
     "type": "tv",
-    "streamUrl": "https://stream.hydeinnovations.com/bukedde1flussonic/index.m3u8",
-    "description": "general",
+    "streamUrl": "https://streamfi-dreamtv1.zettawiseroutes.com:8181/hls/stream.m3u8",
+    "description": "religious",
     "language": "English",
     "country": "UG",
     "categories": [
-      "general"
+      "religious"
     ],
-    "website": "https://www.bukedde.co.ug/",
-    "isFeatured": true
-  },
-  {
-    "id": "bukedde-tv-2",
-    "name": "Bukedde TV 2",
-    "type": "tv",
-    "streamUrl": "https://stream.hydeinnovations.com/bukedde2flussonic/index.m3u8",
-    "description": "general",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "general"
-    ],
-    "website": "https://www.bukedde.co.ug/",
+    "website": "http://www.imc.ug/",
     "isFeatured": true
   },
   {
@@ -150,20 +136,6 @@
     "categories": [
       "general"
     ],
-    "isFeatured": true
-  },
-  {
-    "id": "tv-west",
-    "name": "TV West",
-    "type": "tv",
-    "streamUrl": "https://stream.hydeinnovations.com/tvwest-flussonic/index.m3u8",
-    "description": "general",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "general"
-    ],
-    "website": "https://tvwest.co.ug/",
     "isFeatured": true
   },
   {
@@ -652,7 +624,7 @@
     "id": "radio-977-the-mix-us",
     "name": ".977 The Mix",
     "type": "radio",
-    "streamUrl": "http://26343.live.streamtheworld.com/977_MIX_SC",
+    "streamUrl": "http://24293.live.streamtheworld.com:3690/977_MIX_SC",
     "description": "80s, 90s, hits, today",
     "language": "english",
     "country": "US",
@@ -800,7 +772,7 @@
     "id": "radio-somafm-indie-pop-rocks-128k-aac-us",
     "name": "SomaFM Indie Pop Rocks! (128k AAC)",
     "type": "radio",
-    "streamUrl": "https://ice5.somafm.com/indiepop-128-aac",
+    "streamUrl": "https://ice2.somafm.com/indiepop-128-aac",
     "logo": "https://somafm.com/img3/indiepop-400.jpg",
     "description": "indie, indie pop, indie rock",
     "language": "english",
@@ -1003,6 +975,19 @@
       "talk"
     ],
     "website": "https://www.bbc.co.uk/radio4",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-anti-radio-az",
+    "name": "Anti Radio",
+    "type": "radio",
+    "streamUrl": "https://stream.antiradio.net/radio/8000/mp3",
+    "logo": "https://antiradio.net/wp-content/uploads/2024/04/cropped-favicon-180x180.png",
+    "description": "Radio station",
+    "language": "english",
+    "country": "AZ",
+    "categories": [],
+    "website": "https://antiradio.net/",
     "isFeatured": false
   }
 ]
