@@ -1,72 +1,45 @@
-import { applyDefaultFont, FONT_LOAD_TIMEOUT_MS } from "@/constants/contants";
+import { AudioEngine } from "@/components/audio/AudioEngine";
 import { setupTrackPlayer } from "@/lib/trackPlayerSetup";
 import { useTheme, useThemeVars } from "@/lib/useTheme";
 import { VideoWarmup } from "@/lib/utils";
-import { View } from "react-native";
 import { useFavouritesStore } from "@/stores/useFavouritesStore";
+import { useOnboardingStore } from "@/stores/useOnboardingStore";
+import { useRecentsStore } from "@/stores/useRecentsStore";
 import { useStationStore } from "@/stores/useStationStore";
 import { useThemeStore } from "@/stores/useThemeStore";
-import {
-  Inter_400Regular,
-  Inter_500Medium,
-  Inter_600SemiBold,
-  Inter_700Bold,
-  useFonts,
-} from "@expo-google-fonts/inter";
 import { SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import ErrorScreen from "./ErrorScreen";
+import { Platform, View } from "react-native";
 
 function InitialLayout() {
-  const { resolved } = useTheme();
+  const { resolved, colors } = useTheme();
   const themeVars = useThemeVars();
   const themeLoaded = useThemeStore((s) => s.isLoaded);
+  const onboardingLoaded = useOnboardingStore((s) => s.isLoaded);
 
   const [warmupDone, setWarmupDone] = useState(false);
-  const [fontTimedOut, setFontTimedOut] = useState(false);
-
-  const [fontsLoaded, fontError] = useFonts({
-    Inter_400Regular,
-    Inter_500Medium,
-    Inter_600SemiBold,
-    Inter_700Bold,
-  });
 
   const fetchStations = useStationStore((s) => s.fetchStations);
   const hydrateFavourites = useFavouritesStore((s) => s.hydrate);
   const hydrateTheme = useThemeStore((s) => s.hydrate);
+  const hydrateOnboarding = useOnboardingStore((s) => s.hydrate);
+  const hydrateRecents = useRecentsStore((s) => s.hydrate);
 
   useEffect(() => {
-    async function init() {
-      await Promise.all([fetchStations(), hydrateFavourites(), hydrateTheme(), setupTrackPlayer()]);
-    }
-    init();
-  }, [fetchStations, hydrateFavourites, hydrateTheme]);
+    void Promise.all([
+      fetchStations(),
+      hydrateFavourites(),
+      hydrateTheme(),
+      hydrateOnboarding(),
+      hydrateRecents(),
+      setupTrackPlayer(),
+    ]);
+  }, [fetchStations, hydrateFavourites, hydrateTheme, hydrateOnboarding, hydrateRecents]);
 
-  useEffect(() => {
-    if (fontsLoaded || fontError) return;
-    const timer = setTimeout(() => setFontTimedOut(true), FONT_LOAD_TIMEOUT_MS);
-    return () => clearTimeout(timer);
-  }, [fontsLoaded, fontError]);
-
-  useEffect(() => {
-    if (fontsLoaded) applyDefaultFont();
-  }, [fontsLoaded]);
-
-  const fontFailed = !!fontError || fontTimedOut;
-  const fontReady = fontsLoaded || fontFailed;
-  const ready = fontReady && themeLoaded;
-
-  useEffect(() => {
-    if (__DEV__) {
-      console.log("[InitialLayout] ready gate", {
-        fontReady,
-        themeLoaded,
-        ready,
-      });
-    }
-  }, [fontReady, themeLoaded, ready]);
+  // Fonts are embedded natively (expo-font config plugin), so the only things
+  // worth holding the splash for are the theme and the first route decision.
+  const ready = themeLoaded && onboardingLoaded;
 
   useEffect(() => {
     if (ready) SplashScreen.hideAsync();
@@ -74,47 +47,28 @@ function InitialLayout() {
 
   if (!ready) return null;
 
-  if (fontFailed) {
-    return (
-      <ErrorScreen
-        message={
-          "We couldn't load the app fonts. Please check your connection and restart the app."
-        }
-      />
-    );
-  }
+  const contentStyle = { backgroundColor: colors.background };
 
   return (
     <View style={themeVars} className="flex-1 bg-background">
       <StatusBar style={resolved === "light" ? "dark" : "light"} />
       {!warmupDone && <VideoWarmup onReady={() => setWarmupDone(true)} />}
-      <Stack screenOptions={{ headerShown: false }}>
+      <AudioEngine />
+      <Stack screenOptions={{ headerShown: false, contentStyle }}>
         <Stack.Screen name="index" options={{ animation: "fade" }} />
-        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="(tabs)" options={{ animation: "fade" }} />
         <Stack.Screen
           name="station/[id]"
           options={{
             presentation: "card",
-            headerShown: false,
-            animation: "slide_from_right",
+            animation: Platform.OS === "ios" ? "slide_from_bottom" : "fade_from_bottom",
+            gestureEnabled: true,
+            gestureDirection: "vertical",
           }}
         />
-        <Stack.Screen
-          name="settings"
-          options={{
-            presentation: "card",
-            headerShown: false,
-            animation: "slide_from_right",
-          }}
-        />
-        <Stack.Screen
-          name="account"
-          options={{
-            presentation: "card",
-            headerShown: false,
-            animation: "slide_from_right",
-          }}
-        />
+        <Stack.Screen name="search" options={{ animation: "fade" }} />
+        <Stack.Screen name="favourites" options={{ animation: "slide_from_right" }} />
+        <Stack.Screen name="account" options={{ animation: "slide_from_right" }} />
       </Stack>
     </View>
   );

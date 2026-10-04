@@ -1,42 +1,39 @@
 import { CategoryRow } from "@/components/CategoryRow";
-import { HeroSection } from "@/components/HeroSection";
+import { HeaderActions } from "@/components/HeaderActions";
+import { HomeHero, useHomeHeroHeight } from "@/components/HomeHero";
 import { RefreshIndicator } from "@/components/RefreshIndicator";
-import { SearchBar } from "@/components/SearchBar";
-import { SkeletonRowCard } from "@/components/SkeletonCard";
-import type { Station } from "@/lib/schemas";
-import { selectHeroStations } from "@/lib/selectHeroStations";
-import { useDebounce } from "@/lib/useDebounce";
+import { SkeletonCard, SkeletonHero, SkeletonTitle } from "@/components/SkeletonCard";
+import { LIST_BOTTOM_PADDING } from "@/components/StationList";
+import { COMPACT_BAR_HEIGHT, CompactHeader, useCollapsingHeader } from "@/components/ui/CollapsingHeader";
+import { ShimmerGroup } from "@/components/ui/Shimmer";
+import { Text } from "@/components/ui/Text";
+import { duration } from "@/lib/motion";
+import { mixInternational, rankFeatured } from "@/lib/homeSections";
 import { useTheme } from "@/lib/useTheme";
+import { useHideTabBarOnScroll } from "@/stores/useChromeStore";
 import { useStationStore } from "@/stores/useStationStore";
-import { UserIcon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react-native";
-import { useRouter } from "expo-router";
+import { useIsFocused } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { useMemo, useState } from "react";
-import { Pressable, ScrollView, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { RefreshControl, View } from "react-native";
+import Animated, { FadeIn, FadeOut, useAnimatedReaction } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { scheduleOnRN } from "react-native-worklets";
 import { useShallow } from "zustand/react/shallow";
 
-const SCROLL_CONTENT_STYLE = { paddingBottom: 28 } as const;
-
-function matchesQuery(s: Station, q: string) {
-  const t = q.toLowerCase().trim();
-  if (!t) return true;
-  return (
-    s.name.toLowerCase().includes(t) ||
-    s.description.toLowerCase().includes(t) ||
-    s.categories.some((c) => c.toLowerCase().includes(t))
-  );
-}
+/** Home rows show a taste of each list; the full list is one tap away. */
+const ROW_LIMIT = 12;
 
 export default function HomeScreen() {
-  const router = useRouter();
-  const { colors } = useTheme();
-  const [searchQuery, setSearchQuery] = useState("");
-  const debouncedQuery = useDebounce(searchQuery, 250);
+  const insets = useSafeAreaInsets();
+  const heroHeight = useHomeHeroHeight();
+  const light = useTheme().resolved === "light";
+  const isFocused = useIsFocused();
 
   const {
     stations,
     isLoading,
+    refreshStations,
     tvStations,
     radioStations,
     internationalStations,
@@ -45,6 +42,7 @@ export default function HomeScreen() {
     useShallow((s) => ({
       stations: s.stations,
       isLoading: s.isLoading,
+      refreshStations: s.refreshStations,
       tvStations: s.tvStations,
       radioStations: s.radioStations,
       internationalStations: s.internationalStations,
@@ -52,109 +50,114 @@ export default function HomeScreen() {
     })),
   );
 
-  const hasInternational = internationalStations.length > 0;
+  const featuredRow = useMemo(() => rankFeatured(featuredStations, ROW_LIMIT), [featuredStations]);
+  const worldStations = useMemo(() => mixInternational(internationalStations, ROW_LIMIT), [internationalStations]);
 
-  const filteredFeatured = useMemo(
-    () => featuredStations.filter((s) => matchesQuery(s, debouncedQuery)),
-    [featuredStations, debouncedQuery],
+  const showSkeleton = isLoading && stations.length === 0;
+
+  // The frosted bar fades in as the hero's bottom edge reaches it.
+  const barBottom = insets.top + COMPACT_BAR_HEIGHT;
+  const handoff: [number, number] = [heroHeight - barBottom - 80, heroHeight - barBottom];
+
+  // Once past the hero, scrolling down slides the bar and the tab bar away;
+  // scrolling up brings them back.
+  const { scrollY, hideY, onScroll } = useCollapsingHeader({
+    hideDistance: COMPACT_BAR_HEIGHT,
+    hideAfter: handoff[1],
+  });
+  useHideTabBarOnScroll(hideY, COMPACT_BAR_HEIGHT);
+
+  // While the bar is still clear the page top is the (dark) hero, so the
+  // status bar and header buttons switch to their light-on-image style. In
+  // light mode the hero's lower half fades to white, so that ends once it
+  // reaches the top of the screen.
+  const [overHero, setOverHero] = useState(true);
+  const threshold = light ? heroHeight * 0.45 : (handoff[0] + handoff[1]) / 2;
+  useAnimatedReaction(
+    () => scrollY.get() < threshold,
+    (next, prev) => {
+      if (next !== prev) scheduleOnRN(setOverHero, next);
+    },
+    [threshold],
   );
-
-  const stationsMatchingSearch = useMemo(
-    () => stations.filter((s) => matchesQuery(s, debouncedQuery)),
-    [stations, debouncedQuery],
-  );
-
-  const heroStations = useMemo(
-    () => selectHeroStations(filteredFeatured, stationsMatchingSearch),
-    [filteredFeatured, stationsMatchingSearch],
-  );
-
-  const tvRow = useMemo(
-    () => tvStations.filter((s) => matchesQuery(s, debouncedQuery)).slice(0, 10),
-    [tvStations, debouncedQuery],
-  );
-
-  const radioRow = useMemo(
-    () => radioStations.filter((s) => matchesQuery(s, debouncedQuery)).slice(0, 10),
-    [radioStations, debouncedQuery],
-  );
-
-  const internationalRow = useMemo(
-    () =>
-      internationalStations
-        .filter((s) => matchesQuery(s, debouncedQuery))
-        .slice(0, 10),
-    [internationalStations, debouncedQuery],
-  );
-
-  const settingsAccessory = (
-    <Pressable
-      onPress={() => router.push("/settings")}
-      hitSlop={8}
-      accessibilityRole="button"
-      accessibilityLabel="Open settings"
-      className="h-9 w-9 items-center justify-center overflow-hidden rounded-full border border-border bg-surface active:opacity-70"
-    >
-      <HugeiconsIcon icon={UserIcon} size={18} color={colors.textPrimary} />
-    </Pressable>
-  );
-
-  if (isLoading && stations.length === 0) {
-    return (
-      <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
-        <View className="px-4 pt-4">
-          <View className="mb-3 h-12 rounded-3xl bg-surface-light" />
-          <View className="mt-2 h-[220px] self-center rounded-[28px] bg-surface-light" style={{ width: "76%" }} />
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            className="mt-6"
-            contentContainerStyle={{ gap: 12, paddingHorizontal: 4 }}
-          >
-            {Array.from({ length: 4 }).map((_, i) => (
-              <SkeletonRowCard key={i} />
-            ))}
-          </ScrollView>
-        </View>
-      </SafeAreaView>
-    );
-  }
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
-      <ScrollView
+    <View className="flex-1 bg-background">
+      {isFocused && overHero ? <StatusBar style="light" /> : null}
+      <Animated.ScrollView
+        onScroll={onScroll}
+        scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={SCROLL_CONTENT_STYLE}
-        keyboardShouldPersistTaps="handled"
+        contentInsetAdjustmentBehavior="never"
+        contentContainerStyle={{ paddingBottom: LIST_BOTTOM_PADDING }}
+        refreshControl={
+          <RefreshControl
+            // The pull only triggers the refresh. The "Updating" pill in the header is the
+            // single loading state, so the native spinner is released straight away.
+            refreshing={false}
+            onRefresh={refreshStations}
+            tintColor="transparent"
+            colors={["transparent"]}
+            progressBackgroundColor="transparent"
+            progressViewOffset={insets.top + 48}
+          />
+        }
       >
-        <View className="pt-3">
-          <SearchBar
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            placeholder="Channels, stations, categories…"
-            variant="pill"
-            trailingAccessory={settingsAccessory}
-          />
-        </View>
-
-        <View className="min-h-[28px] justify-center px-4 pb-1 pt-1">
-          <RefreshIndicator />
-        </View>
-
-        {heroStations.length > 0 && (
-          <HeroSection featuredStations={heroStations} />
+        {showSkeleton ? (
+          <ShimmerGroup>
+            <SkeletonHero height={heroHeight} />
+            <View className="mt-8 gap-3">
+              <SkeletonTitle />
+              <View className="flex-row gap-3 px-5">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <View key={i} style={{ width: 148 }}>
+                    <SkeletonCard />
+                  </View>
+                ))}
+              </View>
+            </View>
+          </ShimmerGroup>
+        ) : (
+          <Animated.View
+            key="browse"
+            entering={FadeIn.duration(duration.base)}
+            exiting={FadeOut.duration(duration.fast)}
+          >
+            <HomeHero
+              tvStations={tvStations}
+              radioStations={radioStations}
+              featuredStations={featuredStations}
+              active={isFocused}
+              scrollY={scrollY}
+              header={
+                <View
+                  pointerEvents="box-none"
+                  style={{ paddingTop: insets.top, height: barBottom }}
+                  className="flex-row items-center px-5"
+                >
+                  <Text className="text-[28px] font-bold tracking-tighter text-white">Laba</Text>
+                </View>
+              }
+            />
+            <View className="mt-6">
+              <CategoryRow index={0} title="Featured" headerVariant="inline" stations={featuredRow} />
+            </View>
+            <CategoryRow index={1} title="Around the world" headerVariant="inline" stations={worldStations} />
+          </Animated.View>
         )}
-
-        <CategoryRow title="Popular TV" stations={tvRow} seeAllHref="/tv" />
-        <CategoryRow title="Radio Stations" stations={radioRow} seeAllHref="/radio" />
-        {hasInternational ? (
-          <CategoryRow
-            title="International"
-            stations={internationalRow}
-            seeAllHref="/tv"
-          />
-        ) : null}
-      </ScrollView>
-    </SafeAreaView>
+      </Animated.ScrollView>
+      <CompactHeader
+        title="Home"
+        scrollY={scrollY}
+        handoff={handoff}
+        hideY={hideY}
+        right={
+          <>
+            <RefreshIndicator />
+            <HeaderActions variant={overHero && !showSkeleton ? "glass" : "surface"} />
+          </>
+        }
+      />
+    </View>
   );
 }

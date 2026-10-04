@@ -1,183 +1,212 @@
 import { AudioPlayer } from "@/components/AudioPlayer";
-import { StationCard } from "@/components/StationCard";
+import { CategoryRow } from "@/components/CategoryRow";
+import { EmptyState } from "@/components/EmptyState";
+import { FavouriteButton } from "@/components/FavouriteButton";
 import { StationArtwork } from "@/components/StationArtwork";
 import { VideoPlayer } from "@/components/VideoPlayer";
 import { YouTubePlayer } from "@/components/YouTubePlayer";
+import { IconButton } from "@/components/ui/IconButton";
+import { Text } from "@/components/ui/Text";
+import { TypePill } from "@/components/ui/TypePill";
+import { enterFromBelow } from "@/lib/motion";
+import type { Station } from "@/lib/schemas";
 import { useTheme } from "@/lib/useTheme";
-import { useFavouritesStore } from "@/stores/useFavouritesStore";
 import { usePlayerStore } from "@/stores/usePlayerStore";
+import { useRecentsStore } from "@/stores/useRecentsStore";
 import { useStationStore } from "@/stores/useStationStore";
-import { ArrowLeft01Icon, FavouriteIcon } from "@hugeicons/core-free-icons";
+import { ArrowDown01Icon, SignalFull02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useMemo } from "react";
-import { FlatList, Pressable, RefreshControl, ScrollView, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { useCallback, useMemo } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
+import Animated from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+function useRelated(station: Station | undefined) {
+  const pool = useStationStore((s) =>
+    station?.type === "tv" ? s.tvStations : s.radioStations,
+  );
+  return useMemo(() => {
+    if (!station) return [];
+    return pool
+      .filter(
+        (c) => c.id !== station.id && c.categories.some((cat) => station.categories.includes(cat)),
+      )
+      .slice(0, 10);
+  }, [pool, station]);
+}
 
 export default function StationScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const { colors } = useTheme();
   const station = useStationStore((s) => s.stations.find((st) => st.id === id));
-  const isFavourite = useFavouritesStore((s) => s.ids.includes(id));
-  const toggle = useFavouritesStore((s) => s.toggle);
-  const play = usePlayerStore((s) => s.play);
-  const stop = usePlayerStore((s) => s.stop);
-  const isRefreshing = useStationStore((s) => s.isRefreshing);
-  const refreshStations = useStationStore((s) => s.refreshStations);
-  const stations = useStationStore((s) => s.stations);
+  const related = useRelated(station);
 
-  // Register station as active immediately on mount; clean up on unmount
-  useEffect(() => {
-    if (station) play(station);
-    return () => stop();
-  }, [station, play, stop]);
+  const isTv = station?.type === "tv";
+
+  // Runs on focus, not just mount: a screen restored from the back stack (e.g. after
+  // opening a related station) must take the global player back to its station.
+  useFocusEffect(
+    useCallback(() => {
+      if (!station) return;
+      useRecentsStore.getState().record(station.id);
+      const player = usePlayerStore.getState();
+      if (station.type === "radio") {
+        // Radio lives in the global engine and keeps playing after this screen closes.
+        // Opening the station that is already loaded (e.g. expanding the mini-player)
+        // keeps its current play/pause intent instead of restarting it.
+        const alreadyLoaded =
+          player.currentStation?.id === station.id && player.status !== "error";
+        if (alreadyLoaded) player.clearPending();
+        else player.play(station);
+      } else if (player.currentStation) {
+        // Video has the floor: pause the radio so they don't talk over each other.
+        player.stop();
+      }
+    }, [station]),
+  );
 
   if (!station) {
     return (
-      <SafeAreaView className="flex-1 items-center justify-center bg-background">
-        <Text className="text-text-secondary">Station not found</Text>
-        <Pressable onPress={() => router.back()} className="mt-4">
-          <Text className="text-primary">Go back</Text>
-        </Pressable>
-      </SafeAreaView>
+      <View className="flex-1 bg-background">
+        <EmptyState
+          title="Station not found"
+          message="It may have been removed from the catalogue."
+          actionLabel="Go back"
+          onAction={() => router.back()}
+        />
+      </View>
     );
   }
 
-  const isTv = station.type === "tv";
-  const badgeColor = isTv ? colors.primary : colors.success;
-  const relatedStations = useMemo(
-    () =>
-      stations
-        .filter((candidate) => {
-          if (candidate.id === station.id) return false;
-          if (candidate.type !== station.type) return false;
-          return candidate.categories.some((cat) => station.categories.includes(cat));
-        })
-        .slice(0, 10),
-    [stations, station],
+  return isTv ? (
+    <TvStation station={station} related={related} onBack={() => router.back()} />
+  ) : (
+    <RadioStation station={station} related={related} onBack={() => router.back()} />
   );
+}
+
+interface StationViewProps {
+  station: Station;
+  related: Station[];
+  onBack: () => void;
+}
+
+function RadioStation({ station, related, onBack }: StationViewProps) {
+  const { colors } = useTheme();
+  const insets = useSafeAreaInsets();
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={isTv ? ["top"] : undefined}>
-      {!isTv && (
-        <View className="flex-row items-center justify-between px-4 py-3">
-          <Pressable
-            onPress={() => router.back()}
-            className="rounded-full bg-surface p-2.5"
-          >
-            <HugeiconsIcon
-              icon={ArrowLeft01Icon}
-              size={22}
-              color={colors.textPrimary}
-            />
-          </Pressable>
+    <View className="flex-1 bg-background">
+      {/* Ambient backdrop: the station's own artwork, heavily blurred. */}
+      <View style={StyleSheet.absoluteFill} pointerEvents="none">
+        <StationArtwork
+          station={station}
+          variant="hero"
+          blurRadius={60}
+          transition={400}
+          style={{ opacity: 0.6, transform: [{ scale: 1.4 }] }}
+        />
+        <LinearGradient
+          colors={[`${colors.background}66`, `${colors.background}CC`, colors.background]}
+          locations={[0, 0.45, 0.8]}
+          style={StyleSheet.absoluteFill}
+        />
+      </View>
 
-          <Pressable
-            onPress={() => toggle(id)}
-            className="rounded-full bg-surface p-2.5"
-          >
-            <HugeiconsIcon
-              icon={FavouriteIcon}
-              size={22}
-              color={isFavourite ? colors.primary : colors.textSecondary}
-            />
-          </Pressable>
+      <View style={{ paddingTop: insets.top + 4 }} className="flex-row items-center justify-between px-4 pb-2">
+        <IconButton icon={ArrowDown01Icon} onPress={onBack} accessibilityLabel="Close player" iconSize={22} />
+        <View className="items-center">
+          <Text className="text-[11px] font-semibold uppercase tracking-[2px] text-text-secondary">
+            Now playing
+          </Text>
+          <Text className="text-[13px] font-semibold">Live radio</Text>
         </View>
-      )}
+        <FavouriteButton stationId={station.id} variant="surface" size={20} />
+      </View>
 
       <ScrollView
-        className="flex-1"
-        contentContainerStyle={{ paddingBottom: 40 }}
         showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefreshing}
-            onRefresh={refreshStations}
-            tintColor={colors.primary}
-            colors={[colors.primary]}
-          />
-        }
+        contentContainerStyle={{ paddingTop: 20, paddingBottom: insets.bottom + 32 }}
       >
-        {!isTv && (
-          <View
-            className="mx-4 mb-1 overflow-hidden rounded-xl bg-background"
-            style={{ aspectRatio: 16 / 9 }}
-          >
-            <StationArtwork station={station} variant="tile" />
-          </View>
-        )}
+        <Animated.View entering={enterFromBelow(0)}>
+          <AudioPlayer station={station} />
+        </Animated.View>
 
-        {isTv ? (
-          station.youtubeChannelId ? (
-            <YouTubePlayer
-              channelId={station.youtubeChannelId}
-              borderless
-              onBack={() => router.back()}
-            />
-          ) : (
-            <VideoPlayer
-              streamUrl={station.streamUrl!}
-              borderless
-              onBack={() => router.back()}
-            />
-          )
+        {related.length > 0 ? (
+          <View className="mt-12">
+            <CategoryRow index={1} title="More like this" stations={related} />
+          </View>
+        ) : null}
+      </ScrollView>
+    </View>
+  );
+}
+
+function TvStation({ station, related, onBack }: StationViewProps) {
+  const { colors } = useTheme();
+  const insets = useSafeAreaInsets();
+
+  return (
+    <View className="flex-1 bg-background">
+      <View style={{ paddingTop: insets.top }} className="bg-black">
+        {station.youtubeChannelId ? (
+          <YouTubePlayer channelId={station.youtubeChannelId} borderless onBack={onBack} />
         ) : (
-          <View className="px-4">
-            <AudioPlayer station={station} />
-          </View>
+          <VideoPlayer streamUrl={station.streamUrl!} borderless onBack={onBack} />
         )}
+      </View>
 
-        <View className="mt-2 px-4">
-          <View className="flex-row flex-wrap items-center gap-2">
-            <Text className="flex-shrink text-2xl font-bold text-foreground">
-              {station.name}
-            </Text>
-            <View
-              className="rounded-md px-2 py-0.5"
-              style={{ backgroundColor: badgeColor + "33" }}
-            >
-              <Text
-                className="text-[11px] font-bold uppercase tracking-wide"
-                style={{ color: badgeColor }}
-              >
-                {isTv ? "TV" : "Radio"}
-              </Text>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 32 }}
+      >
+        <Animated.View entering={enterFromBelow(0)} className="px-5 pt-5">
+          <View className="flex-row items-start gap-3">
+            <View className="h-14 w-14 overflow-hidden rounded-2xl border border-border">
+              <StationArtwork station={station} variant="tile" />
             </View>
-            {isTv && (
-              <Pressable
-                onPress={() => toggle(id)}
-                className="ml-auto rounded-full bg-surface p-2.5"
-              >
-                <HugeiconsIcon
-                  icon={FavouriteIcon}
-                  size={22}
-                  color={isFavourite ? colors.primary : colors.textSecondary}
-                />
-              </Pressable>
-            )}
-          </View>
-          {relatedStations.length > 0 ? (
-            <View className="mt-5">
-              <Text className="mb-2 text-lg font-semibold text-foreground">
-                Related stations
+            <View className="flex-1">
+              <Text numberOfLines={2} className="text-[22px] font-bold leading-7 tracking-tight">
+                {station.name}
               </Text>
-              <FlatList
-                data={relatedStations}
-                keyExtractor={(item) => item.id}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ gap: 12, paddingVertical: 4 }}
-                renderItem={({ item }) => (
-                  <View className="w-44 shrink-0">
-                    <StationCard station={item} />
-                  </View>
-                )}
-              />
+              <View className="mt-1.5 flex-row items-center gap-2">
+                <TypePill type="tv" />
+                <View className="flex-row items-center gap-1">
+                  <HugeiconsIcon icon={SignalFull02Icon} size={12} color={colors.success} />
+                  <Text className="text-xs font-medium text-text-secondary">
+                    {station.country === "UG" ? "Uganda" : station.country} · {station.language}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <FavouriteButton stationId={station.id} variant="surface" size={20} />
+          </View>
+
+          {station.description ? (
+            <Text className="mt-5 text-[15px] leading-[22px] text-text-secondary">
+              {station.description}
+            </Text>
+          ) : null}
+
+          {station.categories.length > 0 ? (
+            <View className="mt-4 flex-row flex-wrap gap-2">
+              {station.categories.map((c) => (
+                <View key={c} className="rounded-full border border-border bg-surface px-3 py-1.5">
+                  <Text className="text-xs font-medium capitalize text-text-secondary">{c}</Text>
+                </View>
+              ))}
             </View>
           ) : null}
-        </View>
+        </Animated.View>
+
+        {related.length > 0 ? (
+          <View className="mt-10">
+            <CategoryRow index={1} title="More like this" stations={related} />
+          </View>
+        ) : null}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }

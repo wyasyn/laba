@@ -1,100 +1,108 @@
+import { FloatingMiniPlayer, MiniPlayerAccessory } from "@/components/MiniPlayer";
+import { TAB_BAR_HEIGHT, TabBar } from "@/components/TabBar";
+import { FONT_FAMILY } from "@/constants/theme";
 import { useTheme } from "@/lib/useTheme";
-import {
-  FavouriteIcon,
-  Home01Icon,
-  Radio01Icon,
-  Tv01Icon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react-native";
-import { BlurView } from "expo-blur";
+import { useChromeStore } from "@/stores/useChromeStore";
+import { usePlayerStore } from "@/stores/usePlayerStore";
 import { Tabs } from "expo-router";
-import { useWindowDimensions } from "react-native";
+import { NativeTabs } from "expo-router/unstable-native-tabs";
+import { Platform, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+/**
+ * iOS 26 has the native tab bar accessory slot and minimize-on-scroll (Liquid
+ * Glass), so it keeps the native tabs. Elsewhere the native bar can only pop in
+ * and out, so a JS bar that slides away on scroll is used instead.
+ */
+const HAS_NATIVE_ACCESSORY =
+  Platform.OS === "ios" && parseInt(String(Platform.Version), 10) >= 26;
+
+function AccessoryContent() {
+  const placement = NativeTabs.BottomAccessory.usePlacement();
+  return <MiniPlayerAccessory placement={placement} />;
+}
+
 export default function TabLayout() {
+  return HAS_NATIVE_ACCESSORY ? <NativeTabLayout /> : <JsTabLayout />;
+}
+
+function JsTabLayout() {
   const insets = useSafeAreaInsets();
-  const { width } = useWindowDimensions();
-  const { colors, resolved } = useTheme();
-  const tabBarHeight = 70;
-  const horizontalMargin = width >= 430 ? 20 : width >= 380 ? 16 : 10;
+  const tabBarHidden = useChromeStore((s) => s.tabBarHidden);
 
   return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.textSecondary,
-        tabBarShowLabel: true,
-        tabBarLabelStyle: {
-          fontSize: 11,
-          marginTop: 2,
-        },
-        tabBarBackground: () => (
-          <BlurView
-            intensity={70}
-            tint={resolved === "dark" ? "dark" : "light"}
-            style={{ flex: 1, borderRadius: 55 }}
+    <View className="flex-1 bg-background">
+      <Tabs tabBar={(props) => <TabBar {...props} />} screenOptions={{ headerShown: false }}>
+        <Tabs.Screen name="index" />
+        <Tabs.Screen name="tv" />
+        <Tabs.Screen name="radio" />
+        <Tabs.Screen name="settings" />
+      </Tabs>
+      <FloatingMiniPlayer bottom={insets.bottom + (tabBarHidden ? 0 : TAB_BAR_HEIGHT) + 10} />
+    </View>
+  );
+}
+
+function NativeTabLayout() {
+  const { colors } = useTheme();
+  const hasStation = usePlayerStore((s) => s.currentStation !== null);
+
+  return (
+    <View className="flex-1 bg-background">
+      <NativeTabs
+        tintColor={colors.primary}
+        iconColor={{ default: colors.textSecondary, selected: colors.primary }}
+        labelStyle={{
+          default: { color: colors.textSecondary, fontSize: 11, fontFamily: FONT_FAMILY, fontWeight: "600" },
+          selected: { color: colors.primary, fontSize: 11, fontFamily: FONT_FAMILY, fontWeight: "700" },
+        }}
+        minimizeBehavior="onScrollDown"
+      >
+        {hasStation ? (
+          <NativeTabs.BottomAccessory>
+            <AccessoryContent />
+          </NativeTabs.BottomAccessory>
+        ) : null}
+
+        {/* Custom icon set (outline by default, filled when selected).
+            Sources live in assets/images/tabs/svg. */}
+        <NativeTabs.Trigger name="index">
+          <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
+          <NativeTabs.Trigger.Icon
+            src={{
+              default: require("@/assets/images/tabs/home.png"),
+              selected: require("@/assets/images/tabs/home-filled.png"),
+            }}
           />
-        ),
-        tabBarStyle: {
-          position: "absolute",
-          marginLeft: horizontalMargin,
-          marginRight: horizontalMargin,
-          bottom: insets.bottom + 10,
-          backgroundColor: `${colors.surface}B3`,
-          borderTopWidth: 0,
-          borderWidth: 1,
-          borderColor: `${colors.border}CC`,
-          borderRadius: 55,
-          overflow: "hidden",
-          height: tabBarHeight,
-          paddingBottom: 8,
-          paddingTop: 8,
-          paddingHorizontal: 8,
-          elevation: 0,
-          shadowOpacity: 0,
-        },
-        tabBarItemStyle: {
-          borderRadius: 14,
-        },
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color, size }) => (
-            <HugeiconsIcon icon={Home01Icon} size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="tv"
-        options={{
-          title: "TV",
-          tabBarIcon: ({ color, size }) => (
-            <HugeiconsIcon icon={Tv01Icon} size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="radio"
-        options={{
-          title: "Radio",
-          tabBarIcon: ({ color, size }) => (
-            <HugeiconsIcon icon={Radio01Icon} size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="favourites"
-        options={{
-          title: "Favourites",
-          tabBarIcon: ({ color, size }) => (
-            <HugeiconsIcon icon={FavouriteIcon} size={size} color={color} />
-          ),
-        }}
-      />
-    </Tabs>
+        </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="tv">
+          <NativeTabs.Trigger.Label>TV</NativeTabs.Trigger.Label>
+          <NativeTabs.Trigger.Icon
+            src={{
+              default: require("@/assets/images/tabs/live_tv.png"),
+              selected: require("@/assets/images/tabs/live_tv-filled.png"),
+            }}
+          />
+        </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="radio">
+          <NativeTabs.Trigger.Label>Radio</NativeTabs.Trigger.Label>
+          <NativeTabs.Trigger.Icon
+            src={{
+              default: require("@/assets/images/tabs/radio.png"),
+              selected: require("@/assets/images/tabs/radio-filled.png"),
+            }}
+          />
+        </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="settings">
+          <NativeTabs.Trigger.Label>Settings</NativeTabs.Trigger.Label>
+          <NativeTabs.Trigger.Icon
+            src={{
+              default: require("@/assets/images/tabs/settings.png"),
+              selected: require("@/assets/images/tabs/settings-filled.png"),
+            }}
+          />
+        </NativeTabs.Trigger>
+      </NativeTabs>
+    </View>
   );
 }
