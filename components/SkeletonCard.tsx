@@ -1,69 +1,43 @@
-import { useEffect } from "react";
+import { CARD_META_HEIGHT, CARD_RADIUS } from "@/components/StationCard";
+import { Skeleton } from "@/components/ui/Shimmer";
 import { View } from "react-native";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withRepeat,
-  withTiming,
-} from "react-native-reanimated";
 
-function useSkeletonPulse() {
-  const opacity = useSharedValue(0.3);
-
-  useEffect(() => {
-    opacity.value = withRepeat(withTiming(0.7, { duration: 800 }), -1, true);
-  }, [opacity]);
-
-  return useAnimatedStyle(() => ({
-    opacity: opacity.value,
-  }));
-}
-
-/** Matches poster-style StationCard (3:4) used in grids. */
+/**
+ * Placeholder matching StationCard. Render inside a ShimmerGroup so all
+ * placeholders sweep together.
+ */
 export function SkeletonCard() {
-  const animatedStyle = useSkeletonPulse();
-
   return (
-    <View
-      className="mb-3 overflow-hidden rounded-xl bg-surface"
-      style={{ aspectRatio: 3 / 4, width: "100%" }}
-    >
-      <Animated.View
-        className="flex-1 bg-surface-light"
-        style={animatedStyle}
-      />
-      <View className="absolute bottom-0 left-0 right-0 px-2.5 pb-2.5 pt-8">
-        <Animated.View
-          className="h-[14px] w-[85%] rounded bg-surface-light"
-          style={animatedStyle}
-        />
-        <Animated.View
-          className="mt-2 h-2.5 w-1/3 rounded bg-surface-light"
-          style={animatedStyle}
-        />
+    <View>
+      <Skeleton style={{ aspectRatio: 1, width: "100%", borderRadius: CARD_RADIUS }} />
+      <View style={{ height: CARD_META_HEIGHT, paddingTop: 11, paddingHorizontal: 2, gap: 7 }}>
+        <Skeleton style={{ width: "78%", height: 12, borderRadius: 6 }} />
+        <Skeleton style={{ width: "52%", height: 10, borderRadius: 5 }} />
       </View>
     </View>
   );
 }
 
-/** Matches stacked `StationCard` used on home horizontal rows. */
-export function SkeletonRowCard() {
-  const animatedStyle = useSkeletonPulse();
-
+/** Placeholder for the full-bleed home hero. */
+export function SkeletonHero({ height }: { height: number }) {
   return (
-    <View className="w-44 shrink-0">
-      <View
-        className="overflow-hidden rounded-[26px] bg-surface"
-        style={{ aspectRatio: 3 / 4, width: "100%" }}
-      >
-        <Animated.View className="flex-1 bg-surface-light" style={animatedStyle} />
+    <View style={{ height }}>
+      <Skeleton style={{ width: "100%", height, borderRadius: 0 }} />
+      <View className="absolute bottom-11 left-5 right-5 gap-3">
+        <Skeleton style={{ width: 84, height: 24, borderRadius: 12 }} />
+        <Skeleton style={{ width: "62%", height: 40, borderRadius: 10 }} />
+        <Skeleton style={{ width: "48%", height: 14, borderRadius: 7 }} />
+        <Skeleton style={{ width: "100%", height: 48, borderRadius: 24, marginTop: 8 }} />
       </View>
-      <View className="items-center px-3 pt-5">
-        <Animated.View
-          className="h-[13px] w-[85%] rounded-md bg-surface-light"
-          style={animatedStyle}
-        />
-      </View>
+    </View>
+  );
+}
+
+/** Placeholder for a section title row. */
+export function SkeletonTitle() {
+  return (
+    <View className="gap-2 px-5">
+      <Skeleton style={{ width: 140, height: 18, borderRadius: 6 }} />
     </View>
   );
 }

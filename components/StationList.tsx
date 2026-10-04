@@ -1,120 +1,227 @@
+import { CompactHeader, COMPACT_BAR_HEIGHT, LargeTitle, useCollapsingHeader } from "@/components/ui/CollapsingHeader";
+import { FilterChips, FILTER_CHIPS_HEIGHT } from "@/components/ui/FilterChips";
+import { GlassView } from "@/components/ui/GlassView";
+import { ShimmerGroup } from "@/components/ui/Shimmer";
+import { Text } from "@/components/ui/Text";
 import type { Station, StationType } from "@/lib/schemas";
-import { useDebounce } from "@/lib/useDebounce";
+import { hasCategory, topCategories } from "@/lib/search";
+import { useHideTabBarOnScroll } from "@/stores/useChromeStore";
 import { useStationStore } from "@/stores/useStationStore";
-import { ReactElement, useCallback, useMemo, useRef, useState } from "react";
-import { FlatList, TextInput, View } from "react-native";
+import { FlashList, type FlashListRef, type ListRenderItemInfo } from "@shopify/flash-list";
+import { useMemo, useRef, useState, type ReactNode } from "react";
+import { RefreshControl, StyleSheet, View, type LayoutChangeEvent } from "react-native";
+import Animated, {
+  Extrapolation,
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { EmptyState } from "./EmptyState";
-import { SearchBar } from "./SearchBar";
-import { SkeletonRowCard } from "./SkeletonCard";
+import { HeaderActions } from "./HeaderActions";
+import { RefreshIndicator } from "./RefreshIndicator";
+import { SkeletonCard } from "./SkeletonCard";
 import { StationCard } from "./StationCard";
 
+const AnimatedFlashList = Animated.createAnimatedComponent(FlashList<Station>);
+
 interface StationListProps {
-  header: ReactElement;
   type: StationType;
+  title: string;
+  subtitle: string;
 }
 
-const COLUMN_WRAPPER_STYLE = {
-  justifyContent: "space-between",
-  paddingHorizontal: 16,
-  marginBottom: 10,
-} as const;
+/** Bottom padding so the last row clears the tab bar and the mini-player. */
+export const LIST_BOTTOM_PADDING = 180;
 
-const CONTENT_CONTAINER_STYLE = { paddingBottom: 20 } as const;
+/** Vertical room for the category rail, including its breathing space. */
+const TABS_SLOT = FILTER_CHIPS_HEIGHT + 20;
 
-export function StationList({ type, header }: StationListProps) {
+function keyExtractor(item: Station) {
+  return item.id;
+}
+
+/** Two-column cell with even gutters (20 outside, 14 between). */
+export function GridCell({ index, children }: { index: number; children: ReactNode }) {
+  const left = index % 2 === 0;
+  return (
+    <View style={{ paddingLeft: left ? 20 : 7, paddingRight: left ? 7 : 20, paddingBottom: 16 }}>
+      {children}
+    </View>
+  );
+}
+
+function renderItem({ item, index }: ListRenderItemInfo<Station>) {
+  return (
+    <GridCell index={index}>
+      <StationCard station={item} />
+    </GridCell>
+  );
+}
+
+export function StationList({ type, title, subtitle }: StationListProps) {
+  const insets = useSafeAreaInsets();
+  const listRef = useRef<FlashListRef<Station>>(null);
+
   const isLoading = useStationStore((s) => s.isLoading);
-  const isRefreshing = useStationStore((s) => s.isRefreshing);
   const refreshStations = useStationStore((s) => s.refreshStations);
-  const sourceStations = useStationStore((s) =>
-    type === "tv" ? s.tvStations : s.radioStations,
+  const sourceStations = useStationStore((s) => (type === "tv" ? s.tvStations : s.radioStations));
+
+  const [category, setCategory] = useState<string | null>(null);
+
+  // Where the rail sits in the scroll content, and where it pins on screen.
+  const [tabsY, setTabsY] = useState(0);
+  const tabsYValue = useSharedValue(0);
+  const pinnedTop = insets.top + COMPACT_BAR_HEIGHT;
+
+  const categories = useMemo(() => topCategories(sourceStations), [sourceStations]);
+
+  const stations = useMemo(
+    () => (category === null ? sourceStations : sourceStations.filter((s) => hasCategory(s, category))),
+    [sourceStations, category],
   );
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const debouncedQuery = useDebounce(searchQuery, 250);
-  const searchRef = useRef<TextInput>(null);
+  const showSkeleton = isLoading && sourceStations.length === 0;
+  const hasTabs = categories.length > 0;
 
-  const stations = useMemo(() => {
-    const q = debouncedQuery.toLowerCase().trim();
-    if (!q) return sourceStations;
-    return sourceStations.filter(
-      (s) =>
-        s.name.toLowerCase().includes(q) ||
-        s.description.toLowerCase().includes(q) ||
-        s.categories.some((c) => c.toLowerCase().includes(q)),
-    );
-  }, [sourceStations, debouncedQuery]);
+  // Scrolling down slides the bar, the category rail and the tab bar away so
+  // the grid gets the whole screen; scrolling up brings them back.
+  const hideDistance = COMPACT_BAR_HEIGHT + (hasTabs ? TABS_SLOT : 0);
+  const { scrollY, hideY, onScroll } = useCollapsingHeader({ hideDistance });
+  useHideTabBarOnScroll(hideY, hideDistance);
+  const noun = type === "tv" ? "channel" : "station";
 
-  const keyExtractor = useCallback((item: Station) => item.id, []);
+  const selectCategory = (next: string | null) => {
+    setCategory(next);
+    // If the rail is pinned, bring the top of the new results to just under it
+    // instead of leaving the viewport wherever the old list happened to be.
+    const pinOffset = tabsY - pinnedTop;
+    hideY.set(0);
+    if (scrollY.get() > pinOffset) {
+      listRef.current?.scrollToOffset({ offset: pinOffset, animated: false });
+    }
+  };
 
-  const renderItem = useCallback(
-    ({ item }: { item: Station }) => (
-      <View className="w-[48%]">
-        <StationCard station={item} />
-      </View>
-    ),
-    [],
+  const onTabsSlotLayout = (e: LayoutChangeEvent) => {
+    const y = e.nativeEvent.layout.y;
+    setTabsY(y);
+    tabsYValue.set(y);
+  };
+
+  const tabsStyle = useAnimatedStyle(() => {
+    const y = tabsYValue.get();
+    return {
+      opacity: y > 0 ? 1 : 0,
+      transform: [{ translateY: Math.max(y - scrollY.get(), pinnedTop - hideY.get()) }],
+    };
+  });
+
+  const tabsBackdropStyle = useAnimatedStyle(() => {
+    const distance = tabsYValue.get() - scrollY.get() - (pinnedTop - hideY.get());
+    return { opacity: interpolate(distance, [12, 0], [0, 1], Extrapolation.CLAMP) };
+  });
+
+  const header = (
+    <View>
+      <LargeTitle
+        title={title}
+        subtitle={subtitle}
+        scrollY={scrollY}
+        accessory={<RefreshIndicator />}
+      />
+      {/* The real rail floats above the list (so it can pin); this reserves its room. */}
+      {hasTabs ? <View onLayout={onTabsSlotLayout} style={{ height: TABS_SLOT }} /> : <View className="h-4" />}
+      {!showSkeleton && stations.length > 0 ? (
+        <Text className="px-5 pb-3 text-[12px] font-semibold uppercase tracking-widest text-text-tertiary">
+          {stations.length} {stations.length === 1 ? noun : `${noun}s`}
+        </Text>
+      ) : null}
+      {showSkeleton ? (
+        <ShimmerGroup>
+          <View className="flex-row flex-wrap">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <View key={i} style={{ width: "50%" }}>
+                <GridCell index={i}>
+                  <SkeletonCard />
+                </GridCell>
+              </View>
+            ))}
+          </View>
+        </ShimmerGroup>
+      ) : null}
+    </View>
   );
-
-  const placeholder = useMemo(
-    () => `Search ${type === "tv" ? "TV" : "radio"} stations...`,
-    [type],
-  );
-
-  const listHeader = useMemo(() => <View>{header}</View>, [header]);
-
-  if (isLoading && stations.length === 0) {
-    return (
-      <View className="flex-1 bg-background">
-        {header}
-        <SearchBar
-          ref={searchRef}
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          placeholder={placeholder}
-          variant="pill"
-        />
-        <View className="flex-row flex-wrap justify-between px-4 pt-6">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <View key={i} className="w-[48%]">
-              <SkeletonRowCard />
-            </View>
-          ))}
-        </View>
-      </View>
-    );
-  }
 
   return (
     <View className="flex-1 bg-background">
-      <FlatList
-        data={stations}
+      <AnimatedFlashList
+        ref={listRef}
+        data={showSkeleton ? [] : stations}
         keyExtractor={keyExtractor}
         numColumns={2}
-        columnWrapperStyle={COLUMN_WRAPPER_STYLE}
         renderItem={renderItem}
-        initialNumToRender={8}
-        maxToRenderPerBatch={8}
-        windowSize={5}
-        removeClippedSubviews
-        ListHeaderComponent={
-          <>
-            {listHeader}
-            <SearchBar
-              ref={searchRef}
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              placeholder={placeholder}
-              variant="pill"
-            />
-            <View className="h-2" />
-          </>
-        }
-        ListEmptyComponent={<EmptyState />}
+        ListHeaderComponent={header}
+        ListEmptyComponent={showSkeleton ? null : <EmptyState />}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={CONTENT_CONTAINER_STYLE}
-        refreshing={isRefreshing}
-        onRefresh={refreshStations}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="handled"
+        // FlashList v2 anchors the first visible item by default, which made the
+        // list jump mid-way when a filter put items back in front of it.
+        maintainVisibleContentPosition={{ disabled: true }}
+        contentContainerStyle={{ paddingBottom: LIST_BOTTOM_PADDING }}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
+        refreshControl={
+          <RefreshControl
+            // The pull only triggers the refresh. The "Updating" pill in the header is the
+            // single loading state, so the native spinner is released straight away.
+            refreshing={false}
+            onRefresh={refreshStations}
+            tintColor="transparent"
+            colors={["transparent"]}
+            progressBackgroundColor="transparent"
+            progressViewOffset={insets.top + COMPACT_BAR_HEIGHT}
+          />
+        }
+      />
+
+      {hasTabs ? (
+        <Animated.View pointerEvents="box-none" style={[styles.tabs, tabsStyle]}>
+          <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill, tabsBackdropStyle]}>
+            <GlassView style={StyleSheet.absoluteFill} intensity={60} />
+            <View className="absolute bottom-0 left-0 right-0 h-px bg-border" />
+          </Animated.View>
+          <View style={styles.tabsInner}>
+            <FilterChips
+              options={categories}
+              selected={category}
+              onSelect={selectCategory}
+            />
+          </View>
+        </Animated.View>
+      ) : null}
+
+      <CompactHeader
+        title={title}
+        scrollY={scrollY}
+        divider={!hasTabs}
+        hideY={hideY}
+        right={<HeaderActions />}
       />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  tabs: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: TABS_SLOT,
+  },
+  tabsInner: {
+    flex: 1,
+    justifyContent: "center",
+  },
+});

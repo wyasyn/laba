@@ -1,6 +1,5 @@
-import { useTheme } from "@/lib/useTheme";
 import {
-  ArrowLeft01Icon,
+  ArrowDown01Icon,
   FullscreenIcon,
   MinimizeScreenIcon,
 } from "@hugeicons/core-free-icons";
@@ -31,7 +30,6 @@ export function YouTubePlayer({
   borderless = false,
   onBack,
 }: YouTubePlayerProps) {
-  const { colors } = useTheme();
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showBack, setShowBack] = useState(false);
   const backTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -107,9 +105,9 @@ export function YouTubePlayer({
           className="absolute left-3 top-3 rounded-full bg-black/60 p-2"
           hitSlop={8}
           accessibilityRole="button"
-          accessibilityLabel="Go back"
+          accessibilityLabel="Close player"
         >
-          <HugeiconsIcon icon={ArrowLeft01Icon} size={20} color="#fff" />
+          <HugeiconsIcon icon={ArrowDown01Icon} size={20} color="#fff" />
         </Pressable>
       )}
     </>
