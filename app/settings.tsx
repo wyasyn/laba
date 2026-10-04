@@ -82,10 +82,8 @@ export default function SettingsScreen() {
           </View>
         </View>
 
-        <Section title="Appearance">
-          <View className="p-3">
-            <ThemeSegmentedControl />
-          </View>
+        <Section title="Appearance" plain>
+          <ThemeSegmentedControl />
         </Section>
 
         <Section title="Library">
@@ -127,21 +125,26 @@ export default function SettingsScreen() {
   );
 }
 
-function Section({ title, children }: { title: string; children: ReactNode }) {
+/** `plain` renders the children without the card container. */
+function Section({ title, plain, children }: { title: string; plain?: boolean; children: ReactNode }) {
   const items = Array.isArray(children) ? children.filter(Boolean) : [children];
   return (
     <View>
       <Text className="mb-2 ml-1 text-xs font-semibold uppercase tracking-widest text-text-secondary">
         {title}
       </Text>
-      <View className="overflow-hidden rounded-2xl border border-border bg-surface" style={{ borderCurve: "continuous" }}>
-        {items.map((child, i) => (
-          <View key={i}>
-            {i > 0 ? <View className="ml-[60px] h-px bg-border" /> : null}
-            {child}
-          </View>
-        ))}
-      </View>
+      {plain ? (
+        children
+      ) : (
+        <View className="overflow-hidden rounded-2xl border border-border bg-surface" style={{ borderCurve: "continuous" }}>
+          {items.map((child, i) => (
+            <View key={i}>
+              {i > 0 ? <View className="ml-[60px] h-px bg-border" /> : null}
+              {child}
+            </View>
+          ))}
+        </View>
+      )}
     </View>
   );
 }

@@ -76,12 +76,6 @@ export function StationList({ type, title, subtitle }: StationListProps) {
 
   const categories = useMemo(() => topCategories(sourceStations), [sourceStations]);
 
-  const counts = useMemo(() => {
-    const out: Record<string, number> = { "": sourceStations.length };
-    for (const c of categories) out[c] = sourceStations.filter((s) => hasCategory(s, c)).length;
-    return out;
-  }, [sourceStations, categories]);
-
   const stations = useMemo(
     () => (category === null ? sourceStations : sourceStations.filter((s) => hasCategory(s, category))),
     [sourceStations, category],
@@ -195,7 +189,6 @@ export function StationList({ type, title, subtitle }: StationListProps) {
               options={categories}
               selected={category}
               onSelect={selectCategory}
-              counts={counts}
             />
           </View>
         </Animated.View>
