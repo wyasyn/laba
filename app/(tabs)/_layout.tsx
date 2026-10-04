@@ -1,17 +1,21 @@
 import { FloatingMiniPlayer, MiniPlayerAccessory } from "@/components/MiniPlayer";
+import { TAB_BAR_HEIGHT, TabBar } from "@/components/TabBar";
 import { FONT_FAMILY } from "@/constants/theme";
 import { useTheme } from "@/lib/useTheme";
+import { useChromeStore } from "@/stores/useChromeStore";
 import { usePlayerStore } from "@/stores/usePlayerStore";
+import { Tabs } from "expo-router";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
 import { Platform, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-/** iOS 26 has the native tab bar accessory slot (Liquid Glass). */
+/**
+ * iOS 26 has the native tab bar accessory slot and minimize-on-scroll (Liquid
+ * Glass), so it keeps the native tabs. Elsewhere the native bar can only pop in
+ * and out, so a JS bar that slides away on scroll is used instead.
+ */
 const HAS_NATIVE_ACCESSORY =
   Platform.OS === "ios" && parseInt(String(Platform.Version), 10) >= 26;
-
-/** Approximate native tab bar heights, used to float the mini-player above them. */
-const TAB_BAR_HEIGHT = Platform.OS === "android" ? 80 : 49;
 
 function AccessoryContent() {
   const placement = NativeTabs.BottomAccessory.usePlacement();
@@ -19,8 +23,28 @@ function AccessoryContent() {
 }
 
 export default function TabLayout() {
-  const { colors } = useTheme();
+  return HAS_NATIVE_ACCESSORY ? <NativeTabLayout /> : <JsTabLayout />;
+}
+
+function JsTabLayout() {
   const insets = useSafeAreaInsets();
+  const tabBarHidden = useChromeStore((s) => s.tabBarHidden);
+
+  return (
+    <View className="flex-1 bg-background">
+      <Tabs tabBar={(props) => <TabBar {...props} />} screenOptions={{ headerShown: false }}>
+        <Tabs.Screen name="index" />
+        <Tabs.Screen name="tv" />
+        <Tabs.Screen name="radio" />
+        <Tabs.Screen name="settings" />
+      </Tabs>
+      <FloatingMiniPlayer bottom={insets.bottom + (tabBarHidden ? 0 : TAB_BAR_HEIGHT) + 10} />
+    </View>
+  );
+}
+
+function NativeTabLayout() {
+  const { colors } = useTheme();
   const hasStation = usePlayerStore((s) => s.currentStation !== null);
 
   return (
@@ -32,21 +56,16 @@ export default function TabLayout() {
           default: { color: colors.textSecondary, fontSize: 11, fontFamily: FONT_FAMILY, fontWeight: "600" },
           selected: { color: colors.primary, fontSize: 11, fontFamily: FONT_FAMILY, fontWeight: "700" },
         }}
-        // iOS uses the system (Liquid Glass) material; Android needs an explicit surface
-        backgroundColor={Platform.OS === "android" ? colors.surface : undefined}
-        indicatorColor={`${colors.primary}26`}
-        // Android defaults to "auto" (labels only on the selected tab once there are 4+ tabs)
-        labelVisibilityMode="labeled"
         minimizeBehavior="onScrollDown"
       >
-        {HAS_NATIVE_ACCESSORY && hasStation ? (
+        {hasStation ? (
           <NativeTabs.BottomAccessory>
             <AccessoryContent />
           </NativeTabs.BottomAccessory>
         ) : null}
 
-        {/* Custom icon set on both platforms (outline by default, filled when
-            selected). Sources live in assets/images/tabs/svg. */}
+        {/* Custom icon set (outline by default, filled when selected).
+            Sources live in assets/images/tabs/svg. */}
         <NativeTabs.Trigger name="index">
           <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
           <NativeTabs.Trigger.Icon
@@ -74,20 +93,16 @@ export default function TabLayout() {
             }}
           />
         </NativeTabs.Trigger>
-        <NativeTabs.Trigger name="favourites">
-          <NativeTabs.Trigger.Label>Favourites</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger name="settings">
+          <NativeTabs.Trigger.Label>Settings</NativeTabs.Trigger.Label>
           <NativeTabs.Trigger.Icon
             src={{
-              default: require("@/assets/images/tabs/favorite.png"),
-              selected: require("@/assets/images/tabs/favorite-filled.png"),
+              default: require("@/assets/images/tabs/settings.png"),
+              selected: require("@/assets/images/tabs/settings-filled.png"),
             }}
           />
         </NativeTabs.Trigger>
       </NativeTabs>
-
-      {!HAS_NATIVE_ACCESSORY ? (
-        <FloatingMiniPlayer bottom={insets.bottom + TAB_BAR_HEIGHT + 10} />
-      ) : null}
     </View>
   );
 }

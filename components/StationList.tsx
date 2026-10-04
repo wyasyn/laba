@@ -5,6 +5,7 @@ import { ShimmerGroup } from "@/components/ui/Shimmer";
 import { Text } from "@/components/ui/Text";
 import type { Station, StationType } from "@/lib/schemas";
 import { hasCategory, topCategories } from "@/lib/search";
+import { useHideTabBarOnScroll } from "@/stores/useChromeStore";
 import { useStationStore } from "@/stores/useStationStore";
 import { FlashList, type FlashListRef, type ListRenderItemInfo } from "@shopify/flash-list";
 import { useMemo, useRef, useState, type ReactNode } from "react";
@@ -60,7 +61,6 @@ function renderItem({ item, index }: ListRenderItemInfo<Station>) {
 
 export function StationList({ type, title, subtitle }: StationListProps) {
   const insets = useSafeAreaInsets();
-  const { scrollY, onScroll } = useCollapsingHeader();
   const listRef = useRef<FlashListRef<Station>>(null);
 
   const isLoading = useStationStore((s) => s.isLoading);
@@ -83,6 +83,12 @@ export function StationList({ type, title, subtitle }: StationListProps) {
 
   const showSkeleton = isLoading && sourceStations.length === 0;
   const hasTabs = categories.length > 0;
+
+  // Scrolling down slides the bar, the category rail and the tab bar away so
+  // the grid gets the whole screen; scrolling up brings them back.
+  const hideDistance = COMPACT_BAR_HEIGHT + (hasTabs ? TABS_SLOT : 0);
+  const { scrollY, hideY, onScroll } = useCollapsingHeader({ hideDistance });
+  useHideTabBarOnScroll(hideY, hideDistance);
   const noun = type === "tv" ? "channel" : "station";
 
   const selectCategory = (next: string | null) => {
@@ -90,6 +96,7 @@ export function StationList({ type, title, subtitle }: StationListProps) {
     // If the rail is pinned, bring the top of the new results to just under it
     // instead of leaving the viewport wherever the old list happened to be.
     const pinOffset = tabsY - pinnedTop;
+    hideY.set(0);
     if (scrollY.get() > pinOffset) {
       listRef.current?.scrollToOffset({ offset: pinOffset, animated: false });
     }
@@ -105,12 +112,12 @@ export function StationList({ type, title, subtitle }: StationListProps) {
     const y = tabsYValue.get();
     return {
       opacity: y > 0 ? 1 : 0,
-      transform: [{ translateY: Math.max(y - scrollY.get(), pinnedTop) }],
+      transform: [{ translateY: Math.max(y - scrollY.get(), pinnedTop - hideY.get()) }],
     };
   });
 
   const tabsBackdropStyle = useAnimatedStyle(() => {
-    const distance = tabsYValue.get() - scrollY.get() - pinnedTop;
+    const distance = tabsYValue.get() - scrollY.get() - (pinnedTop - hideY.get());
     return { opacity: interpolate(distance, [12, 0], [0, 1], Extrapolation.CLAMP) };
   });
 
@@ -198,6 +205,7 @@ export function StationList({ type, title, subtitle }: StationListProps) {
         title={title}
         scrollY={scrollY}
         divider={!hasTabs}
+        hideY={hideY}
         right={<HeaderActions />}
       />
     </View>

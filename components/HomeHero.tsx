@@ -1,12 +1,11 @@
-import { FavouriteButton } from "@/components/FavouriteButton";
-import { StationArtwork } from "@/components/StationArtwork";
 import { openStation } from "@/components/StationCard";
 import { IconButton } from "@/components/ui/IconButton";
 import { PressableScale } from "@/components/ui/PressableScale";
 import { Text } from "@/components/ui/Text";
-import { TypePill } from "@/components/ui/TypePill";
+import { withAlpha } from "@/constants/theme";
 import type { Station, StationType } from "@/lib/schemas";
 import { useTheme } from "@/lib/useTheme";
+import { cn } from "@/lib/utils";
 import { ArrowRight01Icon, PlayIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { Image } from "expo-image";
@@ -26,51 +25,18 @@ import Animated, {
 import { scheduleOnRN } from "react-native-worklets";
 
 const PARALLAX = 48;
+/** How far the hero card shrinks by the time it has scrolled off. */
+const RECEDE_SCALE = 0.86;
+/** Corner radius the hero card rounds to as it recedes. */
+const RECEDE_RADIUS = 32;
+/** Backdrop moves at this fraction of the page scroll (vertical parallax). */
+const SCROLL_PARALLAX = 0.35;
 const AUTO_ADVANCE_MS = 6000;
-/** Featured stations shown after the TV and Radio slides. */
-const MAX_STATION_SLIDES = 3;
 /** Space under the buttons for the pagination dots. */
 const DOTS_AREA = 44;
 
 const TV_IMAGE = require("@/assets/images/home/hero-tv.jpg");
 const RADIO_IMAGE = require("@/assets/images/home/hero-radio.jpg");
-
-/**
- * Bundled backdrops for featured station slides, so every slide has a photo
- * whatever the station (logos alone look thin at this size). Photos from
- * Unsplash (unsplash.com/license). `tags` match station categories.
- * Each pool must hold at least MAX_STATION_SLIDES photos so none repeat.
- */
-const STATION_PHOTOS: Record<StationType, { image: number; tags: string[] }[]> = {
-  tv: [
-    { image: require("@/assets/images/home/tv-stage.jpg"), tags: ["entertainment", "music", "general"] },
-    { image: require("@/assets/images/home/tv-studio.jpg"), tags: ["news", "education", "business"] },
-    { image: require("@/assets/images/home/tv-concert.jpg"), tags: ["culture", "lifestyle", "religious"] },
-  ],
-  radio: [
-    { image: require("@/assets/images/home/radio-mic.jpg"), tags: ["talk", "news", "religious"] },
-    { image: require("@/assets/images/home/radio-mixer.jpg"), tags: ["music", "entertainment"] },
-    { image: RADIO_IMAGE, tags: ["general", "culture", "education"] },
-  ],
-};
-
-/**
- * One photo per station slide, never repeating within the carousel: first a
- * photo whose tags match the station's categories, then the next unused one.
- */
-function assignPhotos(stations: Station[]) {
-  const used = new Set<number>();
-  return stations.map((s) => {
-    const pool = STATION_PHOTOS[s.type];
-    const cats = s.categories.map((c) => c.toLowerCase());
-    const photo =
-      pool.find((p) => !used.has(p.image) && p.tags.some((t) => cats.includes(t))) ??
-      pool.find((p) => !used.has(p.image)) ??
-      pool[0];
-    used.add(photo.image);
-    return photo.image;
-  });
-}
 
 /** Hero height: most of the first screen, like a streaming app's billboard. */
 export function useHomeHeroHeight() {
@@ -78,20 +44,18 @@ export function useHomeHeroHeight() {
   return Math.round(Math.min(Math.max(height * 0.68, 460), 720));
 }
 
-type Slide =
-  | {
-      kind: "editorial";
-      key: string;
-      type: StationType;
-      image: number;
-      eyebrow: string;
-      title: string;
-      meta: string;
-      cta: string;
-      station?: Station;
-      href: Href;
-    }
-  | { kind: "station"; key: string; station: Station; image: number };
+interface Slide {
+  key: string;
+  type: StationType;
+  image: number;
+  eyebrow: string;
+  title: string;
+  meta: string;
+  cta: string;
+  /** The station the primary button opens. */
+  station?: Station;
+  href: Href;
+}
 
 function hasLogo(s: Station) {
   return Boolean(s.logo?.trim());
@@ -116,15 +80,24 @@ function pick(featured: Station[], all: Station[]) {
 interface HomeHeroProps {
   tvStations: Station[];
   radioStations: Station[];
-  /** Featured stations, already ranked (see selectHeroStations). */
+  /** Featured stations; each slide's button starts with one of these when it can. */
   featuredStations: Station[];
   /** Pauses auto-advance while the tab is not visible. */
   active: boolean;
   /** Drawn over the top of the hero (wordmark, refresh pill). */
   header?: ReactNode;
+  /** The page's vertical scroll offset, which drives the recede effect. */
+  scrollY: SharedValue<number>;
 }
 
-export function HomeHero({ tvStations, radioStations, featuredStations, active, header }: HomeHeroProps) {
+export function HomeHero({
+  tvStations,
+  radioStations,
+  featuredStations,
+  active,
+  header,
+  scrollY,
+}: HomeHeroProps) {
   const { width } = useWindowDimensions();
   const height = useHomeHeroHeight();
   const reduceMotion = useReducedMotion();
@@ -134,16 +107,21 @@ export function HomeHero({ tvStations, radioStations, featuredStations, active, 
   const [dragging, setDragging] = useState(false);
 
   const slides = useMemo<Slide[]>(() => {
-    const tvPick = pick(featuredStations.filter((s) => s.type === "tv"), tvStations);
-    const radioPick = pick(featuredStations.filter((s) => s.type === "radio"), radioStations);
+    const tvPick = pick(
+      featuredStations.filter((s) => s.type === "tv"),
+      tvStations,
+    );
+    const radioPick = pick(
+      featuredStations.filter((s) => s.type === "radio"),
+      radioStations,
+    );
     const tvMeta = [`${tvStations.length} channels`, ...topCategories(tvStations)].join(" · ");
     const radioMeta = [`${radioStations.length} stations`, ...topCategories(radioStations)].join(" · ");
 
     const out: Slide[] = [];
     if (tvStations.length > 0) {
       out.push({
-        kind: "editorial",
-        key: "editorial-tv",
+        key: "tv",
         type: "tv",
         image: TV_IMAGE,
         eyebrow: "Live now",
@@ -156,8 +134,7 @@ export function HomeHero({ tvStations, radioStations, featuredStations, active, 
     }
     if (radioStations.length > 0) {
       out.push({
-        kind: "editorial",
-        key: "editorial-radio",
+        key: "radio",
         type: "radio",
         image: RADIO_IMAGE,
         eyebrow: "On air",
@@ -168,10 +145,6 @@ export function HomeHero({ tvStations, radioStations, featuredStations, active, 
         href: "/radio",
       });
     }
-    const used = new Set([tvPick?.id, radioPick?.id]);
-    const picks = featuredStations.filter((s) => !used.has(s.id)).slice(0, MAX_STATION_SLIDES);
-    const photos = assignPhotos(picks);
-    picks.forEach((s, i) => out.push({ kind: "station", key: s.id, station: s, image: photos[i] }));
     return out;
   }, [tvStations, radioStations, featuredStations]);
 
@@ -206,40 +179,82 @@ export function HomeHero({ tvStations, radioStations, featuredStations, active, 
     },
   });
 
+  const { resolved, colors } = useTheme();
+  const dotColor = resolved === "light" ? colors.textPrimary : "#FFFFFF";
+
+  // As the page scrolls, the hero recedes like a card being put away: it
+  // shrinks toward its bottom edge (so it stays attached to the rows below),
+  // rounds its corners and dims. Pulling down stretches it to fill the gap.
+  const cardStyle = useAnimatedStyle(() => {
+    const y = scrollY.get();
+    if (y < 0) return { transform: [{ scale: 1 - y / height }], borderRadius: 0, opacity: 1 };
+    return {
+      transform: [
+        { scale: reduceMotion ? 1 : interpolate(y, [0, height], [1, RECEDE_SCALE], Extrapolation.CLAMP) },
+      ],
+      borderRadius: reduceMotion
+        ? 0
+        : interpolate(y, [0, height * 0.5], [0, RECEDE_RADIUS], Extrapolation.CLAMP),
+      opacity: interpolate(y, [height * 0.35, height], [1, 0.15], Extrapolation.CLAMP),
+    };
+  });
+
+  // The wordmark and dots go first; the compact bar takes over from the wordmark.
+  const headerStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(scrollY.get(), [0, 120], [1, 0], Extrapolation.CLAMP),
+  }));
+  const dotsStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(scrollY.get(), [0, height * 0.25], [1, 0], Extrapolation.CLAMP),
+  }));
+
   if (count === 0) return null;
 
   return (
     <View style={{ height }}>
-      <Animated.FlatList
-        ref={listRef}
-        data={slides}
-        keyExtractor={(item) => item.key}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onScroll={onScroll}
-        scrollEventThrottle={16}
-        getItemLayout={(_, i) => ({ length: width, offset: width * i, index: i })}
-        renderItem={({ item, index: i }) => (
-          <HeroSlide slide={item} index={i} scrollX={scrollX} width={width} height={height} />
-        )}
-      />
+      <Animated.View style={[StyleSheet.absoluteFill, styles.card, cardStyle]}>
+        <Animated.FlatList
+          ref={listRef}
+          data={slides}
+          keyExtractor={(item) => item.key}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onScroll={onScroll}
+          scrollEventThrottle={16}
+          getItemLayout={(_, i) => ({
+            length: width,
+            offset: width * i,
+            index: i,
+          })}
+          renderItem={({ item, index: i }) => (
+            <HeroSlide
+              slide={item}
+              index={i}
+              scrollX={scrollX}
+              scrollY={scrollY}
+              width={width}
+              height={height}
+              reduceMotion={reduceMotion}
+            />
+          )}
+        />
 
-      {/* Bottom edge melts into the page. */}
-      <BottomFade />
+        {/* Bottom edge melts into the page. */}
+        <BottomFade />
+
+        {count > 1 ? (
+          <Animated.View pointerEvents="none" style={[styles.dots, dotsStyle]}>
+            {slides.map((s, i) => (
+              <Dot key={s.key} index={i} scrollX={scrollX} width={width} color={dotColor} />
+            ))}
+          </Animated.View>
+        ) : null}
+      </Animated.View>
 
       {header ? (
-        <View pointerEvents="box-none" style={styles.header}>
+        <Animated.View pointerEvents="box-none" style={[styles.header, headerStyle]}>
           {header}
-        </View>
-      ) : null}
-
-      {count > 1 ? (
-        <View pointerEvents="none" style={styles.dots}>
-          {slides.map((s, i) => (
-            <Dot key={s.key} index={i} scrollX={scrollX} width={width} />
-          ))}
-        </View>
+        </Animated.View>
       ) : null}
     </View>
   );
@@ -260,116 +275,106 @@ interface HeroSlideProps {
   slide: Slide;
   index: number;
   scrollX: SharedValue<number>;
+  scrollY: SharedValue<number>;
   width: number;
   height: number;
+  reduceMotion: boolean;
 }
 
-function HeroSlide({ slide, index, scrollX, width, height }: HeroSlideProps) {
+function HeroSlide({ slide, index, scrollX, scrollY, width, height, reduceMotion }: HeroSlideProps) {
   const router = useRouter();
+  // Light mode fades the photo into the page and draws the copy in ink;
+  // dark mode keeps white copy over a dark scrim.
+  const light = useTheme().resolved === "light";
+  const title = light ? "text-text-primary" : "text-white";
 
-  // Backdrop drifts slower than the page for a parallax depth effect.
+  // Backdrop drifts slower than the page, sideways between slides and
+  // vertically as the page scrolls, for a parallax depth effect. The gap the
+  // vertical drift opens at the top always stays above the screen.
   const artStyle = useAnimatedStyle(() => {
     const d = scrollX.get() / width - index;
+    const y = Math.max(scrollY.get(), 0);
     return {
-      transform: [{ translateX: interpolate(d, [-1, 0, 1], [-PARALLAX, 0, PARALLAX], Extrapolation.CLAMP) }],
+      transform: [
+        {
+          translateX: interpolate(d, [-1, 0, 1], [-PARALLAX, 0, PARALLAX], Extrapolation.CLAMP),
+        },
+        { translateY: reduceMotion ? 0 : y * SCROLL_PARALLAX },
+      ],
     };
   });
 
-  // Copy fades as the slide leaves so two titles never overlap.
+  // Copy fades as the slide leaves so two titles never overlap, and lifts
+  // away ahead of the backdrop as the page scrolls.
   const contentStyle = useAnimatedStyle(() => {
     const d = Math.abs(scrollX.get() / width - index);
-    return { opacity: interpolate(d, [0, 0.5], [1, 0], Extrapolation.CLAMP) };
+    const y = Math.max(scrollY.get(), 0);
+    return {
+      opacity:
+        interpolate(d, [0, 0.5], [1, 0], Extrapolation.CLAMP) *
+        interpolate(y, [0, height * 0.4], [1, 0], Extrapolation.CLAMP),
+      transform: [
+        { translateY: reduceMotion ? 0 : interpolate(y, [0, height * 0.5], [0, -40], Extrapolation.CLAMP) },
+      ],
+    };
   });
 
-  const art = { position: "absolute", top: 0, bottom: 0, left: -PARALLAX, width: width + PARALLAX * 2 } as const;
+  const art = {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: -PARALLAX,
+    width: width + PARALLAX * 2,
+  } as const;
 
-  if (slide.kind === "editorial") {
-    const onPrimary = () =>
-      slide.station ? openStation(router, slide.station) : router.push(slide.href);
-    return (
-      <View style={{ width, height, overflow: "hidden" }}>
-        <Animated.View style={[art, artStyle]}>
-          <Image source={slide.image} style={StyleSheet.absoluteFill} contentFit="cover" transition={200} />
-        </Animated.View>
-        <Scrims />
-        <Animated.View style={[styles.content, contentStyle]}>
-          <Eyebrow>{slide.eyebrow}</Eyebrow>
-          <Text className="mt-3 text-[44px] font-bold leading-[48px] tracking-tighter text-white">
-            {slide.title}
-          </Text>
-          <Text numberOfLines={1} className="mt-2 text-[15px] font-medium text-white/80">
-            {slide.meta}
-          </Text>
-          <View className="mt-5 flex-row items-center gap-3">
-            <PrimaryButton
-              label={slide.cta}
-              onPress={onPrimary}
-              accessibilityLabel={slide.station ? `${slide.cta}: ${slide.station.name}` : slide.cta}
-            />
-            <IconButton
-              icon={ArrowRight01Icon}
-              variant="glass"
-              size={48}
-              iconSize={22}
-              onPress={() => router.push(slide.href)}
-              accessibilityLabel={slide.type === "tv" ? "Browse all TV channels" : "Browse all radio stations"}
-            />
-          </View>
-          {slide.station ? (
-            <Text numberOfLines={1} className="mt-3 text-[13px] text-white/60">
-              Starts with {slide.station.name}
-            </Text>
-          ) : null}
-        </Animated.View>
-      </View>
-    );
-  }
+  const onPrimary = () => (slide.station ? openStation(router, slide.station) : router.push(slide.href));
 
-  const { station } = slide;
   return (
     <View style={{ width, height, overflow: "hidden" }}>
       <Animated.View style={[art, artStyle]}>
         <Image source={slide.image} style={StyleSheet.absoluteFill} contentFit="cover" transition={200} />
       </Animated.View>
-      <Scrims />
+      <Scrims light={light} />
       <Animated.View style={[styles.content, contentStyle]}>
-        <Eyebrow>Featured</Eyebrow>
-        <View className="mt-3 flex-row items-center gap-3">
-          <View style={styles.logoShadow}>
-            <View style={styles.logo}>
-              <StationArtwork station={station} variant="tile" />
-            </View>
-          </View>
-          <Text
-            numberOfLines={1}
-            className="flex-1 text-[36px] font-bold leading-[42px] tracking-tighter text-white"
-          >
-            {station.name}
-          </Text>
-        </View>
-        <View className="mt-2 flex-row items-center gap-2">
-          <TypePill type={station.type} variant="solid" />
-          {station.description ? (
-            <Text numberOfLines={1} className="shrink text-[14px] text-white/75">
-              {station.description}
-            </Text>
-          ) : null}
-        </View>
+        <Eyebrow light={light}>{slide.eyebrow}</Eyebrow>
+        <Text className={cn("mt-3 text-[44px] font-bold leading-[48px] tracking-tighter", title)}>
+          {slide.title}
+        </Text>
+        <Text
+          numberOfLines={1}
+          className={cn("mt-2 text-[15px] font-medium", light ? "text-text-secondary" : "text-white/80")}
+        >
+          {slide.meta}
+        </Text>
         <View className="mt-5 flex-row items-center gap-3">
           <PrimaryButton
-            label={station.type === "tv" ? "Watch now" : "Listen now"}
-            onPress={() => openStation(router, station)}
-            accessibilityLabel={`Play ${station.name}`}
+            light={light}
+            label={slide.cta}
+            onPress={onPrimary}
+            accessibilityLabel={slide.station ? `${slide.cta}: ${slide.station.name}` : slide.cta}
           />
-          <FavouriteButton stationId={station.id} size={26} />
+          <IconButton
+            icon={ArrowRight01Icon}
+            variant={light ? "surface" : "glass"}
+            size={48}
+            iconSize={22}
+            onPress={() => router.push(slide.href)}
+            accessibilityLabel={slide.type === "tv" ? "Browse all TV channels" : "Browse all radio stations"}
+          />
         </View>
       </Animated.View>
     </View>
   );
 }
 
-/** Dark scrims at the top (for the header) and bottom (for the copy). */
-function Scrims() {
+/**
+ * A dark scrim at the top (for the header) and one at the bottom (for the
+ * copy). In light mode the bottom one fades into the page background instead,
+ * so the hero blends into the white page rather than ending in a dark band.
+ */
+function Scrims({ light }: { light: boolean }) {
+  const { colors } = useTheme();
+  const bg = colors.background;
   return (
     <>
       <LinearGradient
@@ -377,49 +382,86 @@ function Scrims() {
         colors={["rgba(0,0,0,0.55)", "rgba(0,0,0,0)"]}
         style={styles.topScrim}
       />
-      <LinearGradient
-        pointerEvents="none"
-        colors={["rgba(0,0,0,0)", "rgba(0,0,0,0.55)", "rgba(0,0,0,0.92)"]}
-        locations={[0.3, 0.6, 1]}
-        style={StyleSheet.absoluteFill}
-      />
+      {light ? (
+        <LinearGradient
+          pointerEvents="none"
+          colors={[withAlpha(bg, 0), withAlpha(bg, 0.75), withAlpha(bg, 0.96), bg]}
+          locations={[0.28, 0.5, 0.68, 1]}
+          style={StyleSheet.absoluteFill}
+        />
+      ) : (
+        <LinearGradient
+          pointerEvents="none"
+          colors={["rgba(0,0,0,0)", "rgba(0,0,0,0.55)", "rgba(0,0,0,0.92)"]}
+          locations={[0.3, 0.6, 1]}
+          style={StyleSheet.absoluteFill}
+        />
+      )}
     </>
   );
 }
 
-function Eyebrow({ children }: { children: string }) {
+function Eyebrow({ children, light }: { children: string; light: boolean }) {
   return (
-    <View className="self-start rounded-full border border-white/20 bg-black/35 px-3 py-1">
-      <Text className="text-[12px] font-semibold tracking-wide text-white">{children}</Text>
+    <View
+      className={cn(
+        "self-start rounded-full border px-3 py-1",
+        light ? "border-border bg-surface" : "border-white/20 bg-black/35",
+      )}
+    >
+      <Text
+        className={cn("text-[12px] font-semibold tracking-wide", light ? "text-text-primary" : "text-white")}
+      >
+        {children}
+      </Text>
     </View>
   );
 }
 
 function PrimaryButton({
+  light,
   label,
   onPress,
   accessibilityLabel,
 }: {
+  light: boolean;
   label: string;
   onPress: () => void;
   accessibilityLabel: string;
 }) {
+  const { colors } = useTheme();
+  const ink = light ? colors.onPrimary : "#0C0C09";
   return (
     <PressableScale
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
       containerClassName="flex-1"
-      className="h-12 flex-row items-center justify-center gap-2 rounded-full bg-white"
+      className={cn(
+        "h-12 flex-row items-center justify-center gap-2 rounded-full",
+        light ? "bg-primary" : "bg-white",
+      )}
       style={styles.buttonShadow}
     >
-      <HugeiconsIcon icon={PlayIcon} size={18} color="#0C0C09" fill="#0C0C09" />
-      <Text className="text-[16px] font-semibold text-[#0C0C09]">{label}</Text>
+      <HugeiconsIcon icon={PlayIcon} size={18} color={ink} fill={ink} />
+      <Text className="text-[16px] font-semibold" style={{ color: ink }}>
+        {label}
+      </Text>
     </PressableScale>
   );
 }
 
-function Dot({ index, scrollX, width }: { index: number; scrollX: SharedValue<number>; width: number }) {
+function Dot({
+  index,
+  scrollX,
+  width,
+  color,
+}: {
+  index: number;
+  scrollX: SharedValue<number>;
+  width: number;
+  color: string;
+}) {
   const style = useAnimatedStyle(() => {
     const d = Math.abs(scrollX.get() / width - index);
     return {
@@ -427,10 +469,15 @@ function Dot({ index, scrollX, width }: { index: number; scrollX: SharedValue<nu
       opacity: interpolate(d, [0, 1], [1, 0.4], Extrapolation.CLAMP),
     };
   });
-  return <Animated.View style={[styles.dot, style]} />;
+  return <Animated.View style={[styles.dot, { backgroundColor: color }, style]} />;
 }
 
 const styles = StyleSheet.create({
+  card: {
+    overflow: "hidden",
+    borderCurve: "continuous",
+    transformOrigin: "bottom",
+  },
   header: {
     position: "absolute",
     top: 0,
@@ -457,22 +504,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     height: 16,
   },
-  logo: {
-    width: 52,
-    height: 52,
-    borderRadius: 14,
-    borderCurve: "continuous",
-    overflow: "hidden",
-  },
-  logoShadow: {
-    borderRadius: 14,
-    backgroundColor: "#000",
-    shadowColor: "#000",
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 6,
-  },
   buttonShadow: {
     shadowColor: "#000",
     shadowOpacity: 0.25,
@@ -493,6 +524,5 @@ const styles = StyleSheet.create({
   dot: {
     height: 6,
     borderRadius: 3,
-    backgroundColor: "#FFFFFF",
   },
 });

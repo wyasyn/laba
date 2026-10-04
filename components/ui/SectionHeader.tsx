@@ -1,6 +1,7 @@
 import { useTheme } from "@/lib/useTheme";
 import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
+import type { ReactNode } from "react";
 import { View } from "react-native";
 import { PressableScale } from "./PressableScale";
 import { Text } from "./Text";
@@ -11,9 +12,11 @@ interface SectionHeaderProps {
   onSeeAll?: () => void;
   /** "pill" puts a See all chip on the right; "inline" makes the title itself the link. */
   variant?: "pill" | "inline";
+  /** Shown on the right in place of the See all chip (pill variant only). */
+  action?: ReactNode;
 }
 
-export function SectionHeader({ title, subtitle, onSeeAll, variant = "pill" }: SectionHeaderProps) {
+export function SectionHeader({ title, subtitle, onSeeAll, variant = "pill", action }: SectionHeaderProps) {
   const { colors } = useTheme();
 
   if (variant === "inline") {
@@ -53,7 +56,7 @@ export function SectionHeader({ title, subtitle, onSeeAll, variant = "pill" }: S
           <Text className="mt-0.5 text-[13px] text-text-secondary">{subtitle}</Text>
         ) : null}
       </View>
-      {onSeeAll ? (
+      {action ?? (onSeeAll ? (
         <PressableScale
           onPress={onSeeAll}
           hitSlop={10}
@@ -64,7 +67,7 @@ export function SectionHeader({ title, subtitle, onSeeAll, variant = "pill" }: S
           <Text className="text-[13px] font-semibold text-text-secondary">See all</Text>
           <HugeiconsIcon icon={ArrowRight01Icon} size={14} color={colors.textSecondary} />
         </PressableScale>
-      ) : null}
+      ) : null)}
     </View>
   );
 }
