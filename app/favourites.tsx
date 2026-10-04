@@ -1,19 +1,17 @@
 import { EmptyState } from "@/components/EmptyState";
-import { HeaderActions } from "@/components/HeaderActions";
 import { StationCard } from "@/components/StationCard";
 import { GridCell, LIST_BOTTOM_PADDING } from "@/components/StationList";
-import { CompactHeader, LargeTitle, useCollapsingHeader } from "@/components/ui/CollapsingHeader";
+import { IconButton } from "@/components/ui/IconButton";
+import { Text } from "@/components/ui/Text";
 import type { Station } from "@/lib/schemas";
 import { useFavouritesStore } from "@/stores/useFavouritesStore";
 import { useStationStore } from "@/stores/useStationStore";
-import { FavouriteIcon } from "@hugeicons/core-free-icons";
+import { ArrowLeft01Icon, FavouriteIcon } from "@hugeicons/core-free-icons";
 import { FlashList, type ListRenderItemInfo } from "@shopify/flash-list";
 import { useRouter } from "expo-router";
 import { useMemo } from "react";
 import { View } from "react-native";
-import Animated from "react-native-reanimated";
-
-const AnimatedFlashList = Animated.createAnimatedComponent(FlashList<Station>);
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 function keyExtractor(item: Station) {
   return item.id;
@@ -27,9 +25,9 @@ function renderItem({ item, index }: ListRenderItemInfo<Station>) {
   );
 }
 
-export default function FavouritesTabScreen() {
+export default function FavouritesScreen() {
   const router = useRouter();
-  const { scrollY, onScroll } = useCollapsingHeader();
+  const insets = useSafeAreaInsets();
   const ids = useFavouritesStore((s) => s.ids);
   const stations = useStationStore((s) => s.stations);
 
@@ -48,18 +46,22 @@ export default function FavouritesTabScreen() {
 
   return (
     <View className="flex-1 bg-background">
-      <AnimatedFlashList
+      <View style={{ paddingTop: insets.top + 4 }} className="flex-row items-center gap-3 px-4 pb-2">
+        <IconButton icon={ArrowLeft01Icon} onPress={() => router.back()} accessibilityLabel="Go back" />
+        <View className="flex-1">
+          <Text className="text-[17px] font-semibold">Favourites</Text>
+          {count > 0 ? (
+            <Text className="text-[13px] text-text-secondary">
+              {count} saved station{count === 1 ? "" : "s"}
+            </Text>
+          ) : null}
+        </View>
+      </View>
+      <FlashList
         data={favouriteStations}
         keyExtractor={keyExtractor}
         numColumns={2}
         renderItem={renderItem}
-        ListHeaderComponent={
-          <LargeTitle
-            title="Favourites"
-            subtitle={count > 0 ? `${count} saved station${count === 1 ? "" : "s"}` : "Your saved stations"}
-            scrollY={scrollY}
-          />
-        }
         ListEmptyComponent={
           <EmptyState
             title="Nothing saved yet"
@@ -70,11 +72,8 @@ export default function FavouritesTabScreen() {
           />
         }
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: LIST_BOTTOM_PADDING }}
-        onScroll={onScroll}
-        scrollEventThrottle={16}
+        contentContainerStyle={{ paddingTop: 8, paddingBottom: LIST_BOTTOM_PADDING }}
       />
-      <CompactHeader title="Favourites" scrollY={scrollY} right={<HeaderActions />} />
     </View>
   );
 }

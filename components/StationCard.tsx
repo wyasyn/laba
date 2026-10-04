@@ -1,4 +1,3 @@
-import { FavouriteButton } from "@/components/FavouriteButton";
 import { StationTypeIcon } from "@/components/icons/StationTypeIcon";
 import { StationArtwork } from "@/components/StationArtwork";
 import { Equalizer } from "@/components/ui/Equalizer";
@@ -14,8 +13,6 @@ import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 interface StationCardProps {
   station: Station;
-  /** Show the favourite toggle on the artwork. */
-  showFavourite?: boolean;
 }
 
 export const CARD_RADIUS = 20;
@@ -33,7 +30,7 @@ function metaLabel(station: Station) {
   return category ? `${kind} · ${category.charAt(0).toUpperCase()}${category.slice(1)}` : kind;
 }
 
-export const StationCard = memo(function StationCard({ station, showFavourite = true }: StationCardProps) {
+export const StationCard = memo(function StationCard({ station }: StationCardProps) {
   const router = useRouter();
   const { colors } = useTheme();
   const isOnAir = usePlayerStore(
@@ -51,7 +48,7 @@ export const StationCard = memo(function StationCard({ station, showFavourite = 
       <View style={[styles.art, { backgroundColor: colors.surfaceLight }]}>
         <StationArtwork station={station} variant="tile" />
 
-        <View style={StyleSheet.absoluteFill} className="flex-row items-start justify-between p-2">
+        <View style={StyleSheet.absoluteFill} className="flex-row items-start p-2">
           {isOnAir ? (
             <Animated.View
               entering={FadeIn.duration(200)}
@@ -62,10 +59,7 @@ export const StationCard = memo(function StationCard({ station, showFavourite = 
               <Equalizer size={10} color={colors.onPrimary} />
               <Text className="text-[11px] font-bold text-primary-foreground">Playing</Text>
             </Animated.View>
-          ) : (
-            <View />
-          )}
-          {showFavourite ? <FavouriteButton stationId={station.id} size={14} /> : null}
+          ) : null}
         </View>
 
         {/* On-air ring sits above the artwork so it is never clipped by it. */}

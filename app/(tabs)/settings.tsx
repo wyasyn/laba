@@ -1,11 +1,18 @@
-import { IconButton } from "@/components/ui/IconButton";
+import { CategoryRow } from "@/components/CategoryRow";
+import { HeaderActions } from "@/components/HeaderActions";
+import { LIST_BOTTOM_PADDING } from "@/components/StationList";
+import { COMPACT_BAR_HEIGHT, CompactHeader, LargeTitle, useCollapsingHeader } from "@/components/ui/CollapsingHeader";
+import { PressableScale } from "@/components/ui/PressableScale";
 import { Text } from "@/components/ui/Text";
 import { haptic, spring } from "@/lib/motion";
+import type { Station } from "@/lib/schemas";
 import { useTheme } from "@/lib/useTheme";
+import { useHideTabBarOnScroll } from "@/stores/useChromeStore";
 import { useFavouritesStore } from "@/stores/useFavouritesStore";
+import { useRecentsStore } from "@/stores/useRecentsStore";
+import { useStationStore } from "@/stores/useStationStore";
 import { useThemeStore, type ThemeMode } from "@/stores/useThemeStore";
 import {
-  ArrowLeft01Icon,
   ArrowRight01Icon,
   FavouriteIcon,
   InformationCircleIcon,
@@ -20,8 +27,8 @@ import { HugeiconsIcon } from "@hugeicons/react-native";
 import Constants from "expo-constants";
 import { useRouter } from "expo-router";
 import * as StoreReview from "expo-store-review";
-import { useEffect, type ReactNode } from "react";
-import { Linking, Pressable, ScrollView, View, type LayoutChangeEvent } from "react-native";
+import { useEffect, useMemo, type ReactNode } from "react";
+import { Alert, Linking, Pressable, View, type LayoutChangeEvent } from "react-native";
 import Animated, {
   interpolateColor,
   useAnimatedStyle,
@@ -29,7 +36,6 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type IconSvg = Parameters<typeof HugeiconsIcon>[0]["icon"];
 
@@ -53,74 +59,120 @@ async function rateApp() {
   } catch {}
 }
 
+/** Recently opened stations that are still in the catalogue, newest first. */
+function useRecentStations() {
+  const ids = useRecentsStore((s) => s.ids);
+  const stations = useStationStore((s) => s.stations);
+  return useMemo(() => {
+    const byId = new Map(stations.map((s) => [s.id, s]));
+    return ids.map((id) => byId.get(id)).filter((s): s is Station => s !== undefined);
+  }, [ids, stations]);
+}
+
+function confirmClearRecents() {
+  Alert.alert("Clear recently viewed?", "This removes your viewing history from this device.", [
+    { text: "Cancel", style: "cancel" },
+    {
+      text: "Clear",
+      style: "destructive",
+      onPress: () => {
+        haptic.tap();
+        useRecentsStore.getState().clear();
+      },
+    },
+  ]);
+}
+
+function ClearRecentsButton() {
+  return (
+    <PressableScale
+      onPress={confirmClearRecents}
+      hitSlop={10}
+      accessibilityRole="button"
+      accessibilityLabel="Clear recently viewed"
+      className="rounded-full bg-surface-light px-3 py-1.5"
+    >
+      <Text className="text-[13px] font-semibold text-text-secondary">Clear</Text>
+    </PressableScale>
+  );
+}
+
 export default function SettingsScreen() {
   const { colors } = useTheme();
-  const insets = useSafeAreaInsets();
+  const { scrollY, hideY, onScroll } = useCollapsingHeader({ hideDistance: COMPACT_BAR_HEIGHT });
+  useHideTabBarOnScroll(hideY, COMPACT_BAR_HEIGHT);
   const favouriteCount = useFavouritesStore((s) => s.ids.length);
+  const recentStations = useRecentStations();
   const router = useRouter();
 
   return (
     <View className="flex-1 bg-background">
-      <View style={{ paddingTop: insets.top + 4 }} className="flex-row items-center gap-3 px-4 pb-2">
-        <IconButton icon={ArrowLeft01Icon} onPress={() => router.back()} accessibilityLabel="Go back" />
-        <Text className="text-[17px] font-semibold">Settings</Text>
-      </View>
-
-      <ScrollView
-        contentContainerStyle={{ padding: 20, paddingBottom: insets.bottom + 40, gap: 28 }}
+      <Animated.ScrollView
+        contentContainerStyle={{ paddingBottom: LIST_BOTTOM_PADDING }}
         showsVerticalScrollIndicator={false}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
       >
-        <View className="flex-row items-center gap-4">
-          <View className="h-16 w-16 items-center justify-center rounded-full bg-primary/15">
-            <HugeiconsIcon icon={UserIcon} size={28} color={colors.primary} />
+        <LargeTitle title="Settings" scrollY={scrollY} />
+
+        {recentStations.length > 0 ? (
+          <CategoryRow
+            title="Recently viewed"
+            subtitle="Pick up where you left off"
+            stations={recentStations}
+            headerAction={<ClearRecentsButton />}
+          />
+        ) : null}
+
+        <View style={{ paddingHorizontal: 20, gap: 28 }}>
+          <View className="flex-row items-center gap-4">
+            <View className="h-16 w-16 items-center justify-center rounded-full bg-primary/15">
+              <HugeiconsIcon icon={UserIcon} size={28} color={colors.primary} />
+            </View>
+            <View className="flex-1">
+              <Text className="text-xl font-bold">Your Laba</Text>
+              <Text className="mt-0.5 text-sm text-text-secondary">
+                {favouriteCount} favourite{favouriteCount === 1 ? "" : "s"} saved on this device
+              </Text>
+            </View>
           </View>
-          <View className="flex-1">
-            <Text className="text-xl font-bold">Your Laba</Text>
-            <Text className="mt-0.5 text-sm text-text-secondary">
-              {favouriteCount} favourite{favouriteCount === 1 ? "" : "s"} saved on this device
-            </Text>
-          </View>
+
+          <Section title="Appearance" plain>
+            <ThemeSegmentedControl />
+          </Section>
+
+          <Section title="Library">
+            <Row
+              icon={FavouriteIcon}
+              tint={colors.primary}
+              label="Favourites"
+              value={String(favouriteCount)}
+              onPress={() => router.push("/favourites")}
+            />
+            <Row icon={UserIcon} tint="#6366F1" label="Account" onPress={() => router.push("/account")} />
+          </Section>
+
+          <Section title="Support">
+            <Row
+              icon={Mail01Icon}
+              tint="#0EA5E9"
+              label="Contact support"
+              onPress={() => Linking.openURL("mailto:ywalum@gmail.com").catch(() => {})}
+            />
+            <Row icon={StarIcon} tint="#F59E0B" label="Rate the app" onPress={() => void rateApp()} />
+          </Section>
+
+          <Section title="About">
+            <Row icon={InformationCircleIcon} tint="#64748B" label={APP_NAME} value={`v${APP_VERSION}`} />
+          </Section>
+
+          <Text className="text-center text-xs leading-[18px] text-text-tertiary">
+            Free-to-air TV and radio, with a Uganda focus and international channels.{"\n"}
+            Made with care in Uganda.
+          </Text>
         </View>
-
-        <Section title="Appearance" plain>
-          <ThemeSegmentedControl />
-        </Section>
-
-        <Section title="Library">
-          <Row
-            icon={FavouriteIcon}
-            tint={colors.primary}
-            label="Favourites"
-            value={String(favouriteCount)}
-            onPress={() => router.navigate("/(tabs)/favourites")}
-          />
-          <Row
-            icon={UserIcon}
-            tint="#6366F1"
-            label="Account"
-            onPress={() => router.push("/account")}
-          />
-        </Section>
-
-        <Section title="Support">
-          <Row
-            icon={Mail01Icon}
-            tint="#0EA5E9"
-            label="Contact support"
-            onPress={() => Linking.openURL("mailto:ywalum@gmail.com").catch(() => {})}
-          />
-          <Row icon={StarIcon} tint="#F59E0B" label="Rate the app" onPress={() => void rateApp()} />
-        </Section>
-
-        <Section title="About">
-          <Row icon={InformationCircleIcon} tint="#64748B" label={APP_NAME} value={`v${APP_VERSION}`} />
-        </Section>
-
-        <Text className="text-center text-xs leading-[18px] text-text-tertiary">
-          Free-to-air TV and radio, with a Uganda focus and international channels.{"\n"}
-          Made with care in Uganda.
-        </Text>
-      </ScrollView>
+      </Animated.ScrollView>
+      <CompactHeader title="Settings" scrollY={scrollY} hideY={hideY} right={<HeaderActions />} />
     </View>
   );
 }

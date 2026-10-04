@@ -12,6 +12,7 @@ import { enterFromBelow } from "@/lib/motion";
 import type { Station } from "@/lib/schemas";
 import { useTheme } from "@/lib/useTheme";
 import { usePlayerStore } from "@/stores/usePlayerStore";
+import { useRecentsStore } from "@/stores/useRecentsStore";
 import { useStationStore } from "@/stores/useStationStore";
 import { ArrowDown01Icon, SignalFull02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
@@ -49,6 +50,7 @@ export default function StationScreen() {
   useFocusEffect(
     useCallback(() => {
       if (!station) return;
+      useRecentsStore.getState().record(station.id);
       const player = usePlayerStore.getState();
       if (station.type === "radio") {
         // Radio lives in the global engine and keeps playing after this screen closes.

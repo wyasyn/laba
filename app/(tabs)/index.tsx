@@ -1,15 +1,16 @@
+import { CategoryRow } from "@/components/CategoryRow";
 import { HeaderActions } from "@/components/HeaderActions";
 import { HomeHero, useHomeHeroHeight } from "@/components/HomeHero";
 import { RefreshIndicator } from "@/components/RefreshIndicator";
 import { SkeletonCard, SkeletonHero, SkeletonTitle } from "@/components/SkeletonCard";
-import { StationCard } from "@/components/StationCard";
-import { GridCell, LIST_BOTTOM_PADDING } from "@/components/StationList";
+import { LIST_BOTTOM_PADDING } from "@/components/StationList";
 import { COMPACT_BAR_HEIGHT, CompactHeader, useCollapsingHeader } from "@/components/ui/CollapsingHeader";
-import { SectionHeader } from "@/components/ui/SectionHeader";
 import { ShimmerGroup } from "@/components/ui/Shimmer";
 import { Text } from "@/components/ui/Text";
-import { duration, enterFromBelow } from "@/lib/motion";
-import { selectHeroStations } from "@/lib/selectHeroStations";
+import { duration } from "@/lib/motion";
+import { mixInternational, rankFeatured } from "@/lib/homeSections";
+import { useTheme } from "@/lib/useTheme";
+import { useHideTabBarOnScroll } from "@/stores/useChromeStore";
 import { useStationStore } from "@/stores/useStationStore";
 import { useIsFocused } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -20,13 +21,13 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { scheduleOnRN } from "react-native-worklets";
 import { useShallow } from "zustand/react/shallow";
 
-/** Home shows a taste of each list; the full list is one tap away. */
-const ROW_LIMIT = 6;
+/** Home rows show a taste of each list; the full list is one tap away. */
+const ROW_LIMIT = 12;
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const heroHeight = useHomeHeroHeight();
-  const { scrollY, onScroll } = useCollapsingHeader();
+  const light = useTheme().resolved === "light";
   const isFocused = useIsFocused();
 
   const {
@@ -49,10 +50,8 @@ export default function HomeScreen() {
     })),
   );
 
-  const heroStations = useMemo(
-    () => selectHeroStations(featuredStations, stations),
-    [featuredStations, stations],
-  );
+  const featuredRow = useMemo(() => rankFeatured(featuredStations, ROW_LIMIT), [featuredStations]);
+  const worldStations = useMemo(() => mixInternational(internationalStations, ROW_LIMIT), [internationalStations]);
 
   const showSkeleton = isLoading && stations.length === 0;
 
@@ -60,10 +59,20 @@ export default function HomeScreen() {
   const barBottom = insets.top + COMPACT_BAR_HEIGHT;
   const handoff: [number, number] = [heroHeight - barBottom - 80, heroHeight - barBottom];
 
+  // Once past the hero, scrolling down slides the bar and the tab bar away;
+  // scrolling up brings them back.
+  const { scrollY, hideY, onScroll } = useCollapsingHeader({
+    hideDistance: COMPACT_BAR_HEIGHT,
+    hideAfter: handoff[1],
+  });
+  useHideTabBarOnScroll(hideY, COMPACT_BAR_HEIGHT);
+
   // While the bar is still clear the page top is the (dark) hero, so the
-  // status bar and header buttons switch to their light-on-image style.
+  // status bar and header buttons switch to their light-on-image style. In
+  // light mode the hero's lower half fades to white, so that ends once it
+  // reaches the top of the screen.
   const [overHero, setOverHero] = useState(true);
-  const threshold = (handoff[0] + handoff[1]) / 2;
+  const threshold = light ? heroHeight * 0.45 : (handoff[0] + handoff[1]) / 2;
   useAnimatedReaction(
     () => scrollY.get() < threshold,
     (next, prev) => {
@@ -117,8 +126,9 @@ export default function HomeScreen() {
             <HomeHero
               tvStations={tvStations}
               radioStations={radioStations}
-              featuredStations={heroStations}
+              featuredStations={featuredStations}
               active={isFocused}
+              scrollY={scrollY}
               header={
                 <View
                   pointerEvents="box-none"
@@ -129,21 +139,10 @@ export default function HomeScreen() {
                 </View>
               }
             />
-            {internationalStations.length > 0 ? (
-              // Same two-column cards as the TV and Radio tabs.
-              <Animated.View entering={enterFromBelow(0)} className="mt-6">
-                <SectionHeader title="Around the world" variant="inline" />
-                <View className="mt-3 flex-row flex-wrap">
-                  {internationalStations.slice(0, ROW_LIMIT).map((station, i) => (
-                    <View key={station.id} style={{ width: "50%" }}>
-                      <GridCell index={i}>
-                        <StationCard station={station} />
-                      </GridCell>
-                    </View>
-                  ))}
-                </View>
-              </Animated.View>
-            ) : null}
+            <View className="mt-6">
+              <CategoryRow index={0} title="Featured" headerVariant="inline" stations={featuredRow} />
+            </View>
+            <CategoryRow index={1} title="Around the world" headerVariant="inline" stations={worldStations} />
           </Animated.View>
         )}
       </Animated.ScrollView>
@@ -151,6 +150,7 @@ export default function HomeScreen() {
         title="Home"
         scrollY={scrollY}
         handoff={handoff}
+        hideY={hideY}
         right={
           <>
             <RefreshIndicator />

@@ -10,6 +10,7 @@ export const CACHE_KEYS = {
   STATIONS: "@laba/stations",
   STATIONS_TIMESTAMP: "@laba/stations_timestamp",
   FAVOURITES: "@laba/favourites",
+  RECENTS: "@laba/recents",
   THEME_MODE: "@laba/theme_mode",
 } as const;
 

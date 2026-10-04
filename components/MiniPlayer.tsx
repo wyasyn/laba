@@ -10,7 +10,7 @@ import { useTheme } from "@/lib/useTheme";
 import { usePlayerStore, type PlaybackStatus } from "@/stores/usePlayerStore";
 import { Cancel01Icon } from "@hugeicons/core-free-icons";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
@@ -127,6 +127,14 @@ export function FloatingMiniPlayer({ bottom }: { bottom: number }) {
   const hasStation = usePlayerStore((s) => s.currentStation !== null);
   const stop = usePlayerStore((s) => s.stop);
   const dragY = useSharedValue(0);
+  // Glides down into the tab bar's space when the bar hides, and back up.
+  const offset = useSharedValue(bottom);
+
+  useEffect(() => {
+    offset.set(withSpring(bottom, spring.snappy));
+  }, [bottom, offset]);
+
+  const offsetStyle = useAnimatedStyle(() => ({ bottom: offset.get() }));
 
   const dismiss = () => {
     haptic.tap();
@@ -159,7 +167,7 @@ export function FloatingMiniPlayer({ bottom }: { bottom: number }) {
     <Animated.View
       entering={SlideInDown.springify().damping(18).stiffness(180)}
       exiting={SlideOutDown.duration(220)}
-      style={[styles.floating, { bottom }]}
+      style={[styles.floating, offsetStyle]}
       pointerEvents="box-none"
     >
       <GestureDetector gesture={pan}>

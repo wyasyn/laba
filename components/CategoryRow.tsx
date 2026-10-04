@@ -9,7 +9,7 @@ import { HugeiconsIcon } from "@hugeicons/react-native";
 import { FlashList } from "@shopify/flash-list";
 import type { Href } from "expo-router";
 import { useRouter } from "expo-router";
-import { memo } from "react";
+import { memo, type ReactNode } from "react";
 import { View } from "react-native";
 import Animated from "react-native-reanimated";
 import { CARD_META_HEIGHT, CARD_RADIUS, StationCard } from "./StationCard";
@@ -22,6 +22,8 @@ interface CategoryRowProps {
   /** Size of the full list. When larger than `stations`, a See all tile ends the row. */
   totalCount?: number;
   headerVariant?: "pill" | "inline";
+  /** Replaces the See all chip on the right of the header. */
+  headerAction?: ReactNode;
   /** Position on the page, used to stagger the entrance. */
   index?: number;
 }
@@ -53,6 +55,7 @@ export const CategoryRow = memo(function CategoryRow({
   seeAllHref,
   totalCount,
   headerVariant,
+  headerAction,
   index = 0,
 }: CategoryRowProps) {
   const router = useRouter();
@@ -69,6 +72,7 @@ export const CategoryRow = memo(function CategoryRow({
         subtitle={subtitle}
         onSeeAll={onSeeAll}
         variant={headerVariant}
+        action={headerAction}
       />
       <View style={{ height: ROW_HEIGHT }}>
         <FlashList

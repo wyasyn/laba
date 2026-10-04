@@ -4,6 +4,7 @@ import { useTheme, useThemeVars } from "@/lib/useTheme";
 import { VideoWarmup } from "@/lib/utils";
 import { useFavouritesStore } from "@/stores/useFavouritesStore";
 import { useOnboardingStore } from "@/stores/useOnboardingStore";
+import { useRecentsStore } from "@/stores/useRecentsStore";
 import { useStationStore } from "@/stores/useStationStore";
 import { useThemeStore } from "@/stores/useThemeStore";
 import { SplashScreen, Stack } from "expo-router";
@@ -23,6 +24,7 @@ function InitialLayout() {
   const hydrateFavourites = useFavouritesStore((s) => s.hydrate);
   const hydrateTheme = useThemeStore((s) => s.hydrate);
   const hydrateOnboarding = useOnboardingStore((s) => s.hydrate);
+  const hydrateRecents = useRecentsStore((s) => s.hydrate);
 
   useEffect(() => {
     void Promise.all([
@@ -30,9 +32,10 @@ function InitialLayout() {
       hydrateFavourites(),
       hydrateTheme(),
       hydrateOnboarding(),
+      hydrateRecents(),
       setupTrackPlayer(),
     ]);
-  }, [fetchStations, hydrateFavourites, hydrateTheme, hydrateOnboarding]);
+  }, [fetchStations, hydrateFavourites, hydrateTheme, hydrateOnboarding, hydrateRecents]);
 
   // Fonts are embedded natively (expo-font config plugin), so the only things
   // worth holding the splash for are the theme and the first route decision.
@@ -64,7 +67,7 @@ function InitialLayout() {
           }}
         />
         <Stack.Screen name="search" options={{ animation: "fade" }} />
-        <Stack.Screen name="settings" options={{ animation: "slide_from_right" }} />
+        <Stack.Screen name="favourites" options={{ animation: "slide_from_right" }} />
         <Stack.Screen name="account" options={{ animation: "slide_from_right" }} />
       </Stack>
     </View>
