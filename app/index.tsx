@@ -155,7 +155,7 @@ function DriftColumn({ stations, tile, reverse }: { stations: Station[]; tile: n
 
 const styles = StyleSheet.create({
   ctaShadow: {
-    shadowColor: "#6366F1",
+    shadowColor: "#000",
     shadowOpacity: 0.4,
     shadowRadius: 16,
     shadowOffset: { width: 0, height: 8 },
