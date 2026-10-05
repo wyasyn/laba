@@ -293,4 +293,5 @@ before coding.
 - [x] **3.6 Tests and docs.** Jest via `jest-expo` (`pnpm test`): 33 tests
   over search, home sections, stream titles, i18n, the player store and
   the station store. README updated (SDK 57, tabs, new features, Sentry).
-  Screenshots in `docs/assets/screenshots` not refreshed.
+  Screenshots in `assets/screenshots` and `docs/assets/screenshots`
+  retaken from a release build, plus a new filters shot on the docs page.
