@@ -125,7 +125,23 @@ and a prebuild pass.
 
 ## Phase 2: features users expect
 
-### [ ] 2.1 Share a station and deep links
+### [x] 2.1 Share a station and deep links
+
+> Done in `a53dfab` on `feat/phase-2-features`. Verified on the Android
+> emulator: share sheet sends "Watch <name> live on Laba: <link>"; with the
+> domain approved by hand (`pm set-app-links-user-selection`), opening
+> `https://laba.yasinwalum.com/station/<id>` lands on that station and plays.
+> **Still to do before this works for real users:**
+> - `docs/.well-known/assetlinks.json` only has the local debug key. Add the
+>   SHA-256 of the EAS release key (`eas credentials -p android`) and, once
+>   on Google Play, the Play App Signing key.
+> - `docs/.well-known/apple-app-site-association` has an `APPLE_TEAM_ID`
+>   placeholder; replace it with the Apple Developer Team ID.
+> - Merge to `main` so `deploy-docs.yml` publishes `.well-known/` and
+>   `404.html`, then check `https://laba.yasinwalum.com/.well-known/assetlinks.json`.
+> - The web fallback's "Get the app" link points at the docs home page; point
+>   it at the store listing once there is one.
+> Not checked on iOS or on a second device.
 
 **Approach:**
 - Share button on the station screen (`app/station/[id].tsx`, both TV and
@@ -142,7 +158,12 @@ and a prebuild pass.
 **Done when:** sharing from one device and tapping the link on another opens
 the station in the app.
 
-### [ ] 2.2 Sleep timer for radio
+### [x] 2.2 Sleep timer for radio
+
+> Done in `e2ab124`. JS timers stop when an Android app is backgrounded, so
+> the timer is checked on expo-audio's native status events instead.
+> Verified on the Android emulator with a temporary 1-minute option: app
+> backgrounded and screen locked, playback paused on time. Not checked on iOS.
 
 **Approach:**
 - `sleepUntil: number | null` plus `setSleepTimer(minutes | null)` in
@@ -155,7 +176,11 @@ the station in the app.
 **Done when:** timer pauses playback at the right time, including with the
 app backgrounded and screen locked.
 
-### [ ] 2.3 Picture-in-picture and background audio for TV
+### [x] 2.3 Picture-in-picture and background audio for TV
+
+> Done in `2fdb2da`. Verified on the Android emulator: Bukedde TV 1 (HLS)
+> keeps playing in a PiP window after pressing Home. YouTube channels are
+> WebView-based and not covered. Not checked on iOS (needs a device build).
 
 **Approach:**
 - `components/VideoPlayer.tsx`: enable `react-native-video` PiP
@@ -171,7 +196,13 @@ app backgrounded and screen locked.
 **Done when:** an HLS TV stream continues in a PiP window on both platforms
 when leaving the app.
 
-### [ ] 2.4 Report a broken stream
+### [x] 2.4 Report a broken stream
+
+> Done in `e279a37`. "Report a problem" sits on the radio error card, the
+> video error overlay and a footer link on both station screens, rather
+> than a header menu (there is no menu to put it in). Verified on the
+> Android emulator: the mailto intent carries the station id, name, stream
+> URL, app version and platform.
 
 **Approach:**
 - "Report a problem" action on the station error state (radio player and
@@ -184,7 +215,12 @@ when leaving the app.
 
 **Done when:** tapping report opens a prefilled message with the right details.
 
-### [ ] 2.5 Country and language filters
+### [x] 2.5 Country and language filters
+
+> Done in `1639e17`. One filter button at the end of the category rail opens
+> a sheet with both filters. Also fixed a grid bug the filters exposed:
+> recycled FlashList cells kept the wrong column gutters. Verified on the
+> Android emulator: Uganda + English + Religious narrows Radio to 5 stations.
 
 **Approach:**
 - `lib/search.ts`: helpers for top countries and languages, like
