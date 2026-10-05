@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Laba</title>
+  <meta name="description" content="Free-to-air live TV and radio, with a Uganda focus.">
+  <style>
+    :root {
+      --bg: #f6f6f4;
+      --card: #ffffff;
+      --text: #161614;
+      --muted: #6b6b66;
+      --border: #e4e4df;
+      --accent: #161614;
+      --on-accent: #ffffff;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0c0c09;
+        --card: #181815;
+        --text: #f3f3ef;
+        --muted: #a3a39c;
+        --border: #2a2a26;
+        --accent: #f3f3ef;
+        --on-accent: #0c0c09;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    main {
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+    }
+    .art {
+      width: 132px;
+      height: 132px;
+      margin: 0 auto 24px;
+      border-radius: 30px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-size: 44px;
+      font-weight: 700;
+      letter-spacing: -1px;
+    }
+    .art img { width: 100%; height: 100%; object-fit: cover; }
+    .kicker {
+      margin: 0 0 6px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    h1 { margin: 0 0 10px; font-size: 26px; line-height: 1.2; letter-spacing: -0.5px; }
+    p.lede { margin: 0 0 28px; font-size: 15px; line-height: 1.5; color: var(--muted); }
+    .btn {
+      display: block;
+      padding: 15px 20px;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .btn-primary { background: var(--accent); color: var(--on-accent); }
+    .btn-secondary { margin-top: 10px; color: var(--text); border: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="art" id="art" aria-hidden="true">L</div>
+    <p class="kicker" id="kicker">Laba</p>
+    <h1 id="title">Page not found</h1>
+    <p class="lede" id="lede">This page doesn't exist. Laba streams free-to-air TV and radio, with a Uganda focus.</p>
+    <a class="btn btn-primary" id="open" href="/" hidden>Open in Laba</a>
+    <a class="btn btn-secondary" id="home" href="/">About Laba</a>
+  </main>
+  <script>
+    // Station links (/station/<id>) open the app directly when it is
+    // installed. Anyone landing here doesn't have it, or opened the link
+    // somewhere app links don't apply, so offer the app scheme and the site.
+    (function () {
+      var match = location.pathname.match(/^\/station\/([^\/]+)\/?$/);
+      if (!match) return;
+      var id = decodeURIComponent(match[1]);
+
+      var open = document.getElementById("open");
+      open.href = "laba://station/" + encodeURIComponent(id);
+      open.hidden = false;
+      document.getElementById("home").textContent = "Get the app";
+      document.getElementById("title").textContent = "Open this station in Laba";
+      document.getElementById("lede").textContent =
+        "Watch and listen live in the Laba app. If it doesn't open, install Laba first.";
+      document.title = "Laba";
+
+      fetch("/stations.json")
+        .then(function (res) { return res.ok ? res.json() : []; })
+        .then(function (stations) {
+          var station = stations.find(function (s) { return s.id === id; });
+          if (!station) return;
+          var verb = station.type === "tv" ? "Watch" : "Listen to";
+          document.title = station.name + " on Laba";
+          document.getElementById("kicker").textContent = station.type === "tv" ? "Live TV" : "Live radio";
+          document.getElementById("title").textContent = station.name;
+          document.getElementById("lede").textContent =
+            verb + " " + station.name + " live in the Laba app. If it doesn't open, install Laba first.";
+
+          var art = document.getElementById("art");
+          art.textContent = station.name.replace(/[^A-Za-z0-9 ]/g, "").split(/\s+/)
+            .filter(Boolean).slice(0, 2).map(function (w) { return w[0]; }).join("").toUpperCase() || "L";
+          if (station.logo) {
+            var img = new Image();
+            img.alt = "";
+            img.onload = function () { art.textContent = ""; art.appendChild(img); };
+            img.src = station.logo;
+          }
+        })
+        .catch(function () {});
+    })();
+  </script>
+</body>
+</html>
