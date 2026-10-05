@@ -1,6 +1,7 @@
 import { PressableScale } from "@/components/ui/PressableScale";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Text } from "@/components/ui/Text";
+import { useT } from "@/lib/i18n";
 import { enterFromBelow } from "@/lib/motion";
 import type { Station } from "@/lib/schemas";
 import { useTheme } from "@/lib/useTheme";
@@ -96,12 +97,13 @@ export const CategoryRow = memo(function CategoryRow({
 
 function SeeAllTile({ title, remaining, onPress }: { title: string; remaining: number; onPress: () => void }) {
   const { colors } = useTheme();
+  const { t } = useT();
   return (
     <PressableScale
       onPress={onPress}
       scaleTo={0.965}
       accessibilityRole="button"
-      accessibilityLabel={`See all ${title}, ${remaining} more`}
+      accessibilityLabel={t("section.seeAllMoreLabel", { title, count: remaining })}
       containerStyle={{ width: CARD_WIDTH, marginLeft: 12 }}
     >
       <View
@@ -112,8 +114,8 @@ function SeeAllTile({ title, remaining, onPress }: { title: string; remaining: n
           <HugeiconsIcon icon={ArrowRight01Icon} size={22} color={colors.textPrimary} strokeWidth={2.2} />
         </View>
         <View className="items-center">
-          <Text className="text-[15px] font-semibold">See all</Text>
-          <Text className="mt-0.5 text-[12px] font-medium text-text-secondary">{remaining} more</Text>
+          <Text className="text-[15px] font-semibold">{t("section.seeAll")}</Text>
+          <Text className="mt-0.5 text-[12px] font-medium text-text-secondary">{t("section.more", { count: remaining })}</Text>
         </View>
       </View>
     </PressableScale>

@@ -7,8 +7,8 @@ import { hasCategory, matchesFilters, topCategories, type StationFilters } from 
 import { useHideTabBarOnScroll } from "@/stores/useChromeStore";
 import { useStationStore } from "@/stores/useStationStore";
 import { FlashList, type FlashListRef, type ListRenderItemInfo } from "@shopify/flash-list";
-import { useMemo, useRef, useState, type ReactNode } from "react";
-import { RefreshControl, StyleSheet, View, type LayoutChangeEvent } from "react-native";
+import { useCallback, useMemo, useRef, useState, type ReactNode } from "react";
+import { RefreshControl, StyleSheet, View, useWindowDimensions, type LayoutChangeEvent } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -37,35 +37,49 @@ export const LIST_BOTTOM_PADDING = 180;
 /** Vertical room for the category rail, including its breathing space. */
 const TABS_SLOT = FILTER_CHIPS_HEIGHT + 20;
 
+const GRID_OUTER = 20;
+const GRID_GAP = 14;
+
+/** Two columns on phones, three on small tablets, four on large ones. */
+export function useGridColumns() {
+  const { width } = useWindowDimensions();
+  return width >= 900 ? 4 : width >= 600 ? 3 : 2;
+}
+
 /**
- * Grid key. Includes the column because GridCell pads by column, and FlashList
- * doesn't re-render a recycled cell when filtering only moves its item: a
- * station that changes column has to get a fresh cell.
+ * Grid cell with even gutters (20 outside, 14 between) and equal card widths
+ * for any column count: each cell pads by its column so the gaps line up.
  */
-export function gridKeyExtractor(item: Station, index: number) {
-  return `${item.id}:${index % 2}`;
+export function GridCell({ index, columns, children }: { index: number; columns: number; children: ReactNode }) {
+  const column = index % columns;
+  const padding = (2 * GRID_OUTER + (columns - 1) * GRID_GAP) / columns;
+  const left = GRID_OUTER - column * (padding - GRID_GAP);
+  return <View style={{ paddingLeft: left, paddingRight: padding - left, paddingBottom: 16 }}>{children}</View>;
 }
 
-/** Two-column cell with even gutters (20 outside, 14 between). */
-export function GridCell({ index, children }: { index: number; children: ReactNode }) {
-  const left = index % 2 === 0;
-  return (
-    <View style={{ paddingLeft: left ? 20 : 7, paddingRight: left ? 7 : 20, paddingBottom: 16 }}>
-      {children}
-    </View>
+/**
+ * Columns, key and cell renderer for a FlashList grid of stations. The key
+ * includes the column because GridCell pads by column, and FlashList doesn't
+ * re-render a recycled cell when filtering only moves its item: a station
+ * that changes column has to get a fresh cell.
+ */
+export function useStationGrid() {
+  const columns = useGridColumns();
+  const keyExtractor = useCallback((item: Station, index: number) => `${item.id}:${index % columns}`, [columns]);
+  const renderItem = useCallback(
+    ({ item, index }: ListRenderItemInfo<Station>) => (
+      <GridCell index={index} columns={columns}>
+        <StationCard station={item} />
+      </GridCell>
+    ),
+    [columns],
   );
-}
-
-function renderItem({ item, index }: ListRenderItemInfo<Station>) {
-  return (
-    <GridCell index={index}>
-      <StationCard station={item} />
-    </GridCell>
-  );
+  return { columns, keyExtractor, renderItem };
 }
 
 export function StationList({ type, title, subtitle }: StationListProps) {
   const insets = useSafeAreaInsets();
+  const { columns, keyExtractor, renderItem } = useStationGrid();
   const listRef = useRef<FlashListRef<Station>>(null);
 
   const isLoading = useStationStore((s) => s.isLoading);
@@ -151,9 +165,9 @@ export function StationList({ type, title, subtitle }: StationListProps) {
       {showSkeleton ? (
         <ShimmerGroup>
           <View className="flex-row flex-wrap">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <View key={i} style={{ width: "50%" }}>
-                <GridCell index={i}>
+            {Array.from({ length: columns * 3 }).map((_, i) => (
+              <View key={i} style={{ width: `${100 / columns}%` }}>
+                <GridCell index={i} columns={columns}>
                   <SkeletonCard />
                 </GridCell>
               </View>
@@ -169,8 +183,9 @@ export function StationList({ type, title, subtitle }: StationListProps) {
       <AnimatedFlashList
         ref={listRef}
         data={showSkeleton ? [] : stations}
-        keyExtractor={gridKeyExtractor}
-        numColumns={2}
+        key={columns}
+        keyExtractor={keyExtractor}
+        numColumns={columns}
         renderItem={renderItem}
         ListHeaderComponent={header}
         ListEmptyComponent={showSkeleton ? null : <EmptyState />}

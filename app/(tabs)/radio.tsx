@@ -1,5 +1,7 @@
+import { useT } from "@/lib/i18n";
 import { StationList } from "@/components/StationList";
 
 export default function RadioScreen() {
-  return <StationList type="radio" title="Radio" subtitle="Live stations from Uganda and beyond" />;
+  const { t } = useT();
+  return <StationList type="radio" title={t("lists.radioTitle")} subtitle={t("lists.radioSubtitle")} />;
 }

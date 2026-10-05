@@ -1,3 +1,4 @@
+import { useT } from "@/lib/i18n";
 import { duration, spring } from "@/lib/motion";
 import type { PlaybackStatus } from "@/stores/usePlayerStore";
 import { PauseIcon, PlayIcon, ReloadIcon } from "@hugeicons/core-free-icons";
@@ -33,8 +34,15 @@ function faceFor(status: PlaybackStatus): Face {
 export function PlayPauseButton({ status, onPress, size = 72, background, color }: PlayPauseButtonProps) {
   const face = faceFor(status);
   const iconSize = Math.round(size * 0.4);
+  const { t } = useT();
   const label =
-    face === "pause" ? "Pause" : face === "retry" ? "Retry" : face === "loading" ? "Connecting" : "Play";
+    face === "pause"
+      ? t("player.pause")
+      : face === "retry"
+        ? t("player.retry")
+        : face === "loading"
+          ? t("player.connecting")
+          : t("player.play");
 
   return (
     <PressableScale

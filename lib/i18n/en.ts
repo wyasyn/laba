@@ -1,0 +1,190 @@
+/**
+ * English strings: the source of truth. Other languages may leave keys out
+ * and fall back to these. `{name}` placeholders are filled by t(); keys
+ * ending in `_one` / `_other` are picked by count.
+ */
+export const en = {
+  // Shared
+  "common.goBack": "Go back",
+  "common.cancel": "Cancel",
+  "common.done": "Done",
+
+  // Tabs
+  "tabs.home": "Home",
+  "tabs.tv": "TV",
+  "tabs.radio": "Radio",
+  "tabs.settings": "Settings",
+
+  // Onboarding
+  "onboarding.badge": "Live TV & Radio",
+  "onboarding.headline": "Everything live.\nAll in one place.",
+  "onboarding.body": "Stream Uganda's favourite TV channels and radio stations, plus international news, free.",
+  "onboarding.cta": "Get started",
+
+  // Home
+  "home.title": "Home",
+  "home.featured": "Featured",
+  "home.world": "Around the world",
+  "hero.tvEyebrow": "Live now",
+  "hero.tvTitle": "Live TV",
+  "hero.tvCta": "Watch now",
+  "hero.radioEyebrow": "On air",
+  "hero.radioTitle": "Radio",
+  "hero.radioCta": "Listen now",
+  "hero.channels_one": "{count} channel",
+  "hero.channels_other": "{count} channels",
+  "hero.stations_one": "{count} station",
+  "hero.stations_other": "{count} stations",
+  "hero.browseTv": "Browse all TV channels",
+  "hero.browseRadio": "Browse all radio stations",
+
+  // Station lists
+  "lists.tvTitle": "Live TV",
+  "lists.tvSubtitle": "Free-to-air channels, streaming now",
+  "lists.radioTitle": "Radio",
+  "lists.radioSubtitle": "Live stations from Uganda and beyond",
+  "lists.updating": "Updating",
+  "card.liveTv": "Live TV",
+  "card.radio": "Radio",
+  "card.playing": "Playing",
+  "card.playTv": "Play {name}, TV channel",
+  "card.playRadio": "Play {name}, radio station",
+  "section.seeAll": "See all",
+  "section.seeAllLabel": "See all {title}",
+  "section.more": "{count} more",
+  "section.seeAllMoreLabel": "See all {title}, {count} more",
+  "empty.title": "No stations found",
+  "empty.message": "Try a different search term",
+
+  // Search and filters
+  "search.open": "Search TV and radio",
+  "search.placeholder": "Channels, stations, genres",
+  "search.defaultPlaceholder": "Search stations",
+  "search.clear": "Clear search",
+  "search.noMatch": "Nothing matches \"{query}\". Try a genre like news or music.",
+  "search.browseByGenre": "Browse by genre",
+  "search.searchFor": "Search {term}",
+  "filters.all": "All",
+  "filters.title": "Filters",
+  "filters.reset": "Reset",
+  "filters.country": "Country",
+  "filters.language": "Language",
+  "filters.any": "Any",
+  "filters.open": "Filter by country and language",
+  "filters.active": "Filters: {summary}. Change filters",
+  "filters.close": "Close filters",
+
+  // Not found
+  "notFound.title": "Page not found",
+  "notFound.message": "This screen does not exist in the app.",
+  "notFound.action": "Go to home",
+
+  // Station screen
+  "station.notFoundTitle": "Station not found",
+  "station.notFoundMessage": "It may have been removed from the catalogue.",
+  "station.nowPlaying": "Now playing",
+  "station.liveRadio": "Live radio",
+  "station.close": "Close player",
+  "station.share": "Share {name}",
+  "station.moreLikeThis": "More like this",
+  "station.reportPrompt": "Not playing right?",
+  "station.report": "Report a problem",
+
+  // Sharing and reporting
+  "share.tv": "Watch {name} live on Laba: {url}",
+  "share.radio": "Listen to {name} live on Laba: {url}",
+  "share.dialog": "Share {name}",
+  "report.prompt": "What went wrong? (optional)",
+  "report.noEmailTitle": "No email app found",
+  "report.noEmailMessage": "Send the details to {email} and we'll take a look.",
+
+  // Favourites
+  "favourites.title": "Favourites",
+  "favourites.count_one": "{count} saved station",
+  "favourites.count_other": "{count} saved stations",
+  "favourites.emptyTitle": "Nothing saved yet",
+  "favourites.emptyMessage": "Tap the heart on any station and it will be waiting for you here.",
+  "favourites.browse": "Browse stations",
+  "favourites.add": "Add to favourites",
+  "favourites.remove": "Remove from favourites",
+
+  // Radio player
+  "player.connecting": "Connecting…",
+  "player.reconnecting": "Reconnecting…",
+  "player.liveNow": "Live now",
+  "player.live": "Live",
+  "player.paused": "Paused",
+  "player.stopped": "Stopped",
+  "player.offline": "Offline",
+  "player.unavailable": "Stream unavailable",
+  "player.tapToRetry": "Tap to retry",
+  "player.errorNotResponding": "This station is not responding right now.",
+  "player.errorOffline": "You're offline.",
+  "player.errorFallback": "The stream failed to load.",
+  "player.hintRetry": "Check your connection, then tap play to try again.",
+  "player.hintOffline": "Playback resumes when you're back online.",
+  "player.nowPlayingLabel": "Now playing: {title}",
+  "player.play": "Play",
+  "player.pause": "Pause",
+  "player.retry": "Retry",
+  "player.mute": "Mute",
+  "player.unmute": "Unmute",
+  "player.stop": "Stop",
+  "player.stopAndClose": "Stop and close player",
+  "player.volume": "Volume",
+  "player.open": "Open {name}",
+  "player.lockScreenSubtitle": "Laba · Live radio",
+
+  // Sleep timer
+  "sleep.button": "Sleep timer",
+  "sleep.setLabel": "Set a sleep timer",
+  "sleep.active": "Sleep in {time}",
+  "sleep.changeLabel": "{label}. Change sleep timer",
+  "sleep.subtitle": "The radio fades out and pauses.",
+  "sleep.minutes": "{count} minutes",
+  "sleep.off": "Off",
+  "sleep.close": "Close sleep timer options",
+
+  // TV player
+  "video.loading": "Loading stream...",
+  "video.hint": "Check your connection and try again",
+  "video.retryLabel": "Retry loading stream",
+  "video.enterFullscreen": "Enter fullscreen",
+  "video.exitFullscreen": "Exit fullscreen",
+  "video.pip": "Picture in picture",
+  "video.volume": "Adjust volume",
+  "video.toggleHint": "Toggle playback",
+  "video.showBack": "Show back button",
+  "video.lockScreenSubtitle": "Laba · Live TV",
+
+  // Connectivity
+  "offline.banner": "You're offline",
+
+  // Settings
+  "settings.title": "Settings",
+  "settings.recent": "Recently viewed",
+  "settings.recentSubtitle": "Pick up where you left off",
+  "settings.clear": "Clear",
+  "settings.clearLabel": "Clear recently viewed",
+  "settings.clearConfirmTitle": "Clear recently viewed?",
+  "settings.clearConfirmMessage": "This removes your viewing history from this device.",
+  "settings.yourLaba": "Your Laba",
+  "settings.favouritesSaved_one": "{count} favourite saved on this device",
+  "settings.favouritesSaved_other": "{count} favourites saved on this device",
+  "settings.appearance": "Appearance",
+  "settings.themeLight": "Light",
+  "settings.themeDark": "Dark",
+  "settings.themeAuto": "Auto",
+  "settings.themeLabel": "{label} theme",
+  "settings.language": "Language",
+  "settings.languageSystem": "Same as phone",
+  "settings.library": "Library",
+  "settings.favourites": "Favourites",
+  "settings.support": "Support",
+  "settings.contact": "Contact support",
+  "settings.rate": "Rate the app",
+  "settings.about": "About",
+  "settings.tagline": "Free-to-air TV and radio, with a Uganda focus and international channels.\nMade with care in Uganda.",
+} as const;
+
+export type MessageKey = keyof typeof en;

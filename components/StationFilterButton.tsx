@@ -1,6 +1,7 @@
 import { PressableScale } from "@/components/ui/PressableScale";
 import { FILTER_CHIPS_HEIGHT } from "@/components/ui/FilterChips";
 import { Text } from "@/components/ui/Text";
+import { useT } from "@/lib/i18n";
 import { haptic } from "@/lib/motion";
 import type { Station } from "@/lib/schemas";
 import {
@@ -34,6 +35,7 @@ export function StationFilterButton({ stations, value, onChange }: StationFilter
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const [open, setOpen] = useState(false);
+  const { t } = useT();
 
   const countries = useMemo(() => topCountries(stations), [stations]);
   const languages = useMemo(() => topLanguages(stations), [stations]);
@@ -54,7 +56,7 @@ export function StationFilterButton({ stations, value, onChange }: StationFilter
       <PressableScale
         onPress={() => setOpen(true)}
         accessibilityRole="button"
-        accessibilityLabel={active ? `Filters: ${summary}. Change filters` : "Filter by country and language"}
+        accessibilityLabel={active ? t("filters.active", { summary }) : t("filters.open")}
         scaleTo={0.9}
         className={active ? "items-center justify-center rounded-full bg-primary" : "items-center justify-center rounded-full border border-border bg-surface"}
         style={{ width: FILTER_CHIPS_HEIGHT, height: FILTER_CHIPS_HEIGHT }}
@@ -71,31 +73,33 @@ export function StationFilterButton({ stations, value, onChange }: StationFilter
       </PressableScale>
 
       <Modal visible={open} transparent animationType="fade" onRequestClose={() => setOpen(false)} statusBarTranslucent>
-        <Pressable className="flex-1 justify-end bg-black/40" onPress={() => setOpen(false)} accessibilityLabel="Close filters">
+        <Pressable className="flex-1 justify-end bg-black/40" onPress={() => setOpen(false)} accessibilityLabel={t("filters.close")}>
           <Pressable
             onPress={() => {}}
             className="max-h-[80%] rounded-t-3xl bg-background pt-5"
             style={{ paddingBottom: insets.bottom + 16, borderCurve: "continuous" }}
           >
             <View className="flex-row items-center justify-between px-5">
-              <Text className="text-lg font-bold">Filters</Text>
+              <Text className="text-lg font-bold">{t("filters.title")}</Text>
               {active ? (
                 <Pressable onPress={() => set(NO_FILTERS)} hitSlop={10} accessibilityRole="button">
-                  <Text className="text-[15px] font-semibold text-text-secondary">Reset</Text>
+                  <Text className="text-[15px] font-semibold text-text-secondary">{t("filters.reset")}</Text>
                 </Pressable>
               ) : null}
             </View>
 
             <ScrollView className="mt-2" contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 8 }}>
               <Group
-                title="Country"
+                title={t("filters.country")}
+                anyLabel={t("filters.any")}
                 options={countries}
                 labelOf={countryName}
                 selected={value.country}
                 onSelect={(country) => set({ ...value, country })}
               />
               <Group
-                title="Language"
+                title={t("filters.language")}
+                anyLabel={t("filters.any")}
                 options={languages}
                 labelOf={languageName}
                 selected={value.language}
@@ -110,7 +114,7 @@ export function StationFilterButton({ stations, value, onChange }: StationFilter
                 className="items-center rounded-2xl bg-primary py-4"
               >
                 <Text className="text-[16px] font-semibold" style={{ color: colors.onPrimary }}>
-                  Done
+                  {t("common.done")}
                 </Text>
               </PressableScale>
             </View>
@@ -123,12 +127,14 @@ export function StationFilterButton({ stations, value, onChange }: StationFilter
 
 function Group({
   title,
+  anyLabel,
   options,
   labelOf,
   selected,
   onSelect,
 }: {
   title: string;
+  anyLabel: string;
   options: string[];
   labelOf: (value: string) => string;
   selected: string | null;
@@ -136,7 +142,7 @@ function Group({
 }) {
   if (options.length < 2) return null;
   const items: { value: string | null; label: string }[] = [
-    { value: null, label: "Any" },
+    { value: null, label: anyLabel },
     ...options.map((o) => ({ value: o, label: labelOf(o) })),
   ];
   return (

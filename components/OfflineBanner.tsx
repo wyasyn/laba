@@ -1,4 +1,5 @@
 import { Text } from "@/components/ui/Text";
+import { useT } from "@/lib/i18n";
 import { duration, easing } from "@/lib/motion";
 import { useNetworkStore } from "@/stores/useNetworkStore";
 import { WifiDisconnected02Icon } from "@hugeicons/core-free-icons";
@@ -14,6 +15,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export function OfflineBanner() {
   const isOnline = useNetworkStore((s) => s.isOnline);
   const insets = useSafeAreaInsets();
+  const { t } = useT();
 
   if (isOnline) return null;
 
@@ -29,7 +31,7 @@ export function OfflineBanner() {
       <View style={styles.pill}>
         <HugeiconsIcon icon={WifiDisconnected02Icon} size={15} color="#FFFFFF" />
         <Text className="text-[13px] font-semibold" style={{ color: "#FFFFFF" }}>
-          You&apos;re offline
+          {t("offline.banner")}
         </Text>
       </View>
     </Animated.View>

@@ -8,11 +8,13 @@ import { YouTubePlayer } from "@/components/YouTubePlayer";
 import { IconButton } from "@/components/ui/IconButton";
 import { Text } from "@/components/ui/Text";
 import { TypePill } from "@/components/ui/TypePill";
+import { useT } from "@/lib/i18n";
 import { enterFromBelow } from "@/lib/motion";
 import { reportStation } from "@/lib/report";
 import type { Station } from "@/lib/schemas";
 import { countryName, languageName, languagesOf } from "@/lib/search";
 import { shareStation } from "@/lib/share";
+import { logStreamFailure } from "@/lib/telemetry";
 import { useTheme } from "@/lib/useTheme";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import { useRecentsStore } from "@/stores/useRecentsStore";
@@ -51,6 +53,7 @@ export default function StationScreen() {
   );
   const related = useRelated(station);
   const { colors } = useTheme();
+  const { t } = useT();
 
   const isTv = station?.type === "tv";
 
@@ -88,9 +91,9 @@ export default function StationScreen() {
     return (
       <View className="flex-1 bg-background">
         <EmptyState
-          title="Station not found"
-          message="It may have been removed from the catalogue."
-          actionLabel="Go back"
+          title={t("station.notFoundTitle")}
+          message={t("station.notFoundMessage")}
+          actionLabel={t("common.goBack")}
           onAction={() => router.back()}
         />
       </View>
@@ -112,6 +115,7 @@ interface StationViewProps {
 
 function RadioStation({ station, related, onBack }: StationViewProps) {
   const { colors } = useTheme();
+  const { t } = useT();
   const insets = useSafeAreaInsets();
 
   return (
@@ -133,19 +137,19 @@ function RadioStation({ station, related, onBack }: StationViewProps) {
       </View>
 
       <View style={{ paddingTop: insets.top + 4 }} className="flex-row items-center justify-between px-4 pb-2">
-        <IconButton icon={ArrowDown01Icon} onPress={onBack} accessibilityLabel="Close player" iconSize={22} />
+        <IconButton icon={ArrowDown01Icon} onPress={onBack} accessibilityLabel={t("station.close")} iconSize={22} />
         {/* Centred on the screen, not between the uneven side buttons. */}
         <View pointerEvents="none" style={[StyleSheet.absoluteFill, { top: insets.top + 4 }]} className="items-center justify-center pb-2">
           <Text className="text-[11px] font-semibold uppercase tracking-[2px] text-text-secondary">
-            Now playing
+            {t("station.nowPlaying")}
           </Text>
-          <Text className="text-[13px] font-semibold">Live radio</Text>
+          <Text className="text-[13px] font-semibold">{t("station.liveRadio")}</Text>
         </View>
         <View className="flex-row items-center gap-2">
           <IconButton
             icon={Share08Icon}
             onPress={() => void shareStation(station)}
-            accessibilityLabel={`Share ${station.name}`}
+            accessibilityLabel={t("station.share", { name: station.name })}
             iconSize={19}
           />
           <FavouriteButton stationId={station.id} variant="surface" size={20} />
@@ -162,7 +166,7 @@ function RadioStation({ station, related, onBack }: StationViewProps) {
 
         {related.length > 0 ? (
           <View className="mt-12">
-            <CategoryRow index={1} title="More like this" stations={related} />
+            <CategoryRow index={1} title={t("station.moreLikeThis")} stations={related} />
           </View>
         ) : null}
 
@@ -174,6 +178,7 @@ function RadioStation({ station, related, onBack }: StationViewProps) {
 
 /** Quiet footer link for streams that play badly without erroring outright. */
 function ReportLink({ station }: { station: Station }) {
+  const { t } = useT();
   return (
     <Pressable
       onPress={() => void reportStation(station)}
@@ -182,7 +187,8 @@ function ReportLink({ station }: { station: Station }) {
       className="mt-10 self-center px-4 py-2 active:opacity-60"
     >
       <Text className="text-[13px] text-text-tertiary">
-        Not playing right? <Text className="text-[13px] font-semibold text-text-secondary">Report a problem</Text>
+        {t("station.reportPrompt")}{" "}
+        <Text className="text-[13px] font-semibold text-text-secondary">{t("station.report")}</Text>
       </Text>
     </Pressable>
   );
@@ -190,6 +196,7 @@ function ReportLink({ station }: { station: Station }) {
 
 function TvStation({ station, related, onBack }: StationViewProps) {
   const { colors } = useTheme();
+  const { t } = useT();
   const insets = useSafeAreaInsets();
 
   return (
@@ -203,6 +210,7 @@ function TvStation({ station, related, onBack }: StationViewProps) {
             title={station.name}
             artworkUrl={station.logo}
             onReport={(error) => void reportStation(station, error)}
+            onError={(error) => logStreamFailure(station, error)}
             borderless
             onBack={onBack}
           />
@@ -213,7 +221,11 @@ function TvStation({ station, related, onBack }: StationViewProps) {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: insets.bottom + 32 }}
       >
-        <Animated.View entering={enterFromBelow(0)} className="px-5 pt-5">
+        <Animated.View
+          entering={enterFromBelow(0)}
+          className="px-5 pt-5"
+          style={{ width: "100%", maxWidth: 760, alignSelf: "center" }}
+        >
           <View className="flex-row items-start gap-3">
             <View className="h-14 w-14 overflow-hidden rounded-2xl border border-border">
               <StationArtwork station={station} variant="tile" />
@@ -235,7 +247,7 @@ function TvStation({ station, related, onBack }: StationViewProps) {
             <IconButton
               icon={Share08Icon}
               onPress={() => void shareStation(station)}
-              accessibilityLabel={`Share ${station.name}`}
+              accessibilityLabel={t("station.share", { name: station.name })}
               iconSize={19}
             />
             <FavouriteButton stationId={station.id} variant="surface" size={20} />
@@ -260,7 +272,7 @@ function TvStation({ station, related, onBack }: StationViewProps) {
 
         {related.length > 0 ? (
           <View className="mt-10">
-            <CategoryRow index={1} title="More like this" stations={related} />
+            <CategoryRow index={1} title={t("station.moreLikeThis")} stations={related} />
           </View>
         ) : null}
 

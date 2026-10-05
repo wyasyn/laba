@@ -1,5 +1,6 @@
 import { PressableScale } from "@/components/ui/PressableScale";
 import { Text } from "@/components/ui/Text";
+import { useT } from "@/lib/i18n";
 import { enterFromBelow } from "@/lib/motion";
 import { useTheme } from "@/lib/useTheme";
 import { Search01Icon } from "@hugeicons/core-free-icons";
@@ -23,13 +24,14 @@ interface EmptyStateProps {
 }
 
 export function EmptyState({
-  title = "No stations found",
-  message = "Try a different search term",
+  title,
+  message,
   icon = Search01Icon,
   actionLabel,
   onAction,
 }: EmptyStateProps) {
   const { colors } = useTheme();
+  const { t } = useT();
   const breathe = useSharedValue(0);
 
   useEffect(() => {
@@ -52,8 +54,8 @@ export function EmptyState({
           <HugeiconsIcon icon={icon} size={28} color={colors.primary} />
         </View>
       </View>
-      <Text className="text-center text-lg font-bold">{title}</Text>
-      <Text className="mt-2 text-center text-sm leading-5 text-text-secondary">{message}</Text>
+      <Text className="text-center text-lg font-bold">{title ?? t("empty.title")}</Text>
+      <Text className="mt-2 text-center text-sm leading-5 text-text-secondary">{message ?? t("empty.message")}</Text>
       {actionLabel && onAction ? (
         <PressableScale
           onPress={onAction}

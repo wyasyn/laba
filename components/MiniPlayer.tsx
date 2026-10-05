@@ -5,6 +5,8 @@ import { IconButton } from "@/components/ui/IconButton";
 import { LiveDot } from "@/components/ui/LiveDot";
 import { PlayPauseButton } from "@/components/ui/PlayPauseButton";
 import { Text } from "@/components/ui/Text";
+import { useT } from "@/lib/i18n";
+import type { MessageKey } from "@/lib/i18n";
 import { haptic, spring } from "@/lib/motion";
 import { useTheme } from "@/lib/useTheme";
 import { usePlayerStore, type PlaybackStatus } from "@/stores/usePlayerStore";
@@ -23,18 +25,18 @@ import Animated, {
 } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 
-function statusLabel(status: PlaybackStatus, reconnecting: boolean) {
+function statusKey(status: PlaybackStatus, reconnecting: boolean): MessageKey | null {
   switch (status) {
     case "loading":
-      return reconnecting ? "Reconnecting…" : "Connecting…";
+      return reconnecting ? "player.reconnecting" : "player.connecting";
     case "playing":
-      return "Live";
+      return "player.live";
     case "paused":
-      return "Paused";
+      return "player.paused";
     case "error":
-      return "Tap to retry";
+      return "player.tapToRetry";
     default:
-      return "";
+      return null;
   }
 }
 
@@ -45,6 +47,8 @@ function MiniPlayerRow({ compact = false }: { compact?: boolean }) {
   const current = usePlayerStore((s) => s.currentStation);
   const status = usePlayerStore((s) => s.status);
   const reconnecting = usePlayerStore((s) => s.reconnecting);
+  const nowPlaying = usePlayerStore((s) => s.nowPlaying);
+  const { t } = useT();
   // Keep showing the last station while the card animates out after stop().
   const [last, setLast] = useState(current);
   if (current && current !== last) setLast(current);
@@ -62,7 +66,7 @@ function MiniPlayerRow({ compact = false }: { compact?: boolean }) {
           openStation(router, station);
         }}
         accessibilityRole="button"
-        accessibilityLabel={`Open ${station.name}`}
+        accessibilityLabel={t("player.open", { name: station.name })}
         className="flex-1 flex-row items-center gap-3"
       >
         <View
@@ -79,6 +83,8 @@ function MiniPlayerRow({ compact = false }: { compact?: boolean }) {
             <View className="mt-0.5 flex-row items-center gap-1.5">
               {status === "playing" ? <LiveDot size={6} color={colors.primary} /> : null}
               <Text
+                numberOfLines={1}
+                style={{ flexShrink: 1 }}
                 className={
                   status === "error"
                     ? "text-xs font-medium text-error"
@@ -87,7 +93,12 @@ function MiniPlayerRow({ compact = false }: { compact?: boolean }) {
                       : "text-xs text-text-secondary"
                 }
               >
-                {statusLabel(status, reconnecting)}
+                {status === "playing" && nowPlaying
+                  ? nowPlaying
+                  : (() => {
+                      const key = statusKey(status, reconnecting);
+                      return key ? t(key) : "";
+                    })()}
               </Text>
             </View>
           ) : null}
@@ -104,7 +115,7 @@ function MiniPlayerRow({ compact = false }: { compact?: boolean }) {
         <IconButton
           icon={Cancel01Icon}
           onPress={stop}
-          accessibilityLabel="Stop and close player"
+          accessibilityLabel={t("player.stopAndClose")}
           variant="ghost"
           size={34}
           iconSize={18}

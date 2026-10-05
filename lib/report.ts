@@ -1,4 +1,5 @@
 import { SUPPORT_EMAIL } from "@/lib/constants";
+import { t } from "@/lib/i18n";
 import type { Station } from "@/lib/schemas";
 import Constants from "expo-constants";
 import { Alert, Linking, Platform } from "react-native";
@@ -10,7 +11,7 @@ import { Alert, Linking, Platform } from "react-native";
 export async function reportStation(station: Station, error?: string | null) {
   const subject = `Laba: problem with ${station.name}`;
   const body = [
-    "What went wrong? (optional)",
+    t("report.prompt"),
     "",
     "",
     "---",
@@ -29,6 +30,6 @@ export async function reportStation(station: Station, error?: string | null) {
   try {
     await Linking.openURL(url);
   } catch {
-    Alert.alert("No email app found", `Send the details to ${SUPPORT_EMAIL} and we'll take a look.`);
+    Alert.alert(t("report.noEmailTitle"), t("report.noEmailMessage", { email: SUPPORT_EMAIL }));
   }
 }

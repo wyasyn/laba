@@ -5,6 +5,7 @@ import { LiveDot } from "@/components/ui/LiveDot";
 import { PlayPauseButton } from "@/components/ui/PlayPauseButton";
 import { Slider } from "@/components/ui/Slider";
 import { Text } from "@/components/ui/Text";
+import { useT } from "@/lib/i18n";
 import { duration, spring } from "@/lib/motion";
 import { reportStation } from "@/lib/report";
 import type { Station } from "@/lib/schemas";
@@ -52,6 +53,8 @@ export function AudioPlayer({ station }: { station: Station }) {
   const reconnecting = usePlayerStore((s) => s.reconnecting);
   const error = usePlayerStore((s) => s.error);
   const isOnline = useNetworkStore((s) => s.isOnline);
+  const nowPlaying = usePlayerStore((s) => s.nowPlaying);
+  const { t } = useT();
   const volume = usePlayerStore((s) => s.volume);
   const togglePlayback = usePlayerStore((s) => s.togglePlayback);
   const stop = usePlayerStore((s) => s.stop);
@@ -73,17 +76,17 @@ export function AudioPlayer({ station }: { station: Station }) {
   const statusText =
     status === "loading"
       ? reconnecting
-        ? "Reconnecting…"
-        : "Connecting…"
+        ? t("player.reconnecting")
+        : t("player.connecting")
       : status === "playing"
-        ? "Live now"
+        ? t("player.liveNow")
         : status === "error"
           ? isOnline
-            ? "Stream unavailable"
-            : "Offline"
+            ? t("player.unavailable")
+            : t("player.offline")
           : status === "idle"
-            ? "Stopped"
-            : "Paused";
+            ? t("player.stopped")
+            : t("player.paused");
 
   const volumeIcon = volume === 0 ? VolumeMuteIcon : volume < 0.5 ? VolumeLowIcon : VolumeHighIcon;
 
@@ -101,7 +104,7 @@ export function AudioPlayer({ station }: { station: Station }) {
         </View>
       </Animated.View>
 
-      <View className="mt-8 w-full px-6">
+      <View className="mt-8 w-full px-6" style={{ maxWidth: 560 }}>
         <Text numberOfLines={2} className="text-center text-[26px] font-bold tracking-tight">
           {station.name}
         </Text>
@@ -119,6 +122,17 @@ export function AudioPlayer({ station }: { station: Station }) {
             {statusText}
           </Text>
         </View>
+        {nowPlaying && isPlaying ? (
+          <Animated.View entering={FadeIn.duration(duration.base)} exiting={FadeOut.duration(duration.fast)}>
+            <Text
+              numberOfLines={2}
+              className="mt-2 text-center text-[15px] text-text-secondary"
+              accessibilityLabel={t("player.nowPlayingLabel", { title: nowPlaying })}
+            >
+              {nowPlaying}
+            </Text>
+          </Animated.View>
+        ) : null}
       </View>
 
       <Waveform active={isPlaying} color={colors.primary} idleColor={colors.border} />
@@ -127,7 +141,7 @@ export function AudioPlayer({ station }: { station: Station }) {
         <IconButton
           icon={volumeIcon}
           onPress={toggleMute}
-          accessibilityLabel={volume === 0 ? "Unmute" : "Mute"}
+          accessibilityLabel={volume === 0 ? t("player.unmute") : t("player.mute")}
           size={52}
           iconSize={22}
         />
@@ -141,16 +155,16 @@ export function AudioPlayer({ station }: { station: Station }) {
         <IconButton
           icon={StopIcon}
           onPress={stop}
-          accessibilityLabel="Stop"
+          accessibilityLabel={t("player.stop")}
           size={52}
           iconSize={22}
           disabled={status === "idle"}
         />
       </View>
 
-      <View className="mt-8 w-full flex-row items-center gap-3 px-8">
+      <View className="mt-8 w-full flex-row items-center gap-3 px-8" style={{ maxWidth: 520 }}>
         <HugeiconsIcon icon={volumeIcon} size={18} color={colors.textSecondary} />
-        <Slider value={volume} onChange={setVolume} accessibilityLabel="Volume" />
+        <Slider value={volume} onChange={setVolume} accessibilityLabel={t("player.volume")} />
       </View>
 
       <View className="mt-6">
@@ -163,11 +177,11 @@ export function AudioPlayer({ station }: { station: Station }) {
           exiting={FadeOut.duration(duration.fast)}
           className="mx-6 mt-6 w-auto rounded-2xl border border-error/30 bg-error/10 px-4 py-3"
         >
-          <Text className="text-center text-sm font-medium">{error ?? "The stream failed to load."}</Text>
+          <Text className="text-center text-sm font-medium">{error ?? t("player.errorFallback")}</Text>
           <Text className="mt-1 text-center text-xs text-text-secondary">
             {isOnline
-              ? "Check your connection, then tap play to try again."
-              : "Playback resumes when you're back online."}
+              ? t("player.hintRetry")
+              : t("player.hintOffline")}
           </Text>
           {isOnline ? (
             <Pressable
@@ -176,7 +190,7 @@ export function AudioPlayer({ station }: { station: Station }) {
               hitSlop={8}
               className="mt-2 self-center active:opacity-60"
             >
-              <Text className="text-xs font-semibold underline">Report a problem</Text>
+              <Text className="text-xs font-semibold underline">{t("station.report")}</Text>
             </Pressable>
           ) : null}
         </Animated.View>

@@ -17,6 +17,7 @@ export const CACHE_KEYS = {
   FAVOURITES: "@laba/favourites",
   RECENTS: "@laba/recents",
   THEME_MODE: "@laba/theme_mode",
+  LOCALE: "@laba/locale",
 } as const;
 
 // 24 hours in milliseconds
