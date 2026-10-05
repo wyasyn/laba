@@ -135,6 +135,16 @@ node station-builder/build.js
 
 This fetches, validates, and writes a fresh `stations.json` that the app can consume.
 
+### 5. Refresh the bundled fallback (before every release)
+
+```bash
+pnpm stations:snapshot
+```
+
+Downloads the published catalog, validates it, and writes it to
+`data/fallback-stations.json`. This is what a fresh install shows with no
+network, so run it and commit the result before each release build.
+
 ---
 
 ## Scripts
@@ -149,6 +159,7 @@ This fetches, validates, and writes a fresh `stations.json` that the app can con
 | `pnpm prebuild:clean` | Regenerate native projects from scratch |
 | `pnpm build` | Create an EAS build |
 | `pnpm lint` | Lint the project with `eslint-config-expo` |
+| `pnpm stations:snapshot` | Refresh the bundled offline station catalog |
 
 ---
 

@@ -105,7 +105,8 @@ export const useStationStore = create<StationStore>((set, get) => ({
       return;
     }
 
-    // 2. No cache → show bundled fallback (TV-only JSON; radios come from remote build)
+    // 2. No cache → show bundled fallback (snapshot of the remote catalog,
+    //    refreshed with `pnpm stations:snapshot` before each release)
     const fallback = loadFallbackStations();
     set({
       stations: fallback,
