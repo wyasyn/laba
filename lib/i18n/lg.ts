@@ -171,4 +171,8 @@ export const lg: Partial<Record<MessageKey, string>> = {
   "settings.rate": "Wa app obubonero",
   "settings.about": "Ebikwata ku app",
   "settings.tagline": "TV ne leediyo ez'obwereere, nga essira liri ku Uganda n'emikutu gy'ensi yonna.\nYakolebwa n'obwegendereza mu Uganda.",
+
+  "car.recent": "Eby'akaakano",
+  "car.stations": "Emikutu",
+  "car.categories": "Ebika",
 };

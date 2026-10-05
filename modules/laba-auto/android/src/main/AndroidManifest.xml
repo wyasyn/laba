@@ -1,0 +1,28 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+
+  <application>
+    <!-- Lists Laba as a media app in Android Auto. -->
+    <meta-data
+      android:name="com.google.android.gms.car.application"
+      android:resource="@xml/automotive_app_desc" />
+
+    <service
+      android:name="expo.modules.labaauto.LabaAutoService"
+      android:exported="true"
+      android:foregroundServiceType="mediaPlayback">
+      <intent-filter>
+        <action android:name="androidx.media3.session.MediaLibraryService" />
+        <action android:name="android.media.browse.MediaBrowserService" />
+      </intent-filter>
+    </service>
+
+    <!-- Android Auto only loads artwork from content:// URIs, so station logos are served from here. -->
+    <provider
+      android:name="expo.modules.labaauto.ArtworkProvider"
+      android:authorities="${applicationId}.labaauto.artwork"
+      android:exported="true" />
+  </application>
+</manifest>

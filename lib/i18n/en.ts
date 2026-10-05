@@ -185,6 +185,11 @@ export const en = {
   "settings.rate": "Rate the app",
   "settings.about": "About",
   "settings.tagline": "Free-to-air TV and radio, with a Uganda focus and international channels.\nMade with care in Uganda.",
+
+  // Android Auto browse tabs
+  "car.recent": "Recent",
+  "car.stations": "Stations",
+  "car.categories": "Categories",
 } as const;
 
 export type MessageKey = keyof typeof en;

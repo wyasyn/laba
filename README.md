@@ -52,6 +52,7 @@ Targets **iOS**, **Android**, and **Web** from a single Expo codebase.
 - **Resilient radio**: automatic reconnect with backoff when a stream drops, recovery after phone calls and other interruptions, an offline banner, and a sleep timer that fades out.
 - **Now playing**: song titles from the stream's ICY metadata in the player, mini-player and lock screen (Android).
 - **Picture-in-picture TV**: HLS channels keep playing in a floating window, with background audio.
+- **Android Auto**: radio in the car, with Favourites, Recent, all stations and categories, voice search ("play ... on Laba"), next and previous station, and live song titles.
 - **Share and deep links**: station links (`laba.yasinwalum.com/station/<id>`) open the app, with a web fallback.
 - **Filters**: narrow TV and radio by category, country and language.
 - **Languages**: English, Kiswahili and Luganda, following the phone or chosen in Settings.
@@ -91,6 +92,7 @@ data/                Bundled fallback station catalog (Zod-validated)
 station-builder/     Node pipeline: fetch → validate → emit stations.json
 assets/              Icons, splash, fonts, screenshots
 constants/           Theme tokens, shared config
+modules/laba-auto/   Local Expo module: Android Auto media service (Kotlin)
 ```
 
 ### Highlights
@@ -168,6 +170,18 @@ network, so run it and commit the result before each release build.
 | `pnpm lint` | Lint the project with `eslint-config-expo` |
 | `pnpm stations:snapshot` | Refresh the bundled offline station catalog |
 | `pnpm test` | Run the Jest unit tests (stores, search, i18n) |
+
+### Android Auto
+
+`modules/laba-auto` runs a Media3 `MediaLibraryService` with its own player,
+because the car can start it while the app is closed. The app syncs radio
+stations, favourites, recents and the language to it (`lib/carSync.ts`), and
+the two players pause each other so only one plays. To try it, install the
+[Desktop Head Unit](https://developer.android.com/training/cars/testing/dhu)
+(`sdkmanager "extras;google;auto"`). On the phone, turn on developer mode in
+Android Auto's settings, enable "Unknown sources" and "Start head unit
+server", then run `adb forward tcp:5277 tcp:5277` and `desktop-head-unit`.
+Unknown sources is needed until the app is installed from Google Play.
 
 ### Crash reporting
 

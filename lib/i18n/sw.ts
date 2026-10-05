@@ -168,4 +168,8 @@ export const sw: Partial<Record<MessageKey, string>> = {
   "settings.rate": "Kadiria programu",
   "settings.about": "Kuhusu",
   "settings.tagline": "TV na redio za bure, zikilenga Uganda pamoja na chaneli za kimataifa.\nImetengenezwa kwa uangalifu nchini Uganda.",
+
+  "car.recent": "Za karibuni",
+  "car.stations": "Vituo",
+  "car.categories": "Aina",
 };

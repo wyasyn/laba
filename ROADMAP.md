@@ -258,15 +258,30 @@ before coding.
   with the lock screen session reading song, then station. Android only;
   iOS needs an
   `AVPlayerItemMetadataOutput` patch.
-- [ ] **3.2 Android Auto and CarPlay.** Scoped, not built. Needs: a
-  Media3 `MediaLibraryService` exposing a browse tree (Favourites, Radio
-  by category) and playback through the same ExoPlayer, which means
-  moving radio off expo-audio to a native module or
-  `react-native-track-player`; `automotive_app_desc.xml` and Play
-  Console review for Auto; for CarPlay, Apple's audio-app entitlement
-  (request via developer.apple.com, can take weeks) plus a
-  `CPTemplateApplicationScene`. Suggest: start with Android Auto, test in
-  the Desktop Head Unit.
+- [ ] **3.2 Android Auto and CarPlay.** Android Auto built; CarPlay not
+  started. `modules/laba-auto` is a local Expo module with a Media3
+  `MediaLibraryService` and its own ExoPlayer, because Auto can start the
+  service while the app is closed, before React Native exists. Browse tree:
+  Favourites, Recent (car plays first, then the app's), Stations (A to Z),
+  Categories; logos through a content provider (Auto only loads content://
+  artwork), app icon when a logo is missing or dead; search and voice
+  ("play religious on Laba"); a tapped station brings its list, so next and
+  previous move through it; ICY song titles shown as "song, by station";
+  retry with backoff like the app. The app syncs stations, favourites,
+  recents and translated tab names (`lib/carSync.ts`); starting a station on
+  either side pauses the other. Verified on the Android emulator with a
+  throwaway in-app client on the legacy `MediaBrowser` API that Auto uses:
+  tree, artwork, play, next, voice search and pause all work, and the
+  phone-to-car handoff works both ways without a crash. **Still to do:**
+  - Test in the Desktop Head Unit on a real phone (needs Android Auto with
+    developer mode; not possible on this emulator without a Google sign-in).
+  - Play Console: opt into Android Auto under Advanced settings, then pass
+    the Auto review before it shows in cars.
+  - Luganda and Kiswahili tab names (`car.*` keys) need a native check.
+  - A station started on the phone before connecting keeps playing on the
+    phone player and does not show in the car until one is picked there.
+  - CarPlay: Apple's audio-app entitlement (request via developer.apple.com,
+    can take weeks), then a `CPTemplateApplicationScene`.
 - [x] **3.3 Crash and stream-failure reporting.** `@sentry/react-native`,
   on only when `EXPO_PUBLIC_SENTRY_DSN` is set in a release build
   (`lib/telemetry.ts`). Radio stations that fail every retry and TV

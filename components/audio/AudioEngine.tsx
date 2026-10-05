@@ -1,6 +1,7 @@
 import { t } from "@/lib/i18n";
 import { streamTitleOf } from "@/lib/streamTitle";
 import { logStreamFailure } from "@/lib/telemetry";
+import { LabaAuto } from "@/modules/laba-auto";
 import { useNetworkStore } from "@/stores/useNetworkStore";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
@@ -67,12 +68,15 @@ export function AudioEngine() {
   }, [streamUrl, reloadToken, player, stationName, stationLogo, reportStatus]);
 
   // Follow play/pause intent. While interrupted the OS owns the player and
-  // resumes it itself; calling pause() here would cancel that.
+  // resumes it itself; calling pause() here would cancel that. Playing here
+  // pauses Android Auto's player, which has its own stream.
   useEffect(() => {
     if (!streamUrl || interrupted) return;
     try {
-      if (wantsPlaying) player.play();
-      else player.pause();
+      if (wantsPlaying) {
+        LabaAuto?.pauseCarPlayback();
+        player.play();
+      } else player.pause();
     } catch {}
   }, [wantsPlaying, interrupted, streamUrl, player]);
 

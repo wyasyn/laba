@@ -1,5 +1,6 @@
 import { AudioEngine } from "@/components/audio/AudioEngine";
 import { OfflineBanner } from "@/components/OfflineBanner";
+import { watchCarLibrary } from "@/lib/carSync";
 import { setupTrackPlayer } from "@/lib/trackPlayerSetup";
 import { useTheme, useThemeVars } from "@/lib/useTheme";
 import { VideoWarmup } from "@/lib/utils";
@@ -43,6 +44,7 @@ function InitialLayout() {
   }, [fetchStations, hydrateFavourites, hydrateTheme, hydrateOnboarding, hydrateRecents, hydrateLocale]);
 
   useEffect(() => watchNetwork(), []);
+  useEffect(() => watchCarLibrary(), []);
 
   // Fonts are embedded natively (expo-font config plugin), so the only things
   // worth holding the splash for are the theme and the first route decision.
