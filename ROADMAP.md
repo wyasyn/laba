@@ -44,7 +44,15 @@ On a first launch with no network the Radio tab is empty
 
 **Done when:** airplane mode, fresh install, Radio tab shows stations.
 
-### [ ] 1.2 Radio auto-reconnect and interruption recovery
+### [x] 1.2 Radio auto-reconnect and interruption recovery
+
+> Done in `2d513bb`. Connect timeout 15s, then reloads after 2s, 5s, 10s;
+> error only after all three fail. expo-audio already pauses and resumes
+> natively around transient interruptions, so the engine now just marks the
+> stream `interrupted` and stays out of the way. Verified on the Android
+> emulator: network off mid-stream retries on schedule then errors; network
+> back during retries resumes on its own; a simulated incoming call shows
+> "Paused" and playback resumes after hang-up. Not checked on iOS.
 
 **Problem:** any stream drop becomes an error that needs a manual retry
 (`components/audio/AudioEngine.tsx`). No resume after a phone call.
