@@ -1,6 +1,7 @@
 import { LiveDot } from "@/components/ui/LiveDot";
 import { Slider } from "@/components/ui/Slider";
 import { Text } from "@/components/ui/Text";
+import { useT } from "@/lib/i18n";
 import { duration } from "@/lib/motion";
 import { useTheme } from "@/lib/useTheme";
 import { usePlayerStore } from "@/stores/usePlayerStore";
@@ -100,6 +101,7 @@ export function VideoPlayer({
   onBack,
 }: VideoPlayerProps) {
   const { colors } = useTheme();
+  const { t } = useT();
   const videoRef = useRef<VideoRef>(null);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const mountedRef = useRef(true);
@@ -282,7 +284,7 @@ export function VideoPlayer({
         <View className="absolute inset-0 items-center justify-center bg-black/60">
           <ActivityIndicator size="large" color={colors.primary} />
           <Text className="mt-3 text-[13px] text-white/70">
-            Loading stream...
+            {t("video.loading")}
           </Text>
         </View>
       )}
@@ -294,16 +296,16 @@ export function VideoPlayer({
             {errorMessage}
           </Text>
           <Text className="mb-4 text-center text-xs text-white/50">
-            Check your connection and try again
+            {t("video.hint")}
           </Text>
           <Pressable
             onPress={handleRetry}
             className="flex-row items-center gap-2 rounded-lg bg-primary px-6 py-3"
             accessibilityRole="button"
-            accessibilityLabel="Retry loading stream"
+            accessibilityLabel={t("video.retryLabel")}
           >
             <HugeiconsIcon icon={ReloadIcon} size={18} color={colors.onPrimary} />
-            <Text className="font-semibold text-primary-foreground">Retry</Text>
+            <Text className="font-semibold text-primary-foreground">{t("player.retry")}</Text>
           </Pressable>
           {onReport && errorMessage ? (
             <Pressable
@@ -312,7 +314,7 @@ export function VideoPlayer({
               className="mt-3 active:opacity-60"
               accessibilityRole="button"
             >
-              <Text className="text-xs font-semibold text-white/70 underline">Report a problem</Text>
+              <Text className="text-xs font-semibold text-white/70 underline">{t("station.report")}</Text>
             </Pressable>
           ) : null}
         </View>
@@ -332,7 +334,7 @@ export function VideoPlayer({
                       className="rounded-full bg-black/50 p-2"
                       hitSlop={HIT_SLOP}
                       accessibilityRole="button"
-                      accessibilityLabel="Exit fullscreen"
+                      accessibilityLabel={t("video.exitFullscreen")}
                     >
                       <HugeiconsIcon
                         icon={ArrowLeft01Icon}
@@ -346,7 +348,7 @@ export function VideoPlayer({
                       className="rounded-full bg-black/50 p-2"
                       hitSlop={HIT_SLOP}
                       accessibilityRole="button"
-                      accessibilityLabel="Close player"
+                      accessibilityLabel={t("station.close")}
                     >
                       <HugeiconsIcon
                         icon={ArrowDown01Icon}
@@ -363,7 +365,7 @@ export function VideoPlayer({
                       className="rounded-full bg-black/50 p-2"
                       hitSlop={HIT_SLOP}
                       accessibilityRole="button"
-                      accessibilityLabel="Picture in picture"
+                      accessibilityLabel={t("video.pip")}
                     >
                       <HugeiconsIcon icon={PictureInPictureOnIcon} size={20} color="#fff" />
                     </Pressable>
@@ -375,7 +377,7 @@ export function VideoPlayer({
                       className="rounded-full bg-black/50 p-2"
                       hitSlop={HIT_SLOP}
                       accessibilityRole="button"
-                      accessibilityLabel="Adjust volume"
+                      accessibilityLabel={t("video.volume")}
                     >
                       <HugeiconsIcon icon={volumeIcon} size={20} color="#fff" />
                     </Pressable>
@@ -407,8 +409,8 @@ export function VideoPlayer({
                     onPress={togglePlay}
                     hitSlop={HIT_SLOP}
                     accessibilityRole="button"
-                    accessibilityLabel={isPaused ? "Play" : "Pause"}
-                    accessibilityHint="Toggle playback"
+                    accessibilityLabel={isPaused ? t("player.play") : t("player.pause")}
+                    accessibilityHint={t("video.toggleHint")}
                     className="rounded-full bg-black/50 p-5"
                   >
                     <HugeiconsIcon
@@ -424,7 +426,7 @@ export function VideoPlayer({
                   <View className="flex-row items-center gap-1.5 rounded-md bg-error px-2 py-1">
                     <LiveDot color="#FFFFFF" size={6} />
                     <Text className="text-[11px] font-bold uppercase tracking-widest text-white">
-                      Live
+                      {t("player.live")}
                     </Text>
                   </View>
 
@@ -433,7 +435,7 @@ export function VideoPlayer({
                     className="rounded-full bg-black/50 p-2"
                     hitSlop={HIT_SLOP}
                     accessibilityRole="button"
-                    accessibilityLabel={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+                    accessibilityLabel={isFullscreen ? t("video.exitFullscreen") : t("video.enterFullscreen")}
                   >
                     <HugeiconsIcon
                       icon={isFullscreen ? MinimizeScreenIcon : FullscreenIcon}
@@ -456,7 +458,7 @@ export function VideoPlayer({
       ref={videoRef}
       source={{
         uri: streamUrl,
-        metadata: { title, artist: "Laba · Live TV", imageUri: artworkUrl },
+        metadata: { title, artist: t("video.lockScreenSubtitle"), imageUri: artworkUrl },
       }}
       style={{ width: "100%", height: "100%" }}
       resizeMode="contain"

@@ -1,0 +1,65 @@
+diff --git a/android/src/main/java/expo/modules/audio/AudioPlayer.kt b/android/src/main/java/expo/modules/audio/AudioPlayer.kt
+index c76a9fd2a53743a691782e0f67d0d71401df58f6..1c870f9312be007fac8601d44987da5286fcd8c9 100644
+--- a/android/src/main/java/expo/modules/audio/AudioPlayer.kt
++++ b/android/src/main/java/expo/modules/audio/AudioPlayer.kt
+@@ -15,6 +15,7 @@ import androidx.media3.common.util.UnstableApi
+ import androidx.media3.exoplayer.DefaultLoadControl
+ import androidx.media3.exoplayer.ExoPlayer
+ import androidx.media3.exoplayer.source.MediaSource
++import androidx.media3.extractor.metadata.icy.IcyInfo
+ import androidx.media3.session.MediaSession
+ import expo.modules.audio.service.AudioPlaybackServiceConnection
+ import expo.modules.audio.service.ServiceBindingState
+@@ -76,6 +77,9 @@ class AudioPlayer(
+       return if (offset == C.TIME_UNSET) null else offset / 1000.0
+     }
+ 
++  // Live "now playing" text from in-stream metadata (ICY StreamTitle), if any.
++  private var streamTitle: String? = null
++
+   private var samplingEnabled = false
+   private var visualizer: Visualizer? = null
+   private val context by lazy {
+@@ -85,13 +89,34 @@ class AudioPlayer(
+ 
+   init {
+     installPlayerListeners()
++    ref.addListener(object : Player.Listener {
++      // ICY StreamTitle arrives as timed metadata. Read the IcyInfo entries
++      // directly: the merged MediaMetadata also carries the lock-screen title.
++      override fun onMetadata(metadata: androidx.media3.common.Metadata) {
++        for (i in 0 until metadata.length()) {
++          val entry = metadata.get(i)
++          if (entry is IcyInfo) {
++            updateStreamTitle(entry.title)
++          }
++        }
++      }
++    })
+     source?.let {
+       setMediaSource(source)
+     }
+   }
+ 
++  private fun updateStreamTitle(raw: String?) {
++    val title = raw?.trim()?.takeIf { it.isNotEmpty() }
++    if (title != streamTitle) {
++      streamTitle = title
++      sendStatusUpdate()
++    }
++  }
++
+   fun setMediaSource(source: MediaSource) {
+     previousPlaybackState = Player.STATE_IDLE
++    streamTitle = null
+     ref.setMediaSource(source)
+     ref.prepare()
+     startUpdating()
+@@ -215,6 +240,7 @@ class AudioPlayer(
+       "isBuffering" to isBuffering,
+       "isLive" to isLive,
+       "currentOffsetFromLive" to currentOffsetFromLive,
++      "streamTitle" to streamTitle,
+       "error" to null
+     )
+   }

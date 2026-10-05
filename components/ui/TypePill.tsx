@@ -1,4 +1,5 @@
 import { StationTypeIcon } from "@/components/icons/StationTypeIcon";
+import { useT } from "@/lib/i18n";
 import type { StationType } from "@/lib/schemas";
 import { useTheme } from "@/lib/useTheme";
 import { cn } from "@/lib/utils";
@@ -14,6 +15,7 @@ interface TypePillProps {
 
 export function TypePill({ type, variant = "tinted", className }: TypePillProps) {
   const { colors } = useTheme();
+  const { t } = useT();
   const isTv = type === "tv";
   const solid = variant === "solid";
   const tint = solid ? "#FFFFFF" : isTv ? colors.primary : colors.success;
@@ -28,7 +30,7 @@ export function TypePill({ type, variant = "tinted", className }: TypePillProps)
     >
       <StationTypeIcon type={type} size={12} color={tint} strokeWidth={2.2} />
       <Text className="text-[10px] font-bold uppercase tracking-widest" style={{ color: tint }}>
-        {isTv ? "Live TV" : "Radio"}
+        {isTv ? t("card.liveTv") : t("card.radio")}
       </Text>
     </View>
   );

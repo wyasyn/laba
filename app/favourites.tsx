@@ -1,29 +1,22 @@
 import { EmptyState } from "@/components/EmptyState";
-import { StationCard } from "@/components/StationCard";
-import { GridCell, gridKeyExtractor, LIST_BOTTOM_PADDING } from "@/components/StationList";
+import { LIST_BOTTOM_PADDING, useStationGrid } from "@/components/StationList";
 import { IconButton } from "@/components/ui/IconButton";
 import { Text } from "@/components/ui/Text";
+import { useT } from "@/lib/i18n";
 import type { Station } from "@/lib/schemas";
 import { useFavouritesStore } from "@/stores/useFavouritesStore";
 import { useStationStore } from "@/stores/useStationStore";
 import { ArrowLeft01Icon, FavouriteIcon } from "@hugeicons/core-free-icons";
-import { FlashList, type ListRenderItemInfo } from "@shopify/flash-list";
+import { FlashList } from "@shopify/flash-list";
 import { useRouter } from "expo-router";
 import { useMemo } from "react";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-function renderItem({ item, index }: ListRenderItemInfo<Station>) {
-  return (
-    <GridCell index={index}>
-      <StationCard station={item} />
-    </GridCell>
-  );
-}
-
 export default function FavouritesScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { columns, keyExtractor, renderItem } = useStationGrid();
   const ids = useFavouritesStore((s) => s.ids);
   const stations = useStationStore((s) => s.stations);
 
@@ -39,31 +32,33 @@ export default function FavouritesScreen() {
   }, [ids, stations]);
 
   const count = favouriteStations.length;
+  const { t, plural } = useT();
 
   return (
     <View className="flex-1 bg-background">
       <View style={{ paddingTop: insets.top + 4 }} className="flex-row items-center gap-3 px-4 pb-2">
-        <IconButton icon={ArrowLeft01Icon} onPress={() => router.back()} accessibilityLabel="Go back" />
+        <IconButton icon={ArrowLeft01Icon} onPress={() => router.back()} accessibilityLabel={t("common.goBack")} />
         <View className="flex-1">
-          <Text className="text-[17px] font-semibold">Favourites</Text>
+          <Text className="text-[17px] font-semibold">{t("favourites.title")}</Text>
           {count > 0 ? (
             <Text className="text-[13px] text-text-secondary">
-              {count} saved station{count === 1 ? "" : "s"}
+              {plural("favourites.count", count)}
             </Text>
           ) : null}
         </View>
       </View>
       <FlashList
         data={favouriteStations}
-        keyExtractor={gridKeyExtractor}
-        numColumns={2}
+        key={columns}
+        keyExtractor={keyExtractor}
+        numColumns={columns}
         renderItem={renderItem}
         ListEmptyComponent={
           <EmptyState
-            title="Nothing saved yet"
-            message="Tap the heart on any station and it will be waiting for you here."
+            title={t("favourites.emptyTitle")}
+            message={t("favourites.emptyMessage")}
             icon={FavouriteIcon}
-            actionLabel="Browse stations"
+            actionLabel={t("favourites.browse")}
             onAction={() => router.navigate("/(tabs)")}
           />
         }

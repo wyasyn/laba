@@ -1,3 +1,4 @@
+import { useT } from "@/lib/i18n";
 import { duration, haptic, spring } from "@/lib/motion";
 import { useTheme } from "@/lib/useTheme";
 import { useEffect, useRef, useState, type ReactNode } from "react";
@@ -39,12 +40,13 @@ export function FilterChips({
   options,
   selected,
   onSelect,
-  allLabel = "All",
+  allLabel,
   counts,
   labels,
   trailing,
 }: FilterChipsProps) {
   const { colors } = useTheme();
+  const { t } = useT();
   const scrollRef = useRef<ScrollView>(null);
   const frames = useRef<Record<string, Frame>>({});
   const [viewport, setViewport] = useState(0);
@@ -91,7 +93,7 @@ export function FilterChips({
   };
 
   const items: { value: string | null; label: string }[] = [
-    { value: null, label: allLabel },
+    { value: null, label: allLabel ?? t("filters.all") },
     ...options.map((o) => ({ value: o, label: labels?.[o] ?? o })),
   ];
 

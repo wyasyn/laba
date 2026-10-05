@@ -1,4 +1,5 @@
 import { Text } from "@/components/ui/Text";
+import { useT } from "@/lib/i18n";
 import { duration } from "@/lib/motion";
 import { useTheme } from "@/lib/useTheme";
 import { useStationStore } from "@/stores/useStationStore";
@@ -10,7 +11,8 @@ interface RefreshIndicatorProps {
 }
 
 /** Small pill that fades in while stations refresh in the background. */
-export function RefreshIndicator({ label = "Updating" }: RefreshIndicatorProps) {
+export function RefreshIndicator({ label }: RefreshIndicatorProps) {
+  const { t } = useT();
   const isRefreshing = useStationStore((s) => s.isRefreshing);
   const { colors } = useTheme();
 
@@ -23,7 +25,7 @@ export function RefreshIndicator({ label = "Updating" }: RefreshIndicatorProps) 
       className="mb-1.5 flex-row items-center self-end rounded-full border border-border bg-surface px-3 py-1.5"
     >
       <ActivityIndicator size="small" color={colors.primary} style={{ transform: [{ scale: 0.75 }] }} />
-      <Text className="ml-1.5 text-xs font-medium text-text-secondary">{label}</Text>
+      <Text className="ml-1.5 text-xs font-medium text-text-secondary">{label ?? t("lists.updating")}</Text>
     </Animated.View>
   );
 }

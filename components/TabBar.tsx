@@ -1,6 +1,8 @@
 import { GlassView } from "@/components/ui/GlassView";
 import { PressableScale } from "@/components/ui/PressableScale";
 import { Text } from "@/components/ui/Text";
+import { useT } from "@/lib/i18n";
+import type { MessageKey } from "@/lib/i18n";
 import { duration, easing } from "@/lib/motion";
 import { useTheme } from "@/lib/useTheme";
 import { useChromeStore } from "@/stores/useChromeStore";
@@ -21,24 +23,24 @@ const PILL_GAP = 8;
 export const TAB_BAR_HEIGHT = PILL_HEIGHT + PILL_GAP;
 
 /** Outline icon by default, filled when selected. Sources live in assets/images/tabs/svg. */
-const TABS: Record<string, { label: string; icon: ImageSourcePropType; selected: ImageSourcePropType }> = {
+const TABS: Record<string, { label: MessageKey; icon: ImageSourcePropType; selected: ImageSourcePropType }> = {
   index: {
-    label: "Home",
+    label: "tabs.home",
     icon: require("@/assets/images/tabs/home.png"),
     selected: require("@/assets/images/tabs/home-filled.png"),
   },
   tv: {
-    label: "TV",
+    label: "tabs.tv",
     icon: require("@/assets/images/tabs/live_tv.png"),
     selected: require("@/assets/images/tabs/live_tv-filled.png"),
   },
   radio: {
-    label: "Radio",
+    label: "tabs.radio",
     icon: require("@/assets/images/tabs/radio.png"),
     selected: require("@/assets/images/tabs/radio-filled.png"),
   },
   settings: {
-    label: "Settings",
+    label: "tabs.settings",
     icon: require("@/assets/images/tabs/settings.png"),
     selected: require("@/assets/images/tabs/settings-filled.png"),
   },
@@ -51,6 +53,7 @@ const TABS: Record<string, { label: string; icon: ImageSourcePropType; selected:
 export function TabBar({ state, navigation }: TabBarProps) {
   const insets = useSafeAreaInsets();
   const { colors, resolved } = useTheme();
+  const { t } = useT();
   const hidden = useChromeStore((s) => s.tabBarHidden);
   // Extra distance so the shadow is off screen too once hidden.
   const height = TAB_BAR_HEIGHT + insets.bottom + 24;
@@ -104,7 +107,7 @@ export function TabBar({ state, navigation }: TabBarProps) {
               scaleTo={0.92}
               accessibilityRole="tab"
               accessibilityState={{ selected: focused }}
-              accessibilityLabel={tab.label}
+              accessibilityLabel={t(tab.label)}
               containerClassName="flex-1"
               className="flex-1 items-center justify-center gap-1"
             >
@@ -127,7 +130,7 @@ export function TabBar({ state, navigation }: TabBarProps) {
                 className="text-[11px]"
                 style={{ color, fontWeight: focused ? "700" : "600" }}
               >
-                {tab.label}
+                {t(tab.label)}
               </Text>
             </PressableScale>
           );

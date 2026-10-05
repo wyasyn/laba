@@ -1,4 +1,6 @@
 allowBuilds:
+  # Only needed to upload source maps, which isn't set up yet (see ROADMAP 3.3).
+  '@sentry/cli': false
   bufferutil: true
   unrs-resolver: true
 minimumReleaseAgeExclude:
@@ -8,3 +10,5 @@ minimumReleaseAgeExclude:
   - expo-router@57.0.24
   - expo@57.0.26
 nodeLinker: hoisted
+patchedDependencies:
+  expo-audio: patches/expo-audio.patch

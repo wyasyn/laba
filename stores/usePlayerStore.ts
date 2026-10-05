@@ -25,6 +25,8 @@ interface PlayerStore {
   reloadToken: number;
   /** Automatic reload attempts since the stream last played. Reset by a user retry. */
   reconnectAttempt: number;
+  /** What the station says is on now (ICY StreamTitle), when the stream sends it. Android only. */
+  nowPlaying: string | null;
   /** Wall-clock time (ms) at which the sleep timer pauses playback, or null when off. */
   sleepUntil: number | null;
 
@@ -48,6 +50,8 @@ interface PlayerStore {
   reconnect: () => void;
   /** Engine only: the system paused or resumed playback behind our back. */
   setInterrupted: (interrupted: boolean) => void;
+  /** Engine only: the stream's "now playing" text changed. */
+  setNowPlaying: (nowPlaying: string | null) => void;
 }
 
 let volumeBeforeMute = 1;
@@ -63,6 +67,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   volume: 1,
   reloadToken: 0,
   reconnectAttempt: 0,
+  nowPlaying: null,
   sleepUntil: null,
 
   setPending: (stationId) => set({ pendingStationId: stationId }),
@@ -172,5 +177,9 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
 
   setInterrupted: (interrupted) => {
     if (get().interrupted !== interrupted) set({ interrupted });
+  },
+
+  setNowPlaying: (nowPlaying) => {
+    if (get().nowPlaying !== nowPlaying) set({ nowPlaying });
   },
 }));

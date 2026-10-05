@@ -1,5 +1,6 @@
 import { PressableScale } from "@/components/ui/PressableScale";
 import { Text } from "@/components/ui/Text";
+import { useT } from "@/lib/i18n";
 import { haptic } from "@/lib/motion";
 import { useTheme } from "@/lib/useTheme";
 import { usePlayerStore } from "@/stores/usePlayerStore";
@@ -39,9 +40,10 @@ export function SleepTimerButton() {
   const setSleepTimer = usePlayerStore((s) => s.setSleepTimer);
   const [open, setOpen] = useState(false);
   const now = useNow(sleepUntil !== null);
+  const { t } = useT();
 
   const active = sleepUntil !== null;
-  const label = active ? `Sleep in ${formatLeft(sleepUntil - now)}` : "Sleep timer";
+  const label = active ? t("sleep.active", { time: formatLeft(sleepUntil - now) }) : t("sleep.button");
 
   const choose = (minutes: number | null) => {
     haptic.select();
@@ -54,7 +56,7 @@ export function SleepTimerButton() {
       <PressableScale
         onPress={() => setOpen(true)}
         accessibilityRole="button"
-        accessibilityLabel={active ? `${label}. Change sleep timer` : "Set a sleep timer"}
+        accessibilityLabel={active ? t("sleep.changeLabel", { label }) : t("sleep.setLabel")}
         className={
           active
             ? "flex-row items-center gap-2 rounded-full bg-primary px-4 py-2.5"
@@ -74,7 +76,7 @@ export function SleepTimerButton() {
         <Pressable
           className="flex-1 justify-end bg-black/40"
           onPress={() => setOpen(false)}
-          accessibilityLabel="Close sleep timer options"
+          accessibilityLabel={t("sleep.close")}
         >
           <Pressable
             // Swallow taps on the sheet itself so they don't close it.
@@ -82,13 +84,13 @@ export function SleepTimerButton() {
             className="rounded-t-3xl bg-background px-5 pt-5"
             style={{ paddingBottom: insets.bottom + 16, borderCurve: "continuous" }}
           >
-            <Text className="text-lg font-bold">Sleep timer</Text>
-            <Text className="mt-1 text-sm text-text-secondary">The radio fades out and pauses.</Text>
+            <Text className="text-lg font-bold">{t("sleep.button")}</Text>
+            <Text className="mt-1 text-sm text-text-secondary">{t("sleep.subtitle")}</Text>
             <View className="mt-4">
               {OPTIONS.map((minutes) => (
-                <SheetRow key={minutes} label={`${minutes} minutes`} onPress={() => choose(minutes)} />
+                <SheetRow key={minutes} label={t("sleep.minutes", { count: minutes })} onPress={() => choose(minutes)} />
               ))}
-              <SheetRow label="Off" selected={!active} onPress={() => choose(null)} />
+              <SheetRow label={t("sleep.off")} selected={!active} onPress={() => choose(null)} />
             </View>
           </Pressable>
         </Pressable>

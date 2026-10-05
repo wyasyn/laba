@@ -1,3 +1,6 @@
+import { t } from "@/lib/i18n";
+import { streamTitleOf } from "@/lib/streamTitle";
+import { logStreamFailure } from "@/lib/telemetry";
 import { useNetworkStore } from "@/stores/useNetworkStore";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
@@ -30,6 +33,7 @@ export function AudioEngine() {
   const reportStatus = usePlayerStore((s) => s.reportStatus);
   const reconnect = usePlayerStore((s) => s.reconnect);
   const setInterrupted = usePlayerStore((s) => s.setInterrupted);
+  const setNowPlaying = usePlayerStore((s) => s.setNowPlaying);
   const isOnline = useNetworkStore((s) => s.isOnline);
 
   const player = useAudioPlayer(null, { updateInterval: 500 });
@@ -54,7 +58,7 @@ export function AudioEngine() {
       player.play();
       player.setActiveForLockScreen(true, {
         title: stationName,
-        artist: "Laba · Live radio",
+        artist: t("player.lockScreenSubtitle"),
         artworkUrl: stationLogo,
       });
     } catch (e) {
@@ -71,6 +75,21 @@ export function AudioEngine() {
       else player.pause();
     } catch {}
   }, [wantsPlaying, interrupted, streamUrl, player]);
+
+  // What's on now, from the stream itself. Mirrored to the store for the
+  // players, and to the lock screen as "song, by station" when known.
+  const nowPlaying = streamUrl ? streamTitleOf(status) : null;
+  useEffect(() => {
+    setNowPlaying(nowPlaying);
+    if (!streamUrl) return;
+    try {
+      player.updateLockScreenMetadata({
+        title: nowPlaying ?? stationName,
+        artist: nowPlaying ? stationName : t("player.lockScreenSubtitle"),
+        artworkUrl: stationLogo,
+      });
+    } catch {}
+  }, [nowPlaying, streamUrl, stationName, stationLogo, player, setNowPlaying]);
 
   useEffect(() => {
     try {
@@ -172,6 +191,16 @@ export function AudioEngine() {
     return () => clearTimeout(t);
   }, [failed, wantsPlaying, interrupted, canRetry, isOnline, reconnectAttempt, reconnect]);
 
+  // Report a station that would not play after every retry, once per attempt.
+  // Offline failures say nothing about the station, so they are left out.
+  const gaveUp = failed && !canRetry && isOnline && wantsPlaying;
+  const loggedKey = useRef<string | null>(null);
+  useEffect(() => {
+    if (!gaveUp || !station || !loadKey || loggedKey.current === loadKey) return;
+    loggedKey.current = loadKey;
+    logStreamFailure(station, lastFailure ?? `no audio within ${CONNECT_TIMEOUT_MS / 1000}s`);
+  }, [gaveUp, station, loadKey, lastFailure]);
+
   // Translate native status into the app's simpler status.
   const reconnecting = reconnectAttempt > 0 || (stationId !== undefined && heardStationId === stationId);
   useEffect(() => {
@@ -190,11 +219,11 @@ export function AudioEngine() {
     // Whatever is still buffered keeps playing above; once it runs out, say
     // why straight away instead of waiting for the connect timeout.
     if (!isOnline) {
-      reportStatus("error", "You're offline.");
+      reportStatus("error", t("player.errorOffline"));
       return;
     }
     if (failed && !canRetry) {
-      reportStatus("error", "This station is not responding right now.");
+      reportStatus("error", t("player.errorNotResponding"));
       return;
     }
     reportStatus("loading", null, reconnecting);
