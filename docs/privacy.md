@@ -15,6 +15,8 @@ title: Privacy Policy
 
 The App stores preferences and light app state on your device using **AsyncStorage** (for example: theme preference, favourite stations, recently viewed stations, a cached copy of the station list). This data stays on your device unless you clear app data or uninstall the App.
 
+To personalise the Home screen, the App also keeps a small listening profile on your device: which stations you open, roughly how long you listen or watch, and at what part of the day. It is used only to suggest stations and is never sent anywhere. You can pause it or clear it under **Settings > Personalisation**.
+
 ### 2.2 Streaming and network activity
 
 When you play a stream, your device connects to **third-party servers** operated by broadcasters or their partners (in Uganda and, where included, other countries). We do not control those servers. The App uses standard network connections to deliver audio and video; those third parties may process technical data (such as IP address or device information) according to their own practices.

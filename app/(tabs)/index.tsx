@@ -10,12 +10,15 @@ import { Text } from "@/components/ui/Text";
 import { useT } from "@/lib/i18n";
 import { duration } from "@/lib/motion";
 import { mixInternational, rankFeatured } from "@/lib/homeSections";
+import { personalRows } from "@/lib/taste";
 import { useTheme } from "@/lib/useTheme";
 import { useHideTabBarOnScroll } from "@/stores/useChromeStore";
+import { useFavouritesStore } from "@/stores/useFavouritesStore";
 import { useStationStore } from "@/stores/useStationStore";
-import { useIsFocused } from "expo-router";
+import { useTasteStore } from "@/stores/useTasteStore";
+import { useFocusEffect, useIsFocused } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { RefreshControl, View } from "react-native";
 import Animated, { FadeIn, FadeOut, useAnimatedReaction } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -24,6 +27,21 @@ import { useShallow } from "zustand/react/shallow";
 
 /** Home rows show a taste of each list; the full list is one tap away. */
 const ROW_LIMIT = 12;
+
+/** Rows learned from what this person plays. All empty for a new user. */
+function usePersonalRows() {
+  const stations = useStationStore((s) => s.stations);
+  const profile = useTasteStore((s) => s.profile);
+  const favourites = useFavouritesStore((s) => s.ids);
+  // The tab stays mounted, so the clock is re-read on every visit to keep the
+  // time-of-day order fresh.
+  const [now, setNow] = useState(Date.now);
+  useFocusEffect(useCallback(() => setNow(Date.now()), []));
+  return useMemo(
+    () => personalRows(stations, profile, favourites, now, ROW_LIMIT),
+    [stations, profile, favourites, now],
+  );
+}
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -54,6 +72,7 @@ export default function HomeScreen() {
 
   const featuredRow = useMemo(() => rankFeatured(featuredStations, ROW_LIMIT), [featuredStations]);
   const worldStations = useMemo(() => mixInternational(internationalStations, ROW_LIMIT), [internationalStations]);
+  const personal = usePersonalRows();
 
   const showSkeleton = isLoading && stations.length === 0;
 
@@ -142,9 +161,21 @@ export default function HomeScreen() {
               }
             />
             <View className="mt-6">
-              <CategoryRow index={0} title={t("home.featured")} headerVariant="inline" stations={featuredRow} />
+              <CategoryRow index={0} title={t("home.jumpBackIn")} headerVariant="inline" stations={personal.jumpBackIn} />
+              <CategoryRow index={1} title={t("home.forYou")} headerVariant="inline" stations={personal.forYou} />
+              {personal.topCategory ? (
+                <CategoryRow
+                  index={2}
+                  title={t("home.becauseYouLike", {
+                    category: personal.topCategory.name.charAt(0).toUpperCase() + personal.topCategory.name.slice(1),
+                  })}
+                  headerVariant="inline"
+                  stations={personal.topCategory.stations}
+                />
+              ) : null}
+              <CategoryRow index={3} title={t("home.featured")} headerVariant="inline" stations={featuredRow} />
             </View>
-            <CategoryRow index={1} title={t("home.world")} headerVariant="inline" stations={worldStations} />
+            <CategoryRow index={4} title={t("home.world")} headerVariant="inline" stations={worldStations} />
           </Animated.View>
         )}
       </Animated.ScrollView>

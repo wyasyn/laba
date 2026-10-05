@@ -8,7 +8,7 @@ function hasLogo(s: Station): boolean {
  * Takes one item from each group in turn until `limit` items are taken or
  * every group is empty. Groups keep their own order.
  */
-function roundRobin<T>(groups: T[][], limit: number): T[] {
+export function roundRobin<T>(groups: T[][], limit: number): T[] {
   const out: T[] = [];
   const queues = groups.map((g) => [...g]);
   while (out.length < limit && queues.some((q) => q.length > 0)) {

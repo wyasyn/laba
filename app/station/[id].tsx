@@ -14,11 +14,13 @@ import { reportStation } from "@/lib/report";
 import type { Station } from "@/lib/schemas";
 import { countryName, languageName, languagesOf } from "@/lib/search";
 import { shareStation } from "@/lib/share";
+import { SKIP_MS } from "@/lib/taste";
 import { logStreamFailure } from "@/lib/telemetry";
 import { useTheme } from "@/lib/useTheme";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import { useRecentsStore } from "@/stores/useRecentsStore";
 import { useStationStore } from "@/stores/useStationStore";
+import { useTasteStore } from "@/stores/useTasteStore";
 import { ArrowDown01Icon, Share08Icon, SignalFull02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -63,6 +65,7 @@ export default function StationScreen() {
     useCallback(() => {
       if (!station) return;
       useRecentsStore.getState().record(station.id);
+      useTasteStore.getState().recordOpen(station.id);
       const player = usePlayerStore.getState();
       if (station.type === "radio") {
         // Radio lives in the global engine and keeps playing after this screen closes.
@@ -76,6 +79,15 @@ export default function StationScreen() {
         // Video has the floor: pause the radio so they don't talk over each other.
         player.stop();
       }
+      if (station.type !== "tv") return;
+      // Video only plays while this screen is up, so the visit is the watch time.
+      const openedAt = Date.now();
+      return () => {
+        const watchedMs = Date.now() - openedAt;
+        const taste = useTasteStore.getState();
+        taste.recordListen(station.id, watchedMs);
+        if (watchedMs < SKIP_MS) taste.recordSkip(station.id);
+      };
     }, [station]),
   );
 

@@ -16,6 +16,8 @@ export const CACHE_KEYS = {
   STATIONS_TIMESTAMP: "@laba/stations_timestamp",
   FAVOURITES: "@laba/favourites",
   RECENTS: "@laba/recents",
+  TASTE: "@laba/taste",
+  TASTE_PAUSED: "@laba/taste_paused",
   THEME_MODE: "@laba/theme_mode",
   LOCALE: "@laba/locale",
 } as const;

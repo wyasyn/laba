@@ -14,10 +14,13 @@ import { useHideTabBarOnScroll } from "@/stores/useChromeStore";
 import { useFavouritesStore } from "@/stores/useFavouritesStore";
 import { useRecentsStore } from "@/stores/useRecentsStore";
 import { useStationStore } from "@/stores/useStationStore";
+import { useTasteStore } from "@/stores/useTasteStore";
 import { useLocaleStore } from "@/stores/useLocaleStore";
 import { useThemeStore, type ThemeMode } from "@/stores/useThemeStore";
 import {
+  AiBrain01Icon,
   ArrowRight01Icon,
+  Delete02Icon,
   FavouriteIcon,
   InformationCircleIcon,
   LanguageCircleIcon,
@@ -88,6 +91,20 @@ function confirmClearRecents() {
   ]);
 }
 
+function confirmClearTaste() {
+  Alert.alert(translateNow("settings.clearTasteConfirmTitle"), translateNow("settings.clearTasteConfirmMessage"), [
+    { text: translateNow("common.cancel"), style: "cancel" },
+    {
+      text: translateNow("settings.clear"),
+      style: "destructive",
+      onPress: () => {
+        haptic.tap();
+        useTasteStore.getState().reset();
+      },
+    },
+  ]);
+}
+
 function ClearRecentsButton() {
   const { t } = useT();
   return (
@@ -113,6 +130,7 @@ export default function SettingsScreen() {
   const { t, plural, locale } = useT();
   const languagePreference = useLocaleStore((s) => s.preference);
   const [languageOpen, setLanguageOpen] = useState(false);
+  const learningPaused = useTasteStore((s) => s.paused);
 
   return (
     <View className="flex-1 bg-background">
@@ -169,6 +187,17 @@ export default function SettingsScreen() {
               value={String(favouriteCount)}
               onPress={() => router.push("/favourites")}
             />
+          </Section>
+
+          <Section title={t("settings.personalisation")}>
+            <Row
+              icon={AiBrain01Icon}
+              tint="#8B5CF6"
+              label={t("settings.learn")}
+              value={learningPaused ? t("settings.off") : t("settings.on")}
+              onPress={() => useTasteStore.getState().setPaused(!learningPaused)}
+            />
+            <Row icon={Delete02Icon} tint="#EF4444" label={t("settings.clearTaste")} onPress={confirmClearTaste} />
           </Section>
 
           <Section title={t("settings.support")}>

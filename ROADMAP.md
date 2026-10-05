@@ -310,3 +310,36 @@ before coding.
   the station store. README updated (SDK 57, tabs, new features, Sentry).
   Screenshots in `assets/screenshots` and `docs/assets/screenshots`
   retaken from a release build, plus a new filters shot on the docs page.
+
+---
+
+## Phase 4: personalisation and accounts
+
+Plan: the taste engine runs on the device and needs no account; sign-in is
+optional and only adds backup and sync across devices. Provider: Supabase
+(auth + Postgres with row-level security), Google and email OTP sign-in.
+
+- [x] **4.1 On-device taste engine.** `lib/taste.ts` (pure scoring,
+  `lib/__tests__/taste.test.ts`), `stores/useTasteStore.ts` (persisted
+  per-station tally: opens, listen time, skips, part of day),
+  `lib/listenTracker.ts` (radio listen time from the player store, saved
+  every minute and on background; TV time from the station screen). Home
+  adds "Jump back in", "For you" and "Because you like {category}" above
+  Featured; a new user sees the old layout. Settings has a Personalisation
+  section (pause learning, clear history). Verified on the Android emulator
+  (release build): fresh install shows the default Home; after a minute of
+  gospel radio and a short news visit all three rows appear with sensible
+  picks; clearing history restores the default; rows survive a force-stop.
+  **Still to do:** native check of the new Luganda and Kiswahili strings
+  (`home.jumpBackIn`, `home.forYou`, `home.becauseYouLike`,
+  `settings.personalisation`, `settings.learn`, `settings.on/off`,
+  `settings.clearTaste*`). Not checked on iOS.
+- [ ] **4.2 Optional sign-in and sync (Supabase).** Needs a Supabase project
+  and Google OAuth clients first. Plan: one `profiles` row per user
+  (favourites, recents, taste jsonb) under RLS; `lib/supabase.ts` inert
+  without env vars; `stores/useAuthStore.ts` (Google via
+  `@react-native-google-signin/google-signin` + `signInWithIdToken`, email
+  OTP code); `lib/cloudSync.ts` merges on sign-in and upserts debounced;
+  `app/account.tsx` with in-app account deletion (Edge Function); privacy
+  policy and Play Data safety update. Add Sign in with Apple before an iOS
+  release (App Store guideline 4.8).

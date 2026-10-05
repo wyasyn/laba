@@ -1,6 +1,7 @@
 import { AudioEngine } from "@/components/audio/AudioEngine";
 import { OfflineBanner } from "@/components/OfflineBanner";
 import { watchCarLibrary } from "@/lib/carSync";
+import { watchListening } from "@/lib/listenTracker";
 import { setupTrackPlayer } from "@/lib/trackPlayerSetup";
 import { useTheme, useThemeVars } from "@/lib/useTheme";
 import { VideoWarmup } from "@/lib/utils";
@@ -10,6 +11,7 @@ import { watchNetwork } from "@/stores/useNetworkStore";
 import { useOnboardingStore } from "@/stores/useOnboardingStore";
 import { useRecentsStore } from "@/stores/useRecentsStore";
 import { useStationStore } from "@/stores/useStationStore";
+import { useTasteStore } from "@/stores/useTasteStore";
 import { useThemeStore } from "@/stores/useThemeStore";
 import { SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -30,6 +32,7 @@ function InitialLayout() {
   const hydrateOnboarding = useOnboardingStore((s) => s.hydrate);
   const hydrateRecents = useRecentsStore((s) => s.hydrate);
   const hydrateLocale = useLocaleStore((s) => s.hydrate);
+  const hydrateTaste = useTasteStore((s) => s.hydrate);
 
   useEffect(() => {
     void Promise.all([
@@ -39,12 +42,14 @@ function InitialLayout() {
       hydrateOnboarding(),
       hydrateRecents(),
       hydrateLocale(),
+      hydrateTaste(),
       setupTrackPlayer(),
     ]);
-  }, [fetchStations, hydrateFavourites, hydrateTheme, hydrateOnboarding, hydrateRecents, hydrateLocale]);
+  }, [fetchStations, hydrateFavourites, hydrateTheme, hydrateOnboarding, hydrateRecents, hydrateLocale, hydrateTaste]);
 
   useEffect(() => watchNetwork(), []);
   useEffect(() => watchCarLibrary(), []);
+  useEffect(() => watchListening(), []);
 
   // Fonts are embedded natively (expo-font config plugin), so the only things
   // worth holding the splash for are the theme and the first route decision.
