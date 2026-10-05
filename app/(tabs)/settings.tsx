@@ -341,12 +341,9 @@ function ThemeSegmentedControl() {
             bottom: 4,
             left: 4,
             borderRadius: 9,
-            backgroundColor: colors.surfaceElevated,
-            shadowColor: "#000",
-            shadowOpacity: 0.12,
-            shadowRadius: 6,
-            shadowOffset: { width: 0, height: 2 },
-            elevation: 2,
+            // A surface colour sat too close to the track in both themes, so the
+            // selected option uses the primary fill instead.
+            backgroundColor: colors.primary,
           },
         ]}
       />
@@ -365,8 +362,11 @@ function ThemeSegmentedControl() {
             accessibilityLabel={t("settings.themeLabel", { label: t(opt.label) })}
             className="flex-1 flex-row items-center justify-center gap-1.5 py-2.5"
           >
-            <HugeiconsIcon icon={opt.icon} size={16} color={active ? colors.textPrimary : colors.textSecondary} />
-            <Text className={active ? "text-[13px] font-semibold" : "text-[13px] font-medium text-text-secondary"}>
+            <HugeiconsIcon icon={opt.icon} size={16} color={active ? colors.onPrimary : colors.textSecondary} />
+            <Text
+              className={active ? "text-[13px] font-semibold" : "text-[13px] font-medium"}
+              style={{ color: active ? colors.onPrimary : colors.textSecondary }}
+            >
               {t(opt.label)}
             </Text>
           </Pressable>
