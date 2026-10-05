@@ -242,8 +242,8 @@ before coding.
 
 > Phase 3 landed as one commit, `714e083` on `feat/phase-3-later`, because
 > localization touched almost every file the other items changed. Device
-> checks for this phase were cut short by two environment resets (each
-> rolled the emulator back to an old build); see "Not verified" under each.
+> checks for 3.1, 3.4 and 3.5 were finished afterwards on the Android
+> emulator (Pixel 10 Pro XL); see the notes under each.
 
 - [x] **3.1 Radio "now playing" metadata.** A pnpm patch to expo-audio
   (`patches/expo-audio.patch`) reads ICY `StreamTitle` from ExoPlayer's
@@ -253,8 +253,10 @@ before coding.
   (`expo.autolinking.android.buildFromSource` in package.json): SDK 57
   links a precompiled AAR that silently ignored the patch at first.
   Verified: many catalogue streams send titles (curl), the patched module
-  compiles from source. **Not verified:** a title on screen; the last
-  check was interrupted. Android only; iOS needs an
+  compiles from source, and on the emulator .977 Hitz showed the song
+  ("Shakira - Dai Dai (feat. Burna Boy)") in the player and mini-player,
+  with the lock screen session reading song, then station. Android only;
+  iOS needs an
   `AVPlayerItemMetadataOutput` patch.
 - [ ] **3.2 Android Auto and CarPlay.** Scoped, not built. Needs: a
   Media3 `MediaLibraryService` exposing a browse tree (Favourites, Radio
@@ -280,10 +282,14 @@ before coding.
   that translations cover every key and keep the same placeholders.
   **To do:** have a native speaker review `lib/i18n/lg.ts` (first draft)
   and ideally `sw.ts`. Station data (names, categories, countries) stays
-  in English. Not verified on device.
+  in English. Verified on the emulator: switching to Kiswahili and
+  Luganda updates tabs, Settings, lists and the mini-player at once; the
+  choice survives a restart; "Same as phone" goes back to English.
 - [x] **3.5 Tablet layout.** Grids use 2, 3 or 4 columns by window width
   with equal card widths; Settings, radio controls and TV details are
-  width-capped. Not verified on a tablet-size screen.
+  width-capped. Verified on the emulator by lowering the density to
+  simulate wider screens: 3 columns at about 670dp, 4 at about 980dp, with
+  even gutters after scrolling. Not checked on a real tablet.
 - [x] **3.6 Tests and docs.** Jest via `jest-expo` (`pnpm test`): 33 tests
   over search, home sections, stream titles, i18n, the player store and
   the station store. README updated (SDK 57, tabs, new features, Sentry).
