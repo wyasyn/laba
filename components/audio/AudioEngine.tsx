@@ -12,6 +12,9 @@ const CONNECT_TIMEOUT_MS = 15000;
  */
 const RETRY_DELAYS_MS = [2000, 5000, 10000];
 
+/** How long the sleep timer takes to fade the volume out before pausing. */
+const SLEEP_FADE_MS = 8000;
+
 /**
  * Owns the single app-wide radio player. Mounted once at the root so playback
  * survives navigation; screens and the mini-player talk to it only through
@@ -76,6 +79,43 @@ export function AudioEngine() {
       player.volume = volume;
     } catch {}
   }, [volume, player]);
+
+  // Sleep timer. JS timers stop while an Android app is in the background, so
+  // the check runs on the player's native status events instead: they arrive
+  // every update interval while audio plays, which is the only time there is
+  // anything to pause. The last few seconds fade out instead of cutting off
+  // mid-word.
+  const sleepUntil = usePlayerStore((s) => s.sleepUntil);
+  const pause = usePlayerStore((s) => s.pause);
+  const setSleepTimer = usePlayerStore((s) => s.setSleepTimer);
+  useEffect(() => {
+    if (sleepUntil === null) return;
+    const setPlayerVolume = (v: number) => {
+      try {
+        player.volume = v;
+      } catch {}
+    };
+    const check = () => {
+      const left = sleepUntil - Date.now();
+      if (left <= 0) {
+        try {
+          player.pause();
+        } catch {}
+        setPlayerVolume(volume);
+        pause();
+        setSleepTimer(null);
+      } else if (left < SLEEP_FADE_MS) {
+        setPlayerVolume((volume * left) / SLEEP_FADE_MS);
+      }
+    };
+    check();
+    const sub = player.addListener("playbackStatusUpdate", check);
+    return () => {
+      sub.remove();
+      // Cancelled or changed mid-fade: put the volume back.
+      setPlayerVolume(volume);
+    };
+  }, [sleepUntil, volume, player, pause, setSleepTimer]);
 
   const audible = status.playing && !status.isBuffering;
   const ended = status.playbackState === "ended" || status.didJustFinish;
