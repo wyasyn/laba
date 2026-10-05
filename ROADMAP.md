@@ -20,7 +20,13 @@ top to bottom. Tick a box when the item is merged, and add a short note
 
 Small items that fix real failures a new user would hit. Do these first.
 
-### [ ] 1.1 Bundle radio stations in the offline fallback
+### [x] 1.1 Bundle radio stations in the offline fallback
+
+> Done in `cb5c491` on `feat/phase-1-reliability`. `pnpm stations:snapshot`
+> writes the full catalog (65 stations, 28 KB, so no trimming). Kept as a
+> manual pre-release step in the README rather than an EAS hook, so builds
+> stay reproducible. Verified on the Android emulator: data cleared, wifi and
+> data off, Radio tab lists 46 stations. Not checked on iOS.
 
 **Problem:** `data/fallback-stations.json` has 29 TV stations and 0 radio.
 On a first launch with no network the Radio tab is empty
