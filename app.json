@@ -12,7 +12,12 @@
       "bundleIdentifier": "com.yasinwalum.laba",
       "associatedDomains": [
         "applinks:laba.yasinwalum.com"
-      ]
+      ],
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoadsForMedia": true
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -119,7 +124,15 @@
       ],
       "expo-image",
       "expo-status-bar",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
