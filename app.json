@@ -55,7 +55,14 @@
     },
     "plugins": [
       "expo-router",
-      "react-native-video",
+      [
+        "react-native-video",
+        {
+          "enableAndroidPictureInPicture": true,
+          "enableBackgroundAudio": true,
+          "enableNotificationControls": true
+        }
+      ],
       [
         "expo-splash-screen",
         {

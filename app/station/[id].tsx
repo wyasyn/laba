@@ -178,7 +178,13 @@ function TvStation({ station, related, onBack }: StationViewProps) {
         {station.youtubeChannelId ? (
           <YouTubePlayer channelId={station.youtubeChannelId} borderless onBack={onBack} />
         ) : (
-<VideoPlayer streamUrl={station.streamUrl!} borderless onBack={onBack} />
+          <VideoPlayer
+            streamUrl={station.streamUrl!}
+            title={station.name}
+            artworkUrl={station.logo}
+            borderless
+            onBack={onBack}
+          />
         )}
       </View>
 
