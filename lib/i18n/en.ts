@@ -212,7 +212,7 @@ export const en = {
   // Account
   "account.title": "Account",
   "account.pitchTitle": "Keep your stations on every phone",
-  "account.pitchBody": "Sign in to back up your favourites and picks, and get them back on a new phone. Laba works just the same without an account.",
+  "account.pitchBody": "Back up your favourites and picks, and get them on any phone.",
   "account.google": "Continue with Google",
   "account.or": "or",
   "account.emailPlaceholder": "Email address",

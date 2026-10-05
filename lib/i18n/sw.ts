@@ -194,7 +194,7 @@ export const sw: Partial<Record<MessageKey, string>> = {
   // Account
   "account.title": "Akaunti",
   "account.pitchTitle": "Vituo vyako kwenye kila simu",
-  "account.pitchBody": "Ingia ili kuhifadhi vipendwa na mapendekezo yako, na uvipate tena kwenye simu mpya. Laba inafanya kazi vilevile bila akaunti.",
+  "account.pitchBody": "Hifadhi vipendwa na mapendekezo yako, uvipate kwenye simu yoyote.",
   "account.google": "Endelea na Google",
   "account.or": "au",
   "account.emailPlaceholder": "Barua pepe",

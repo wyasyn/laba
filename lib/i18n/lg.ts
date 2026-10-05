@@ -197,7 +197,7 @@ export const lg: Partial<Record<MessageKey, string>> = {
   // Account
   "account.title": "Akawunti",
   "account.pitchTitle": "Sitenseni zo ku buli ssimu",
-  "account.pitchBody": "Yingira otereke bye njagala n'ebikulondeddwa, obiddemu ku ssimu empya. Laba ekola bulungi ne bw'oba tolina akawunti.",
+  "account.pitchBody": "Tereka bye njagala n'ebikulondeddwa, obifune ku ssimu yonna.",
   "account.google": "Weeyongereyo ne Google",
   "account.or": "oba",
   "account.emailPlaceholder": "Email",
