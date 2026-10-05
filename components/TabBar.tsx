@@ -7,6 +7,7 @@ import { duration, easing } from "@/lib/motion";
 import { useTheme } from "@/lib/useTheme";
 import { useChromeStore } from "@/stores/useChromeStore";
 import type { Tabs } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, type ComponentProps } from "react";
 import { Image, StyleSheet, View, type ImageSourcePropType } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
@@ -21,6 +22,8 @@ const PILL_HEIGHT = 64;
 const PILL_GAP = 8;
 /** Space the bar takes above the bottom safe area. */
 export const TAB_BAR_HEIGHT = PILL_HEIGHT + PILL_GAP;
+/** How far the fade behind the pill reaches above it. */
+const FADE_EXTRA = 40;
 
 /** Outline icon by default, filled when selected. Sources live in assets/images/tabs/svg. */
 const TABS: Record<string, { label: MessageKey; icon: ImageSourcePropType; selected: ImageSourcePropType }> = {
@@ -66,81 +69,101 @@ export function TabBar({ state, navigation }: TabBarProps) {
   const slideStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: progress.get() * height }],
   }));
+  const fadeStyle = useAnimatedStyle(() => ({ opacity: 1 - progress.get() }));
 
   return (
-    <Animated.View
-      pointerEvents={hidden ? "none" : "auto"}
-      style={[
-        styles.bar,
-        {
-          bottom: insets.bottom + PILL_GAP,
-          borderColor: colors.border,
-          boxShadow: resolved === "dark"
-            ? "0 8px 24px rgba(0,0,0,0.45)"
-            : "0 8px 24px rgba(0,0,0,0.12)",
-        },
-        slideStyle,
-      ]}
-    >
-      <GlassView style={[StyleSheet.absoluteFill, styles.round]} intensity={60} />
-      <View className="flex-1 flex-row" style={styles.row}>
-        {state.routes.map((route, index) => {
-          const tab = TABS[route.name];
-          if (!tab) return null;
-          const focused = state.index === index;
-          const color = focused ? colors.textPrimary : colors.textSecondary;
+    <>
+      {/* Fades the content out behind the pill so it doesn't show through under it. */}
+      <Animated.View
+        pointerEvents="none"
+        style={[styles.fade, { height: insets.bottom + TAB_BAR_HEIGHT + FADE_EXTRA }, fadeStyle]}
+      >
+        <LinearGradient
+          colors={[`${colors.background}00`, `${colors.background}CC`, colors.background]}
+          locations={[0, 0.55, 1]}
+          style={StyleSheet.absoluteFill}
+        />
+      </Animated.View>
+      <Animated.View
+        pointerEvents={hidden ? "none" : "auto"}
+        style={[
+          styles.bar,
+          {
+            bottom: insets.bottom + PILL_GAP,
+            borderColor: colors.border,
+            boxShadow: resolved === "dark"
+              ? "0 8px 24px rgba(0,0,0,0.45)"
+              : "0 8px 24px rgba(0,0,0,0.12)",
+          },
+          slideStyle,
+        ]}
+      >
+        <GlassView style={[StyleSheet.absoluteFill, styles.round]} intensity={60} />
+        <View className="flex-1 flex-row" style={styles.row}>
+          {state.routes.map((route, index) => {
+            const tab = TABS[route.name];
+            if (!tab) return null;
+            const focused = state.index === index;
+            const color = focused ? colors.textPrimary : colors.textSecondary;
 
-          const onPress = () => {
-            const event = navigation.emit({ type: "tabPress", target: route.key, canPreventDefault: true });
-            if (!focused && !event.defaultPrevented) {
-              navigation.navigate(route.name, route.params);
-            }
-          };
+            const onPress = () => {
+              const event = navigation.emit({ type: "tabPress", target: route.key, canPreventDefault: true });
+              if (!focused && !event.defaultPrevented) {
+                navigation.navigate(route.name, route.params);
+              }
+            };
 
-          const onLongPress = () => navigation.emit({ type: "tabLongPress", target: route.key });
+            const onLongPress = () => navigation.emit({ type: "tabLongPress", target: route.key });
 
-          return (
-            <PressableScale
-              key={route.key}
-              onPress={onPress}
-              onLongPress={onLongPress}
-              scaleTo={0.92}
-              accessibilityRole="tab"
-              accessibilityState={{ selected: focused }}
-              accessibilityLabel={t(tab.label)}
-              containerClassName="flex-1"
-              className="flex-1 items-center justify-center gap-1"
-            >
-              {/* The tint is always rendered and only its opacity changes: toggling the
-                  background from transparent lets the view get flattened and recreated,
-                  and the recreated view lost its corner radius. */}
-              <View
-                collapsable={false}
-                style={[
-                  styles.itemTint,
-                  { backgroundColor: `${colors.textPrimary}14`, opacity: focused ? 1 : 0 },
-                ]}
-              />
-              <Image
-                source={focused ? tab.selected : tab.icon}
-                style={[styles.icon, { tintColor: color }]}
-              />
-              <Text
-                numberOfLines={1}
-                className="text-[11px]"
-                style={{ color, fontWeight: focused ? "700" : "600" }}
+            return (
+              <PressableScale
+                key={route.key}
+                onPress={onPress}
+                onLongPress={onLongPress}
+                scaleTo={0.92}
+                accessibilityRole="tab"
+                accessibilityState={{ selected: focused }}
+                accessibilityLabel={t(tab.label)}
+                containerClassName="flex-1"
+                className="flex-1 items-center justify-center gap-1"
               >
-                {t(tab.label)}
-              </Text>
-            </PressableScale>
-          );
-        })}
-      </View>
-    </Animated.View>
+                {/* The tint is always rendered and only its opacity changes: toggling the
+                    background from transparent lets the view get flattened and recreated,
+                    and the recreated view lost its corner radius. */}
+                <View
+                  collapsable={false}
+                  style={[
+                    styles.itemTint,
+                    { backgroundColor: `${colors.textPrimary}14`, opacity: focused ? 1 : 0 },
+                  ]}
+                />
+                <Image
+                  source={focused ? tab.selected : tab.icon}
+                  style={[styles.icon, { tintColor: color }]}
+                />
+                <Text
+                  numberOfLines={1}
+                  className="text-[11px]"
+                  style={{ color, fontWeight: focused ? "700" : "600" }}
+                >
+                  {t(tab.label)}
+                </Text>
+              </PressableScale>
+            );
+          })}
+        </View>
+      </Animated.View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
+  fade: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
   bar: {
     position: "absolute",
     left: 16,
