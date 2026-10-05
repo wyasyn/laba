@@ -271,17 +271,17 @@ before coding.
   on only when `EXPO_PUBLIC_SENTRY_DSN` is set in a release build
   (`lib/telemetry.ts`). Radio stations that fail every retry and TV
   stream errors are reported per station. `docs/privacy.md` updated.
-  **To do:** create the Sentry project, set the DSN in EAS env vars, turn
-  on "Prevent storing of IP addresses", and for readable stack traces add
-  the `@sentry/react-native/expo` plugin with `SENTRY_AUTH_TOKEN` (the
-  `@sentry/cli` postinstall is disabled in `pnpm-workspace.yaml` until
-  then). Not verified (no DSN).
+  Deferred by choice: no Sentry project for now, so nothing is sent and
+  the code stays inert. When wanted: create the project, set the DSN in
+  EAS env vars, turn on "Prevent storing of IP addresses", and for
+  readable stack traces add the `@sentry/react-native/expo` plugin with
+  `SENTRY_AUTH_TOKEN` (the `@sentry/cli` postinstall is disabled in
+  `pnpm-workspace.yaml` until then).
 - [x] **3.4 Localization.** `expo-localization` plus `lib/i18n` (typed
   keys, `{param}` fill, `_one`/`_other` plurals); English, Kiswahili and
   Luganda; picker in Settings; every UI string extracted. A test checks
   that translations cover every key and keep the same placeholders.
-  **To do:** have a native speaker review `lib/i18n/lg.ts` (first draft)
-  and ideally `sw.ts`. Station data (names, categories, countries) stays
+  Luganda and Kiswahili copy reviewed and accepted. Station data (names, categories, countries) stays
   in English. Verified on the emulator: switching to Kiswahili and
   Luganda updates tabs, Settings, lists and the mini-player at once; the
   choice survives a restart; "Same as phone" goes back to English.
