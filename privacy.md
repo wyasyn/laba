@@ -15,6 +15,8 @@ title: Privacy Policy
 
 The App stores preferences and light app state on your device using **AsyncStorage** (for example: theme preference, favourite stations, recently viewed stations, a cached copy of the station list). This data stays on your device unless you clear app data or uninstall the App.
 
+To personalise the Home screen, the App also keeps a small listening profile on your device: which stations you open, roughly how long you listen or watch, and at what part of the day. It is used only to suggest stations and is never sent anywhere. You can pause it or clear it under **Settings > Personalisation**.
+
 ### 2.2 Streaming and network activity
 
 When you play a stream, your device connects to **third-party servers** operated by broadcasters or their partners (in Uganda and, where included, other countries). We do not control those servers. The App uses standard network connections to deliver audio and video; those third parties may process technical data (such as IP address or device information) according to their own practices.
@@ -23,7 +25,11 @@ When you play a stream, your device connects to **third-party servers** operated
 
 Release builds of the App send crash reports and stream-failure reports to **Sentry**, an error-monitoring service. A crash report contains the error, the app version, and technical details about the device and operating system (such as model and OS version). A stream-failure report contains the station that would not play, its stream address and the error. We do not attach a name, email address, account or advertising ID to these reports, and we ask Sentry not to store IP addresses.
 
-### 2.4 Problem reports you send
+### 2.4 Optional account
+
+You can use the App without an account. If you choose to sign in (with Google or with a code sent to your email), we store your **email address** and, to back up and sync your stations between your devices, your **favourite stations, recently opened stations and the listening profile** described in 2.1. This is stored with **Supabase**, our database provider. Signing out keeps your data on the device. You can delete your account at any time under **Settings > Account > Delete account**, which permanently deletes the account and its backup.
+
+### 2.5 Problem reports you send
 
 If you tap **Report a problem**, the App opens your email app with a message addressed to us that includes the station, its stream address, the app version and your platform. Nothing is sent unless you send that email, and we receive your email address only because you emailed us.
 
@@ -42,6 +48,8 @@ We **do not sell** your personal information.
 We share data only as needed to operate the App, including with:
 
 - **broadcasters / streaming infrastructure** when you play content;
+- **Supabase** (Supabase, Inc.), which stores account and sync data described in 2.4 if you sign in;
+- **Google**, which confirms your identity if you choose to sign in with Google;
 - **Sentry** (Functional Software, Inc.), which processes the crash and stream-failure reports described in 2.3 on our behalf.
 
 We do not share your data for unrelated marketing.
