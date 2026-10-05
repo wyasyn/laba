@@ -18,6 +18,8 @@ export const CACHE_KEYS = {
   RECENTS: "@laba/recents",
   TASTE: "@laba/taste",
   TASTE_PAUSED: "@laba/taste_paused",
+  SYNC_META: "@laba/sync_meta",
+  BACKUP_INVITE_DISMISSED: "@laba/backup_invite_dismissed",
   THEME_MODE: "@laba/theme_mode",
   LOCALE: "@laba/locale",
 } as const;

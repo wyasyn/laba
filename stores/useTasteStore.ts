@@ -22,6 +22,8 @@ interface TasteStore {
   recordSkip: (stationId: string) => void;
   setPaused: (paused: boolean) => void;
   reset: () => void;
+  /** Sync only: take the merged profile from the cloud. */
+  replace: (profile: TasteProfile) => void;
 }
 
 function persist(profile: TasteProfile) {
@@ -70,6 +72,11 @@ export const useTasteStore = create<TasteStore>((set, get) => {
     reset: () => {
       set({ profile: EMPTY_PROFILE });
       persist(EMPTY_PROFILE);
+    },
+
+    replace: (profile) => {
+      set({ profile });
+      persist(profile);
     },
   };
 });

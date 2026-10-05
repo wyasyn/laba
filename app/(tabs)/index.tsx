@@ -1,3 +1,4 @@
+import { BackupInvite } from "@/components/BackupInvite";
 import { CategoryRow } from "@/components/CategoryRow";
 import { HeaderActions } from "@/components/HeaderActions";
 import { HomeHero, useHomeHeroHeight } from "@/components/HomeHero";
@@ -162,6 +163,7 @@ export default function HomeScreen() {
             />
             <View className="mt-6">
               <CategoryRow index={0} title={t("home.jumpBackIn")} headerVariant="inline" stations={personal.jumpBackIn} />
+              <BackupInvite hasHistory={personal.jumpBackIn.length > 0} />
               <CategoryRow index={1} title={t("home.forYou")} headerVariant="inline" stations={personal.forYou} />
               {personal.topCategory ? (
                 <CategoryRow

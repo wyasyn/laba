@@ -2,6 +2,7 @@ import { GlassView } from "@/components/ui/GlassView";
 import { useT } from "@/lib/i18n";
 import { haptic, spring } from "@/lib/motion";
 import { useTheme } from "@/lib/useTheme";
+import { offerBackupAfterFavourite } from "@/stores/useBackupInviteStore";
 import { useFavouritesStore } from "@/stores/useFavouritesStore";
 import { Pressable, View } from "react-native";
 import Animated, {
@@ -59,6 +60,8 @@ export function FavouriteButton({
       haptic.tap();
     }
     toggle(stationId);
+    // Let the heart animation finish before asking.
+    if (adding) setTimeout(offerBackupAfterFavourite, 600);
   };
 
   const idleColor = variant === "glass" ? "#FFFFFF" : colors.textSecondary;

@@ -334,12 +334,27 @@ optional and only adds backup and sync across devices. Provider: Supabase
   (`home.jumpBackIn`, `home.forYou`, `home.becauseYouLike`,
   `settings.personalisation`, `settings.learn`, `settings.on/off`,
   `settings.clearTaste*`). Not checked on iOS.
-- [ ] **4.2 Optional sign-in and sync (Supabase).** Needs a Supabase project
-  and Google OAuth clients first. Plan: one `profiles` row per user
-  (favourites, recents, taste jsonb) under RLS; `lib/supabase.ts` inert
-  without env vars; `stores/useAuthStore.ts` (Google via
-  `@react-native-google-signin/google-signin` + `signInWithIdToken`, email
-  OTP code); `lib/cloudSync.ts` merges on sign-in and upserts debounced;
-  `app/account.tsx` with in-app account deletion (Edge Function); privacy
-  policy and Play Data safety update. Add Sign in with Apple before an iOS
-  release (App Store guideline 4.8).
+- [ ] **4.2 Optional sign-in and sync (Supabase).** Built; waiting on a
+  real-device sign-in test. Supabase project `edgxodnmgjwrxtzkdxoy`,
+  migration in `supabase/migrations` (applied with `supabase db push`):
+  one `profiles` row per user under RLS, server-set `updated_at`, size caps,
+  and a `delete_account()` RPC (security definer; cascade removes the row)
+  instead of an Edge Function. Client: `lib/supabase.ts` (inert without env
+  vars), `stores/useAuthStore.ts` (Google via native sign-in +
+  `signInWithIdToken`, email OTP code), `lib/cloudSync.ts` + `lib/syncMerge.ts`
+  (first sign-in on a device merges both sides; afterwards latest change wins,
+  local edits pushed before any pull, dirty flag survives restarts),
+  `app/account.tsx`, Settings > Account row, a one-time backup prompt on the
+  first favourite or a Home card (`stores/useBackupInviteStore.ts`). The
+  Google config plugin is not in `app.json`: in non-Firebase mode it only
+  sets the iOS URL scheme and requires `iosUrlScheme`, so add it with the iOS
+  client id before an iOS release. Verified on the emulator: anonymous REST
+  access is refused (select returns nothing, insert and delete RPC denied);
+  favourite prompt, Account screen and Google flow launch and cancel work.
+  **Still to do:** Google and email sign-in, sync between two devices and
+  account deletion on a real phone; EAS env vars
+  (`EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY`,
+  `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID`) for store builds; custom SMTP (Resend)
+  before launch; Play Data safety form; native check of the new
+  `account.*`, `home.backup*`, `favourites.backup*` strings; Sign in with
+  Apple before iOS.

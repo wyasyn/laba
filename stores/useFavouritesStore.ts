@@ -10,6 +10,8 @@ interface FavouritesStore {
   hydrate: () => Promise<void>;
   toggle: (stationId: string) => void;
   isFavourite: (stationId: string) => boolean;
+  /** Sync only: take the merged list from the cloud. */
+  replace: (ids: string[]) => void;
 }
 
 export const useFavouritesStore = create<FavouritesStore>((set, get) => ({
@@ -46,5 +48,10 @@ export const useFavouritesStore = create<FavouritesStore>((set, get) => ({
 
   isFavourite: (stationId) => {
     return get().ids.includes(stationId);
+  },
+
+  replace: (ids) => {
+    set({ ids });
+    AsyncStorage.setItem(CACHE_KEYS.FAVOURITES, JSON.stringify(ids)).catch(() => {});
   },
 }));

@@ -14,6 +14,8 @@ interface RecentsStore {
   hydrate: () => Promise<void>;
   record: (stationId: string) => void;
   clear: () => void;
+  /** Sync only: take the merged list from the cloud. */
+  replace: (ids: string[]) => void;
 }
 
 function persist(ids: string[]) {
@@ -46,5 +48,11 @@ export const useRecentsStore = create<RecentsStore>((set, get) => ({
   clear: () => {
     set({ ids: [] });
     persist([]);
+  },
+
+  replace: (ids) => {
+    const next = ids.slice(0, MAX_RECENTS);
+    set({ ids: next });
+    persist(next);
   },
 }));

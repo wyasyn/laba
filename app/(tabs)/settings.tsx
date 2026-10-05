@@ -6,10 +6,12 @@ import { PressableScale } from "@/components/ui/PressableScale";
 import { Text } from "@/components/ui/Text";
 import { LanguageSheet } from "@/components/LanguageSheet";
 import { SUPPORT_EMAIL } from "@/lib/constants";
+import { accountsEnabled } from "@/lib/supabase";
 import { LANGUAGE_NAMES, t as translateNow, useT, type MessageKey } from "@/lib/i18n";
 import { haptic, spring } from "@/lib/motion";
 import type { Station } from "@/lib/schemas";
 import { useTheme } from "@/lib/useTheme";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { useHideTabBarOnScroll } from "@/stores/useChromeStore";
 import { useFavouritesStore } from "@/stores/useFavouritesStore";
 import { useRecentsStore } from "@/stores/useRecentsStore";
@@ -20,6 +22,7 @@ import { useThemeStore, type ThemeMode } from "@/stores/useThemeStore";
 import {
   AiBrain01Icon,
   ArrowRight01Icon,
+  CloudUploadIcon,
   Delete02Icon,
   FavouriteIcon,
   InformationCircleIcon,
@@ -131,6 +134,7 @@ export default function SettingsScreen() {
   const languagePreference = useLocaleStore((s) => s.preference);
   const [languageOpen, setLanguageOpen] = useState(false);
   const learningPaused = useTasteStore((s) => s.paused);
+  const accountEmail = useAuthStore((s) => (s.status === "signedIn" ? (s.user?.email ?? "") : null));
 
   return (
     <View className="flex-1 bg-background">
@@ -164,6 +168,17 @@ export default function SettingsScreen() {
               </Text>
             </View>
           </View>
+
+          {accountsEnabled ? (
+            <Section title={t("settings.account")}>
+              <Row
+                icon={CloudUploadIcon}
+                tint="#3B82F6"
+                label={accountEmail ?? t("settings.signIn")}
+                onPress={() => router.push("/account")}
+              />
+            </Section>
+          ) : null}
 
           <Section title={t("settings.appearance")} plain>
             <ThemeSegmentedControl />
