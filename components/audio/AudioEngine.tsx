@@ -1,3 +1,4 @@
+import { useNetworkStore } from "@/stores/useNetworkStore";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
 import { useEffect, useRef, useState } from "react";
@@ -26,6 +27,7 @@ export function AudioEngine() {
   const reportStatus = usePlayerStore((s) => s.reportStatus);
   const reconnect = usePlayerStore((s) => s.reconnect);
   const setInterrupted = usePlayerStore((s) => s.setInterrupted);
+  const isOnline = useNetworkStore((s) => s.isOnline);
 
   const player = useAudioPlayer(null, { updateInterval: 500 });
   const status = useAudioPlayerStatus(player);
@@ -121,13 +123,14 @@ export function AudioEngine() {
   }, [loadKey, wantsPlaying, interrupted, audible]);
   const failed = loadKey !== null && failedKey === loadKey;
 
-  // Reload a failed stream with backoff until the attempts run out.
+  // Reload a failed stream with backoff until the attempts run out. Offline
+  // there is nothing to reach; the network watcher retries once it is back.
   const canRetry = reconnectAttempt < RETRY_DELAYS_MS.length;
   useEffect(() => {
-    if (!failed || !wantsPlaying || interrupted || !canRetry) return;
+    if (!failed || !wantsPlaying || interrupted || !canRetry || !isOnline) return;
     const t = setTimeout(reconnect, RETRY_DELAYS_MS[reconnectAttempt]);
     return () => clearTimeout(t);
-  }, [failed, wantsPlaying, interrupted, canRetry, reconnectAttempt, reconnect]);
+  }, [failed, wantsPlaying, interrupted, canRetry, isOnline, reconnectAttempt, reconnect]);
 
   // Translate native status into the app's simpler status.
   const reconnecting = reconnectAttempt > 0 || (stationId !== undefined && heardStationId === stationId);
@@ -144,12 +147,18 @@ export function AudioEngine() {
       reportStatus("playing");
       return;
     }
+    // Whatever is still buffered keeps playing above; once it runs out, say
+    // why straight away instead of waiting for the connect timeout.
+    if (!isOnline) {
+      reportStatus("error", "You're offline.");
+      return;
+    }
     if (failed && !canRetry) {
       reportStatus("error", "This station is not responding right now.");
       return;
     }
     reportStatus("loading", null, reconnecting);
-  }, [streamUrl, wantsPlaying, interrupted, audible, failed, canRetry, reconnecting, reportStatus]);
+  }, [streamUrl, wantsPlaying, interrupted, audible, isOnline, failed, canRetry, reconnecting, reportStatus]);
 
   return null;
 }

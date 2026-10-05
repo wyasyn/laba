@@ -7,6 +7,7 @@ import { Text } from "@/components/ui/Text";
 import { duration, spring } from "@/lib/motion";
 import type { Station } from "@/lib/schemas";
 import { useTheme } from "@/lib/useTheme";
+import { useNetworkStore } from "@/stores/useNetworkStore";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import {
   StopIcon,
@@ -48,6 +49,7 @@ export function AudioPlayer({ station }: { station: Station }) {
   const status = usePlayerStore((s) => s.status);
   const reconnecting = usePlayerStore((s) => s.reconnecting);
   const error = usePlayerStore((s) => s.error);
+  const isOnline = useNetworkStore((s) => s.isOnline);
   const volume = usePlayerStore((s) => s.volume);
   const togglePlayback = usePlayerStore((s) => s.togglePlayback);
   const stop = usePlayerStore((s) => s.stop);
@@ -74,7 +76,9 @@ export function AudioPlayer({ station }: { station: Station }) {
       : status === "playing"
         ? "Live now"
         : status === "error"
-          ? "Stream unavailable"
+          ? isOnline
+            ? "Stream unavailable"
+            : "Offline"
           : status === "idle"
             ? "Stopped"
             : "Paused";
@@ -155,7 +159,9 @@ export function AudioPlayer({ station }: { station: Station }) {
         >
           <Text className="text-center text-sm font-medium">{error ?? "The stream failed to load."}</Text>
           <Text className="mt-1 text-center text-xs text-text-secondary">
-            Check your connection, then tap play to try again.
+            {isOnline
+              ? "Check your connection, then tap play to try again."
+              : "Playback resumes when you're back online."}
           </Text>
         </Animated.View>
       ) : null}

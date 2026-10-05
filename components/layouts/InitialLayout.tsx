@@ -1,8 +1,10 @@
 import { AudioEngine } from "@/components/audio/AudioEngine";
+import { OfflineBanner } from "@/components/OfflineBanner";
 import { setupTrackPlayer } from "@/lib/trackPlayerSetup";
 import { useTheme, useThemeVars } from "@/lib/useTheme";
 import { VideoWarmup } from "@/lib/utils";
 import { useFavouritesStore } from "@/stores/useFavouritesStore";
+import { watchNetwork } from "@/stores/useNetworkStore";
 import { useOnboardingStore } from "@/stores/useOnboardingStore";
 import { useRecentsStore } from "@/stores/useRecentsStore";
 import { useStationStore } from "@/stores/useStationStore";
@@ -37,6 +39,8 @@ function InitialLayout() {
     ]);
   }, [fetchStations, hydrateFavourites, hydrateTheme, hydrateOnboarding, hydrateRecents]);
 
+  useEffect(() => watchNetwork(), []);
+
   // Fonts are embedded natively (expo-font config plugin), so the only things
   // worth holding the splash for are the theme and the first route decision.
   const ready = themeLoaded && onboardingLoaded;
@@ -70,6 +74,7 @@ function InitialLayout() {
         <Stack.Screen name="favourites" options={{ animation: "slide_from_right" }} />
         <Stack.Screen name="account" options={{ animation: "slide_from_right" }} />
       </Stack>
+      <OfflineBanner />
     </View>
   );
 }
