@@ -3,12 +3,14 @@ import { Slider } from "@/components/ui/Slider";
 import { Text } from "@/components/ui/Text";
 import { duration } from "@/lib/motion";
 import { useTheme } from "@/lib/useTheme";
+import { usePlayerStore } from "@/stores/usePlayerStore";
 import {
   ArrowDown01Icon,
   ArrowLeft01Icon,
   FullscreenIcon,
   MinimizeScreenIcon,
   PauseIcon,
+  PictureInPictureOnIcon,
   PlayCircleIcon,
   ReloadIcon,
   VolumeHighIcon,
@@ -39,11 +41,15 @@ import Animated, {
 import Video, {
   type OnBufferData,
   type OnLoadData,
+  type OnPictureInPictureStatusChangedData,
   type VideoRef,
 } from "react-native-video";
 
 interface VideoPlayerProps {
   streamUrl: string;
+  /** Shown in the media notification and lock screen while the stream plays in the background. */
+  title?: string;
+  artworkUrl?: string;
   onError?: (error: string) => void;
   onReady?: () => void;
   borderless?: boolean;
@@ -81,7 +87,15 @@ function playbackReducer(state: PlaybackStatus, action: PlaybackAction): Playbac
   }
 }
 
-export function VideoPlayer({ streamUrl, onError, onReady, borderless = false, onBack }: VideoPlayerProps) {
+export function VideoPlayer({
+  streamUrl,
+  title,
+  artworkUrl,
+  onError,
+  onReady,
+  borderless = false,
+  onBack,
+}: VideoPlayerProps) {
   const { colors } = useTheme();
   const videoRef = useRef<VideoRef>(null);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -93,6 +107,16 @@ export function VideoPlayer({ streamUrl, onError, onReady, borderless = false, o
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [volume, setVolume] = useState(1);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
+  const [isPip, setIsPip] = useState(false);
+
+  // TV and radio never talk over each other: if radio starts while this
+  // player is still mounted (a radio screen opened on top), pause the video.
+  const radioPlaying = usePlayerStore((s) => s.currentStation !== null && s.wantsPlaying);
+  const [prevRadioPlaying, setPrevRadioPlaying] = useState(radioPlaying);
+  if (radioPlaying !== prevRadioPlaying) {
+    setPrevRadioPlaying(radioPlaying);
+    if (radioPlaying) setIsPaused(true);
+  }
 
   const isLoading = status.kind === "loading";
   const isBuffering = status.kind === "buffering";
@@ -190,6 +214,15 @@ export function VideoPlayer({ streamUrl, onError, onReady, borderless = false, o
     dispatch({ type: "buffering", value: buffering });
   }, []);
 
+  const handlePipChange = useCallback(({ isActive }: OnPictureInPictureStatusChangedData) => {
+    setIsPip(isActive);
+  }, []);
+
+  const enterPip = useCallback(() => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    videoRef.current?.enterPictureInPicture();
+  }, []);
+
   const handleRetry = useCallback(() => {
     dispatch({ type: "loading" });
     setIsPaused(false);
@@ -231,7 +264,8 @@ export function VideoPlayer({ streamUrl, onError, onReady, borderless = false, o
         ? VolumeLowIcon
         : VolumeHighIcon;
 
-  const overlays = (
+  // The PiP window shows the bare video; our controls would be unusable there.
+  const overlays = isPip ? null : (
     <>
       {/* Buffering spinner */}
       {isBuffering && (
@@ -310,18 +344,29 @@ export function VideoPlayer({ streamUrl, onError, onReady, borderless = false, o
                   ) : (
                     <View />
                   )}
-                  <Pressable
-                    onPress={() => {
-                      setShowVolumeSlider((v) => !v);
-                      showControls();
-                    }}
-                    className="rounded-full bg-black/50 p-2"
-                    hitSlop={HIT_SLOP}
-                    accessibilityRole="button"
-                    accessibilityLabel="Adjust volume"
-                  >
-                    <HugeiconsIcon icon={volumeIcon} size={20} color="#fff" />
-                  </Pressable>
+                  <View className="flex-row items-center gap-3">
+                    <Pressable
+                      onPress={enterPip}
+                      className="rounded-full bg-black/50 p-2"
+                      hitSlop={HIT_SLOP}
+                      accessibilityRole="button"
+                      accessibilityLabel="Picture in picture"
+                    >
+                      <HugeiconsIcon icon={PictureInPictureOnIcon} size={20} color="#fff" />
+                    </Pressable>
+                    <Pressable
+                      onPress={() => {
+                        setShowVolumeSlider((v) => !v);
+                        showControls();
+                      }}
+                      className="rounded-full bg-black/50 p-2"
+                      hitSlop={HIT_SLOP}
+                      accessibilityRole="button"
+                      accessibilityLabel="Adjust volume"
+                    >
+                      <HugeiconsIcon icon={volumeIcon} size={20} color="#fff" />
+                    </Pressable>
+                  </View>
                 </View>
 
                 {/* Volume slider */}
@@ -329,7 +374,7 @@ export function VideoPlayer({ streamUrl, onError, onReady, borderless = false, o
                   <Animated.View
                     entering={FadeIn.duration(duration.fast)}
                     exiting={FadeOut.duration(duration.fast)}
-                    className="absolute right-14 top-3 h-9 w-[140px] flex-row items-center rounded-full bg-black/60 px-3"
+                    className="absolute right-[100px] top-3 h-9 w-[140px] flex-row items-center rounded-full bg-black/60 px-3"
                   >
                     <Slider
                       value={volume}
@@ -396,7 +441,10 @@ export function VideoPlayer({ streamUrl, onError, onReady, borderless = false, o
     <Video
       key={reloadKey}
       ref={videoRef}
-      source={{ uri: streamUrl }}
+      source={{
+        uri: streamUrl,
+        metadata: { title, artist: "Laba · Live TV", imageUri: artworkUrl },
+      }}
       style={{ width: "100%", height: "100%" }}
       resizeMode="contain"
       paused={isPaused}
@@ -404,6 +452,13 @@ export function VideoPlayer({ streamUrl, onError, onReady, borderless = false, o
       onLoad={handleLoad}
       onError={handleError}
       onBuffer={handleBuffer}
+      // Leaving the app floats the stream in a picture-in-picture window, and
+      // its audio carries on with media controls when PiP is closed or unavailable.
+      enterPictureInPictureOnLeave
+      onPictureInPictureStatusChanged={handlePipChange}
+      playInBackground
+      playWhenInactive
+      showNotificationControls
       bufferConfig={{
         minBufferMs: 5000,
         maxBufferMs: 30000,
