@@ -71,7 +71,14 @@ On a first launch with no network the Radio tab is empty
 **Done when:** toggling network off and on mid-stream resumes on its own;
 a phone call or other audio app pausing it resumes afterwards.
 
-### [ ] 1.3 Network awareness
+### [x] 1.3 Network awareness
+
+> Done in `3a1cc65`. NetInfo-backed `useNetworkStore` (unknown reachability
+> counts as online). One global "You're offline" pill under the status bar
+> rather than per-screen banners. Verified on the Android emulator: pill
+> appears within about 3s of cutting wifi and data; opening radio offline
+> errors at once with "You're offline"; reconnecting hides the pill and the
+> stream resumes by itself. Not checked on iOS.
 
 **Problem:** no connectivity detection. A failed refresh sets
 `useStationStore.error` but nothing shows it; playing offline waits 20s
@@ -89,7 +96,13 @@ for a generic error.
 **Done when:** going offline shows the banner within a second or two; coming
 back online hides it and recovers playback and data.
 
-### [ ] 1.4 Remove the placeholder Account screen
+### [x] 1.4 Remove the placeholder Account screen
+
+> Done in `636f1b9`. `RECORD_AUDIO` was only there because the expo-audio
+> plugin adds it by default; the app never records, so the plugin now runs
+> with `recordAudioAndroid: false` and `microphonePermission: false`, and
+> the permission is in `blockedPermissions`. Clean Android prebuild and
+> build pass; the merged manifest marks `RECORD_AUDIO` as removed.
 
 **Problem:** `app/account.tsx` says "Accounts are coming". Unused deps and an
 unused iOS photo permission can trigger App Store rejection.
