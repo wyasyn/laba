@@ -1,6 +1,6 @@
 import { EmptyState } from "@/components/EmptyState";
 import { StationCard } from "@/components/StationCard";
-import { GridCell, LIST_BOTTOM_PADDING } from "@/components/StationList";
+import { GridCell, gridKeyExtractor, LIST_BOTTOM_PADDING } from "@/components/StationList";
 import { IconButton } from "@/components/ui/IconButton";
 import { Text } from "@/components/ui/Text";
 import type { Station } from "@/lib/schemas";
@@ -12,10 +12,6 @@ import { useRouter } from "expo-router";
 import { useMemo } from "react";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-function keyExtractor(item: Station) {
-  return item.id;
-}
 
 function renderItem({ item, index }: ListRenderItemInfo<Station>) {
   return (
@@ -59,7 +55,7 @@ export default function FavouritesScreen() {
       </View>
       <FlashList
         data={favouriteStations}
-        keyExtractor={keyExtractor}
+        keyExtractor={gridKeyExtractor}
         numColumns={2}
         renderItem={renderItem}
         ListEmptyComponent={
