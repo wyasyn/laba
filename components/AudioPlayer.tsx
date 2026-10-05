@@ -46,6 +46,7 @@ export function AudioPlayer({ station }: { station: Station }) {
   const { colors } = useTheme();
   const { width } = useWindowDimensions();
   const status = usePlayerStore((s) => s.status);
+  const reconnecting = usePlayerStore((s) => s.reconnecting);
   const error = usePlayerStore((s) => s.error);
   const volume = usePlayerStore((s) => s.volume);
   const togglePlayback = usePlayerStore((s) => s.togglePlayback);
@@ -67,7 +68,9 @@ export function AudioPlayer({ station }: { station: Station }) {
 
   const statusText =
     status === "loading"
-      ? "Connecting…"
+      ? reconnecting
+        ? "Reconnecting…"
+        : "Connecting…"
       : status === "playing"
         ? "Live now"
         : status === "error"

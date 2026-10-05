@@ -23,10 +23,10 @@ import Animated, {
 } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 
-function statusLabel(status: PlaybackStatus) {
+function statusLabel(status: PlaybackStatus, reconnecting: boolean) {
   switch (status) {
     case "loading":
-      return "Connecting…";
+      return reconnecting ? "Reconnecting…" : "Connecting…";
     case "playing":
       return "Live";
     case "paused":
@@ -44,6 +44,7 @@ function MiniPlayerRow({ compact = false }: { compact?: boolean }) {
   const { colors } = useTheme();
   const current = usePlayerStore((s) => s.currentStation);
   const status = usePlayerStore((s) => s.status);
+  const reconnecting = usePlayerStore((s) => s.reconnecting);
   // Keep showing the last station while the card animates out after stop().
   const [last, setLast] = useState(current);
   if (current && current !== last) setLast(current);
@@ -86,7 +87,7 @@ function MiniPlayerRow({ compact = false }: { compact?: boolean }) {
                       : "text-xs text-text-secondary"
                 }
               >
-                {statusLabel(status)}
+                {statusLabel(status, reconnecting)}
               </Text>
             </View>
           ) : null}
