@@ -10,16 +10,17 @@ import { Text } from "@/components/ui/Text";
 import { TypePill } from "@/components/ui/TypePill";
 import { enterFromBelow } from "@/lib/motion";
 import type { Station } from "@/lib/schemas";
+import { shareStation } from "@/lib/share";
 import { useTheme } from "@/lib/useTheme";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import { useRecentsStore } from "@/stores/useRecentsStore";
 import { useStationStore } from "@/stores/useStationStore";
-import { ArrowDown01Icon, SignalFull02Icon } from "@hugeicons/core-free-icons";
+import { ArrowDown01Icon, Share08Icon, SignalFull02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useMemo } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
 import Animated from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -41,7 +42,13 @@ export default function StationScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const station = useStationStore((s) => s.stations.find((st) => st.id === id));
+  // A deep link can land before the catalogue is in, or before the background
+  // refresh brings in a station the bundled snapshot doesn't have.
+  const catalogueSettling = useStationStore(
+    (s) => s.stations.length === 0 || s.isLoading || s.isRefreshing,
+  );
   const related = useRelated(station);
+  const { colors } = useTheme();
 
   const isTv = station?.type === "tv";
 
@@ -66,6 +73,14 @@ export default function StationScreen() {
       }
     }, [station]),
   );
+
+  if (!station && catalogueSettling) {
+    return (
+      <View className="flex-1 items-center justify-center bg-background">
+        <ActivityIndicator color={colors.textSecondary} />
+      </View>
+    );
+  }
 
   if (!station) {
     return (
@@ -117,13 +132,22 @@ function RadioStation({ station, related, onBack }: StationViewProps) {
 
       <View style={{ paddingTop: insets.top + 4 }} className="flex-row items-center justify-between px-4 pb-2">
         <IconButton icon={ArrowDown01Icon} onPress={onBack} accessibilityLabel="Close player" iconSize={22} />
-        <View className="items-center">
+        {/* Centred on the screen, not between the uneven side buttons. */}
+        <View pointerEvents="none" style={[StyleSheet.absoluteFill, { top: insets.top + 4 }]} className="items-center justify-center pb-2">
           <Text className="text-[11px] font-semibold uppercase tracking-[2px] text-text-secondary">
             Now playing
           </Text>
           <Text className="text-[13px] font-semibold">Live radio</Text>
         </View>
-        <FavouriteButton stationId={station.id} variant="surface" size={20} />
+        <View className="flex-row items-center gap-2">
+          <IconButton
+            icon={Share08Icon}
+            onPress={() => void shareStation(station)}
+            accessibilityLabel={`Share ${station.name}`}
+            iconSize={19}
+          />
+          <FavouriteButton stationId={station.id} variant="surface" size={20} />
+        </View>
       </View>
 
       <ScrollView
@@ -154,7 +178,7 @@ function TvStation({ station, related, onBack }: StationViewProps) {
         {station.youtubeChannelId ? (
           <YouTubePlayer channelId={station.youtubeChannelId} borderless onBack={onBack} />
         ) : (
-          <VideoPlayer streamUrl={station.streamUrl!} borderless onBack={onBack} />
+<VideoPlayer streamUrl={station.streamUrl!} borderless onBack={onBack} />
         )}
       </View>
 
@@ -181,6 +205,12 @@ function TvStation({ station, related, onBack }: StationViewProps) {
                 </View>
               </View>
             </View>
+            <IconButton
+              icon={Share08Icon}
+              onPress={() => void shareStation(station)}
+              accessibilityLabel={`Share ${station.name}`}
+              iconSize={19}
+            />
             <FavouriteButton stationId={station.id} variant="surface" size={20} />
           </View>
 

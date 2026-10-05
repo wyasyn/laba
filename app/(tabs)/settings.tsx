@@ -4,6 +4,7 @@ import { LIST_BOTTOM_PADDING } from "@/components/StationList";
 import { COMPACT_BAR_HEIGHT, CompactHeader, LargeTitle, useCollapsingHeader } from "@/components/ui/CollapsingHeader";
 import { PressableScale } from "@/components/ui/PressableScale";
 import { Text } from "@/components/ui/Text";
+import { SUPPORT_EMAIL } from "@/lib/constants";
 import { haptic, spring } from "@/lib/motion";
 import type { Station } from "@/lib/schemas";
 import { useTheme } from "@/lib/useTheme";
@@ -156,7 +157,7 @@ export default function SettingsScreen() {
               icon={Mail01Icon}
               tint="#0EA5E9"
               label="Contact support"
-              onPress={() => Linking.openURL("mailto:ywalum@gmail.com").catch(() => {})}
+              onPress={() => Linking.openURL(`mailto:${SUPPORT_EMAIL}`).catch(() => {})}
             />
             <Row icon={StarIcon} tint="#F59E0B" label="Rate the app" onPress={() => void rateApp()} />
           </Section>

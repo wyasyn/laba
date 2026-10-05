@@ -9,7 +9,10 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.yasinwalum.laba"
+      "bundleIdentifier": "com.yasinwalum.laba",
+      "associatedDomains": [
+        "applinks:laba.yasinwalum.com"
+      ]
     },
     "android": {
       "adaptiveIcon": {
@@ -26,6 +29,23 @@
       "package": "com.yasinwalum.laba",
       "blockedPermissions": [
         "android.permission.RECORD_AUDIO"
+      ],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "laba.yasinwalum.com",
+              "pathPrefix": "/station/"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
       ]
     },
     "web": {
