@@ -50,6 +50,8 @@ interface VideoPlayerProps {
   /** Shown in the media notification and lock screen while the stream plays in the background. */
   title?: string;
   artworkUrl?: string;
+  /** Shown as "Report a problem" on the error screen. */
+  onReport?: (error: string) => void;
   onError?: (error: string) => void;
   onReady?: () => void;
   borderless?: boolean;
@@ -91,6 +93,7 @@ export function VideoPlayer({
   streamUrl,
   title,
   artworkUrl,
+  onReport,
   onError,
   onReady,
   borderless = false,
@@ -302,6 +305,16 @@ export function VideoPlayer({
             <HugeiconsIcon icon={ReloadIcon} size={18} color={colors.onPrimary} />
             <Text className="font-semibold text-primary-foreground">Retry</Text>
           </Pressable>
+          {onReport && errorMessage ? (
+            <Pressable
+              onPress={() => onReport(errorMessage)}
+              hitSlop={HIT_SLOP}
+              className="mt-3 active:opacity-60"
+              accessibilityRole="button"
+            >
+              <Text className="text-xs font-semibold text-white/70 underline">Report a problem</Text>
+            </Pressable>
+          ) : null}
         </View>
       )}
 

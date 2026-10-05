@@ -6,6 +6,7 @@ import { PlayPauseButton } from "@/components/ui/PlayPauseButton";
 import { Slider } from "@/components/ui/Slider";
 import { Text } from "@/components/ui/Text";
 import { duration, spring } from "@/lib/motion";
+import { reportStation } from "@/lib/report";
 import type { Station } from "@/lib/schemas";
 import { useTheme } from "@/lib/useTheme";
 import { useNetworkStore } from "@/stores/useNetworkStore";
@@ -18,7 +19,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { useEffect } from "react";
-import { StyleSheet, View, useWindowDimensions } from "react-native";
+import { Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import Animated, {
   Easing,
   FadeIn,
@@ -168,6 +169,16 @@ export function AudioPlayer({ station }: { station: Station }) {
               ? "Check your connection, then tap play to try again."
               : "Playback resumes when you're back online."}
           </Text>
+          {isOnline ? (
+            <Pressable
+              onPress={() => void reportStation(station, error)}
+              accessibilityRole="button"
+              hitSlop={8}
+              className="mt-2 self-center active:opacity-60"
+            >
+              <Text className="text-xs font-semibold underline">Report a problem</Text>
+            </Pressable>
+          ) : null}
         </Animated.View>
       ) : null}
     </View>
