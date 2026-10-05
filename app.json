@@ -9,10 +9,7 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.yasinwalum.laba",
-      "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "Allow Laba to use your photos to set a profile picture."
-      }
+      "bundleIdentifier": "com.yasinwalum.laba"
     },
     "android": {
       "adaptiveIcon": {
@@ -22,12 +19,14 @@
       },
       "predictiveBackGestureEnabled": false,
       "permissions": [
-        "android.permission.RECORD_AUDIO",
         "android.permission.MODIFY_AUDIO_SETTINGS",
         "android.permission.FOREGROUND_SERVICE",
         "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
       ],
-      "package": "com.yasinwalum.laba"
+      "package": "com.yasinwalum.laba",
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -46,8 +45,13 @@
           "backgroundColor": "#0C0C09"
         }
       ],
-      "expo-secure-store",
-      "expo-audio",
+      [
+        "expo-audio",
+        {
+          "microphonePermission": false,
+          "recordAudioAndroid": false
+        }
+      ],
       [
         "expo-font",
         {

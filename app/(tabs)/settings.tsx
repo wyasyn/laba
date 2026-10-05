@@ -149,7 +149,6 @@ export default function SettingsScreen() {
               value={String(favouriteCount)}
               onPress={() => router.push("/favourites")}
             />
-            <Row icon={UserIcon} tint="#6366F1" label="Account" onPress={() => router.push("/account")} />
           </Section>
 
           <Section title="Support">
