@@ -2,7 +2,6 @@ import { CompactHeader, COMPACT_BAR_HEIGHT, LargeTitle, useCollapsingHeader } fr
 import { FilterChips, FILTER_CHIPS_HEIGHT } from "@/components/ui/FilterChips";
 import { GlassView } from "@/components/ui/GlassView";
 import { ShimmerGroup } from "@/components/ui/Shimmer";
-import { Text } from "@/components/ui/Text";
 import type { Station, StationType } from "@/lib/schemas";
 import { hasCategory, topCategories } from "@/lib/search";
 import { useHideTabBarOnScroll } from "@/stores/useChromeStore";
@@ -89,7 +88,6 @@ export function StationList({ type, title, subtitle }: StationListProps) {
   const hideDistance = COMPACT_BAR_HEIGHT + (hasTabs ? TABS_SLOT : 0);
   const { scrollY, hideY, onScroll } = useCollapsingHeader({ hideDistance });
   useHideTabBarOnScroll(hideY, hideDistance);
-  const noun = type === "tv" ? "channel" : "station";
 
   const selectCategory = (next: string | null) => {
     setCategory(next);
@@ -131,11 +129,6 @@ export function StationList({ type, title, subtitle }: StationListProps) {
       />
       {/* The real rail floats above the list (so it can pin); this reserves its room. */}
       {hasTabs ? <View onLayout={onTabsSlotLayout} style={{ height: TABS_SLOT }} /> : <View className="h-4" />}
-      {!showSkeleton && stations.length > 0 ? (
-        <Text className="px-5 pb-3 text-[12px] font-semibold uppercase tracking-widest text-text-tertiary">
-          {stations.length} {stations.length === 1 ? noun : `${noun}s`}
-        </Text>
-      ) : null}
       {showSkeleton ? (
         <ShimmerGroup>
           <View className="flex-row flex-wrap">
