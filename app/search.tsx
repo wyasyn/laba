@@ -1,14 +1,15 @@
 import { EmptyState } from "@/components/EmptyState";
 import { SearchBar } from "@/components/SearchBar";
 import { StationCard } from "@/components/StationCard";
-import { GridCell } from "@/components/StationList";
+import { NO_FILTERS, StationFilterButton } from "@/components/StationFilterButton";
+import { GridCell, gridKeyExtractor } from "@/components/StationList";
 import { FilterChips } from "@/components/ui/FilterChips";
 import { IconButton } from "@/components/ui/IconButton";
 import { PressableScale } from "@/components/ui/PressableScale";
 import { Text } from "@/components/ui/Text";
 import { duration, haptic } from "@/lib/motion";
 import type { Station, StationType } from "@/lib/schemas";
-import { matchesQuery, topCategories } from "@/lib/search";
+import { matchesFilters, matchesQuery, topCategories, type StationFilters } from "@/lib/search";
 import { useDebounce } from "@/lib/useDebounce";
 import { useStationStore } from "@/stores/useStationStore";
 import { ArrowLeft01Icon } from "@hugeicons/core-free-icons";
@@ -21,10 +22,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const TYPES: StationType[] = ["tv", "radio"];
 const TYPE_LABELS: Record<string, string> = { tv: "TV", radio: "Radio" };
-
-function keyExtractor(item: Station) {
-  return item.id;
-}
 
 function renderItem({ item, index }: ListRenderItemInfo<Station>) {
   return (
@@ -42,14 +39,18 @@ export default function SearchScreen() {
 
   const [query, setQuery] = useState("");
   const [type, setType] = useState<StationType | null>(null);
+  const [filters, setFilters] = useState<StationFilters>(NO_FILTERS);
   const debouncedQuery = useDebounce(query, 200);
   const isSearching = debouncedQuery.trim().length > 0;
 
   const suggestions = useMemo(() => topCategories(stations, 10), [stations]);
 
   const matched = useMemo(
-    () => (isSearching ? stations.filter((s) => matchesQuery(s, debouncedQuery)) : []),
-    [stations, debouncedQuery, isSearching],
+    () =>
+      isSearching
+        ? stations.filter((s) => matchesQuery(s, debouncedQuery) && matchesFilters(s, filters))
+        : [],
+    [stations, debouncedQuery, isSearching, filters],
   );
 
   const counts = useMemo(() => {
@@ -86,11 +87,12 @@ export default function SearchScreen() {
               selected={type}
               onSelect={(next) => setType(next as StationType | null)}
               counts={counts}
+              trailing={<StationFilterButton stations={stations} value={filters} onChange={setFilters} />}
             />
           </View>
           <FlashList
             data={results}
-            keyExtractor={keyExtractor}
+            keyExtractor={gridKeyExtractor}
             numColumns={2}
             renderItem={renderItem}
             ListEmptyComponent={

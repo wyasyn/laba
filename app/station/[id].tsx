@@ -11,6 +11,7 @@ import { TypePill } from "@/components/ui/TypePill";
 import { enterFromBelow } from "@/lib/motion";
 import { reportStation } from "@/lib/report";
 import type { Station } from "@/lib/schemas";
+import { countryName, languageName, languagesOf } from "@/lib/search";
 import { shareStation } from "@/lib/share";
 import { useTheme } from "@/lib/useTheme";
 import { usePlayerStore } from "@/stores/usePlayerStore";
@@ -226,7 +227,7 @@ function TvStation({ station, related, onBack }: StationViewProps) {
                 <View className="flex-row items-center gap-1">
                   <HugeiconsIcon icon={SignalFull02Icon} size={12} color={colors.success} />
                   <Text className="text-xs font-medium text-text-secondary">
-                    {station.country === "UG" ? "Uganda" : station.country} · {station.language}
+                    {countryName(station.country)} · {languageName(languagesOf(station)[0] ?? station.language)}
                   </Text>
                 </View>
               </View>
