@@ -9,6 +9,7 @@ import { IconButton } from "@/components/ui/IconButton";
 import { Text } from "@/components/ui/Text";
 import { TypePill } from "@/components/ui/TypePill";
 import { enterFromBelow } from "@/lib/motion";
+import { reportStation } from "@/lib/report";
 import type { Station } from "@/lib/schemas";
 import { shareStation } from "@/lib/share";
 import { useTheme } from "@/lib/useTheme";
@@ -20,7 +21,7 @@ import { HugeiconsIcon } from "@hugeicons/react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useMemo } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import Animated from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -163,8 +164,26 @@ function RadioStation({ station, related, onBack }: StationViewProps) {
             <CategoryRow index={1} title="More like this" stations={related} />
           </View>
         ) : null}
+
+        <ReportLink station={station} />
       </ScrollView>
     </View>
+  );
+}
+
+/** Quiet footer link for streams that play badly without erroring outright. */
+function ReportLink({ station }: { station: Station }) {
+  return (
+    <Pressable
+      onPress={() => void reportStation(station)}
+      accessibilityRole="button"
+      hitSlop={8}
+      className="mt-10 self-center px-4 py-2 active:opacity-60"
+    >
+      <Text className="text-[13px] text-text-tertiary">
+        Not playing right? <Text className="text-[13px] font-semibold text-text-secondary">Report a problem</Text>
+      </Text>
+    </Pressable>
   );
 }
 
@@ -182,6 +201,7 @@ function TvStation({ station, related, onBack }: StationViewProps) {
             streamUrl={station.streamUrl!}
             title={station.name}
             artworkUrl={station.logo}
+            onReport={(error) => void reportStation(station, error)}
             borderless
             onBack={onBack}
           />
@@ -242,6 +262,8 @@ function TvStation({ station, related, onBack }: StationViewProps) {
             <CategoryRow index={1} title="More like this" stations={related} />
           </View>
         ) : null}
+
+        <ReportLink station={station} />
       </ScrollView>
     </View>
   );
