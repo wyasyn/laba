@@ -1,6 +1,7 @@
 import { FloatingMiniPlayer, MiniPlayerAccessory } from "@/components/MiniPlayer";
 import { TAB_BAR_HEIGHT, TabBar } from "@/components/TabBar";
 import { FONT_FAMILY } from "@/constants/theme";
+import { useT } from "@/lib/i18n";
 import { useTheme } from "@/lib/useTheme";
 import { useChromeStore } from "@/stores/useChromeStore";
 import { usePlayerStore } from "@/stores/usePlayerStore";
@@ -44,6 +45,7 @@ function JsTabLayout() {
 }
 
 function NativeTabLayout() {
+  const { t } = useT();
   const { colors } = useTheme();
   const hasStation = usePlayerStore((s) => s.currentStation !== null);
 
@@ -67,7 +69,7 @@ function NativeTabLayout() {
         {/* Custom icon set (outline by default, filled when selected).
             Sources live in assets/images/tabs/svg. */}
         <NativeTabs.Trigger name="index">
-          <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
+          <NativeTabs.Trigger.Label>{t("tabs.home")}</NativeTabs.Trigger.Label>
           <NativeTabs.Trigger.Icon
             src={{
               default: require("@/assets/images/tabs/home.png"),
@@ -76,7 +78,7 @@ function NativeTabLayout() {
           />
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="tv">
-          <NativeTabs.Trigger.Label>TV</NativeTabs.Trigger.Label>
+          <NativeTabs.Trigger.Label>{t("tabs.tv")}</NativeTabs.Trigger.Label>
           <NativeTabs.Trigger.Icon
             src={{
               default: require("@/assets/images/tabs/live_tv.png"),
@@ -85,7 +87,7 @@ function NativeTabLayout() {
           />
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="radio">
-          <NativeTabs.Trigger.Label>Radio</NativeTabs.Trigger.Label>
+          <NativeTabs.Trigger.Label>{t("tabs.radio")}</NativeTabs.Trigger.Label>
           <NativeTabs.Trigger.Icon
             src={{
               default: require("@/assets/images/tabs/radio.png"),
@@ -94,7 +96,7 @@ function NativeTabLayout() {
           />
         </NativeTabs.Trigger>
         <NativeTabs.Trigger name="settings">
-          <NativeTabs.Trigger.Label>Settings</NativeTabs.Trigger.Label>
+          <NativeTabs.Trigger.Label>{t("tabs.settings")}</NativeTabs.Trigger.Label>
           <NativeTabs.Trigger.Icon
             src={{
               default: require("@/assets/images/tabs/settings.png"),

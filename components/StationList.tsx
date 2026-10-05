@@ -2,14 +2,13 @@ import { CompactHeader, COMPACT_BAR_HEIGHT, LargeTitle, useCollapsingHeader } fr
 import { FilterChips, FILTER_CHIPS_HEIGHT } from "@/components/ui/FilterChips";
 import { GlassView } from "@/components/ui/GlassView";
 import { ShimmerGroup } from "@/components/ui/Shimmer";
-import { Text } from "@/components/ui/Text";
 import type { Station, StationType } from "@/lib/schemas";
-import { hasCategory, topCategories } from "@/lib/search";
+import { hasCategory, matchesFilters, topCategories, type StationFilters } from "@/lib/search";
 import { useHideTabBarOnScroll } from "@/stores/useChromeStore";
 import { useStationStore } from "@/stores/useStationStore";
 import { FlashList, type FlashListRef, type ListRenderItemInfo } from "@shopify/flash-list";
-import { useMemo, useRef, useState, type ReactNode } from "react";
-import { RefreshControl, StyleSheet, View, type LayoutChangeEvent } from "react-native";
+import { useCallback, useMemo, useRef, useState, type ReactNode } from "react";
+import { RefreshControl, StyleSheet, View, useWindowDimensions, type LayoutChangeEvent } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -21,6 +20,7 @@ import { EmptyState } from "./EmptyState";
 import { HeaderActions } from "./HeaderActions";
 import { RefreshIndicator } from "./RefreshIndicator";
 import { SkeletonCard } from "./SkeletonCard";
+import { NO_FILTERS, StationFilterButton } from "./StationFilterButton";
 import { StationCard } from "./StationCard";
 
 const AnimatedFlashList = Animated.createAnimatedComponent(FlashList<Station>);
@@ -37,30 +37,49 @@ export const LIST_BOTTOM_PADDING = 180;
 /** Vertical room for the category rail, including its breathing space. */
 const TABS_SLOT = FILTER_CHIPS_HEIGHT + 20;
 
-function keyExtractor(item: Station) {
-  return item.id;
+const GRID_OUTER = 20;
+const GRID_GAP = 14;
+
+/** Two columns on phones, three on small tablets, four on large ones. */
+export function useGridColumns() {
+  const { width } = useWindowDimensions();
+  return width >= 900 ? 4 : width >= 600 ? 3 : 2;
 }
 
-/** Two-column cell with even gutters (20 outside, 14 between). */
-export function GridCell({ index, children }: { index: number; children: ReactNode }) {
-  const left = index % 2 === 0;
-  return (
-    <View style={{ paddingLeft: left ? 20 : 7, paddingRight: left ? 7 : 20, paddingBottom: 16 }}>
-      {children}
-    </View>
-  );
+/**
+ * Grid cell with even gutters (20 outside, 14 between) and equal card widths
+ * for any column count: each cell pads by its column so the gaps line up.
+ */
+export function GridCell({ index, columns, children }: { index: number; columns: number; children: ReactNode }) {
+  const column = index % columns;
+  const padding = (2 * GRID_OUTER + (columns - 1) * GRID_GAP) / columns;
+  const left = GRID_OUTER - column * (padding - GRID_GAP);
+  return <View style={{ paddingLeft: left, paddingRight: padding - left, paddingBottom: 16 }}>{children}</View>;
 }
 
-function renderItem({ item, index }: ListRenderItemInfo<Station>) {
-  return (
-    <GridCell index={index}>
-      <StationCard station={item} />
-    </GridCell>
+/**
+ * Columns, key and cell renderer for a FlashList grid of stations. The key
+ * includes the column because GridCell pads by column, and FlashList doesn't
+ * re-render a recycled cell when filtering only moves its item: a station
+ * that changes column has to get a fresh cell.
+ */
+export function useStationGrid() {
+  const columns = useGridColumns();
+  const keyExtractor = useCallback((item: Station, index: number) => `${item.id}:${index % columns}`, [columns]);
+  const renderItem = useCallback(
+    ({ item, index }: ListRenderItemInfo<Station>) => (
+      <GridCell index={index} columns={columns}>
+        <StationCard station={item} />
+      </GridCell>
+    ),
+    [columns],
   );
+  return { columns, keyExtractor, renderItem };
 }
 
 export function StationList({ type, title, subtitle }: StationListProps) {
   const insets = useSafeAreaInsets();
+  const { columns, keyExtractor, renderItem } = useStationGrid();
   const listRef = useRef<FlashListRef<Station>>(null);
 
   const isLoading = useStationStore((s) => s.isLoading);
@@ -68,6 +87,7 @@ export function StationList({ type, title, subtitle }: StationListProps) {
   const sourceStations = useStationStore((s) => (type === "tv" ? s.tvStations : s.radioStations));
 
   const [category, setCategory] = useState<string | null>(null);
+  const [filters, setFilters] = useState<StationFilters>(NO_FILTERS);
 
   // Where the rail sits in the scroll content, and where it pins on screen.
   const [tabsY, setTabsY] = useState(0);
@@ -77,22 +97,23 @@ export function StationList({ type, title, subtitle }: StationListProps) {
   const categories = useMemo(() => topCategories(sourceStations), [sourceStations]);
 
   const stations = useMemo(
-    () => (category === null ? sourceStations : sourceStations.filter((s) => hasCategory(s, category))),
-    [sourceStations, category],
+    () =>
+      sourceStations.filter(
+        (s) => (category === null || hasCategory(s, category)) && matchesFilters(s, filters),
+      ),
+    [sourceStations, category, filters],
   );
 
   const showSkeleton = isLoading && sourceStations.length === 0;
-  const hasTabs = categories.length > 0;
+  const hasTabs = sourceStations.length > 0;
 
   // Scrolling down slides the bar, the category rail and the tab bar away so
   // the grid gets the whole screen; scrolling up brings them back.
   const hideDistance = COMPACT_BAR_HEIGHT + (hasTabs ? TABS_SLOT : 0);
   const { scrollY, hideY, onScroll } = useCollapsingHeader({ hideDistance });
   useHideTabBarOnScroll(hideY, hideDistance);
-  const noun = type === "tv" ? "channel" : "station";
 
-  const selectCategory = (next: string | null) => {
-    setCategory(next);
+  const scrollToResults = () => {
     // If the rail is pinned, bring the top of the new results to just under it
     // instead of leaving the viewport wherever the old list happened to be.
     const pinOffset = tabsY - pinnedTop;
@@ -100,6 +121,16 @@ export function StationList({ type, title, subtitle }: StationListProps) {
     if (scrollY.get() > pinOffset) {
       listRef.current?.scrollToOffset({ offset: pinOffset, animated: false });
     }
+  };
+
+  const selectCategory = (next: string | null) => {
+    setCategory(next);
+    scrollToResults();
+  };
+
+  const changeFilters = (next: StationFilters) => {
+    setFilters(next);
+    scrollToResults();
   };
 
   const onTabsSlotLayout = (e: LayoutChangeEvent) => {
@@ -131,17 +162,12 @@ export function StationList({ type, title, subtitle }: StationListProps) {
       />
       {/* The real rail floats above the list (so it can pin); this reserves its room. */}
       {hasTabs ? <View onLayout={onTabsSlotLayout} style={{ height: TABS_SLOT }} /> : <View className="h-4" />}
-      {!showSkeleton && stations.length > 0 ? (
-        <Text className="px-5 pb-3 text-[12px] font-semibold uppercase tracking-widest text-text-tertiary">
-          {stations.length} {stations.length === 1 ? noun : `${noun}s`}
-        </Text>
-      ) : null}
       {showSkeleton ? (
         <ShimmerGroup>
           <View className="flex-row flex-wrap">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <View key={i} style={{ width: "50%" }}>
-                <GridCell index={i}>
+            {Array.from({ length: columns * 3 }).map((_, i) => (
+              <View key={i} style={{ width: `${100 / columns}%` }}>
+                <GridCell index={i} columns={columns}>
                   <SkeletonCard />
                 </GridCell>
               </View>
@@ -157,8 +183,9 @@ export function StationList({ type, title, subtitle }: StationListProps) {
       <AnimatedFlashList
         ref={listRef}
         data={showSkeleton ? [] : stations}
+        key={columns}
         keyExtractor={keyExtractor}
-        numColumns={2}
+        numColumns={columns}
         renderItem={renderItem}
         ListHeaderComponent={header}
         ListEmptyComponent={showSkeleton ? null : <EmptyState />}
@@ -196,6 +223,9 @@ export function StationList({ type, title, subtitle }: StationListProps) {
               options={categories}
               selected={category}
               onSelect={selectCategory}
+              trailing={
+                <StationFilterButton stations={sourceStations} value={filters} onChange={changeFilters} />
+              }
             />
           </View>
         </Animated.View>

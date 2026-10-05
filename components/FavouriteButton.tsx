@@ -1,4 +1,5 @@
 import { GlassView } from "@/components/ui/GlassView";
+import { useT } from "@/lib/i18n";
 import { haptic, spring } from "@/lib/motion";
 import { useTheme } from "@/lib/useTheme";
 import { useFavouritesStore } from "@/stores/useFavouritesStore";
@@ -31,6 +32,7 @@ export function FavouriteButton({
   accessibilityLabel,
 }: FavouriteButtonProps) {
   const { colors } = useTheme();
+  const { t } = useT();
   const isFavourite = useFavouritesStore((s) => s.ids.includes(stationId));
   const toggle = useFavouritesStore((s) => s.toggle);
 
@@ -99,7 +101,7 @@ export function FavouriteButton({
       accessibilityRole="button"
       accessibilityState={{ selected: isFavourite }}
       accessibilityLabel={
-        accessibilityLabel ?? (isFavourite ? "Remove from favourites" : "Add to favourites")
+        accessibilityLabel ?? (isFavourite ? t("favourites.remove") : t("favourites.add"))
       }
     >
       {variant === "glass" ? (

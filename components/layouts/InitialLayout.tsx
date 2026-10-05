@@ -1,8 +1,11 @@
 import { AudioEngine } from "@/components/audio/AudioEngine";
+import { OfflineBanner } from "@/components/OfflineBanner";
 import { setupTrackPlayer } from "@/lib/trackPlayerSetup";
 import { useTheme, useThemeVars } from "@/lib/useTheme";
 import { VideoWarmup } from "@/lib/utils";
 import { useFavouritesStore } from "@/stores/useFavouritesStore";
+import { useLocaleStore } from "@/stores/useLocaleStore";
+import { watchNetwork } from "@/stores/useNetworkStore";
 import { useOnboardingStore } from "@/stores/useOnboardingStore";
 import { useRecentsStore } from "@/stores/useRecentsStore";
 import { useStationStore } from "@/stores/useStationStore";
@@ -25,6 +28,7 @@ function InitialLayout() {
   const hydrateTheme = useThemeStore((s) => s.hydrate);
   const hydrateOnboarding = useOnboardingStore((s) => s.hydrate);
   const hydrateRecents = useRecentsStore((s) => s.hydrate);
+  const hydrateLocale = useLocaleStore((s) => s.hydrate);
 
   useEffect(() => {
     void Promise.all([
@@ -33,9 +37,12 @@ function InitialLayout() {
       hydrateTheme(),
       hydrateOnboarding(),
       hydrateRecents(),
+      hydrateLocale(),
       setupTrackPlayer(),
     ]);
-  }, [fetchStations, hydrateFavourites, hydrateTheme, hydrateOnboarding, hydrateRecents]);
+  }, [fetchStations, hydrateFavourites, hydrateTheme, hydrateOnboarding, hydrateRecents, hydrateLocale]);
+
+  useEffect(() => watchNetwork(), []);
 
   // Fonts are embedded natively (expo-font config plugin), so the only things
   // worth holding the splash for are the theme and the first route decision.
@@ -68,8 +75,8 @@ function InitialLayout() {
         />
         <Stack.Screen name="search" options={{ animation: "fade" }} />
         <Stack.Screen name="favourites" options={{ animation: "slide_from_right" }} />
-        <Stack.Screen name="account" options={{ animation: "slide_from_right" }} />
       </Stack>
+      <OfflineBanner />
     </View>
   );
 }

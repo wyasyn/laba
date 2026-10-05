@@ -1,3 +1,4 @@
+import { useT } from "@/lib/i18n";
 import { useTheme } from "@/lib/useTheme";
 import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
@@ -18,6 +19,7 @@ interface SectionHeaderProps {
 
 export function SectionHeader({ title, subtitle, onSeeAll, variant = "pill", action }: SectionHeaderProps) {
   const { colors } = useTheme();
+  const { t } = useT();
 
   if (variant === "inline") {
     const heading = (
@@ -36,7 +38,7 @@ export function SectionHeader({ title, subtitle, onSeeAll, variant = "pill", act
             hitSlop={10}
             scaleTo={0.97}
             accessibilityRole="button"
-            accessibilityLabel={`See all ${title}`}
+            accessibilityLabel={t("section.seeAllLabel", { title })}
           >
             {heading}
           </PressableScale>
@@ -61,10 +63,10 @@ export function SectionHeader({ title, subtitle, onSeeAll, variant = "pill", act
           onPress={onSeeAll}
           hitSlop={10}
           accessibilityRole="button"
-          accessibilityLabel={`See all ${title}`}
+          accessibilityLabel={t("section.seeAllLabel", { title })}
           className="flex-row items-center gap-0.5 rounded-full bg-surface-light py-1.5 pl-3 pr-2"
         >
-          <Text className="text-[13px] font-semibold text-text-secondary">See all</Text>
+          <Text className="text-[13px] font-semibold text-text-secondary">{t("section.seeAll")}</Text>
           <HugeiconsIcon icon={ArrowRight01Icon} size={14} color={colors.textSecondary} />
         </PressableScale>
       ) : null)}

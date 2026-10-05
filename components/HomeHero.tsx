@@ -3,6 +3,7 @@ import { IconButton } from "@/components/ui/IconButton";
 import { PressableScale } from "@/components/ui/PressableScale";
 import { Text } from "@/components/ui/Text";
 import { withAlpha } from "@/constants/theme";
+import { useT } from "@/lib/i18n";
 import type { Station, StationType } from "@/lib/schemas";
 import { useTheme } from "@/lib/useTheme";
 import { cn } from "@/lib/utils";
@@ -105,6 +106,7 @@ export function HomeHero({
   const scrollX = useSharedValue(0);
   const [index, setIndex] = useState(0);
   const [dragging, setDragging] = useState(false);
+  const { t, plural } = useT();
 
   const slides = useMemo<Slide[]>(() => {
     const tvPick = pick(
@@ -115,8 +117,8 @@ export function HomeHero({
       featuredStations.filter((s) => s.type === "radio"),
       radioStations,
     );
-    const tvMeta = [`${tvStations.length} channels`, ...topCategories(tvStations)].join(" · ");
-    const radioMeta = [`${radioStations.length} stations`, ...topCategories(radioStations)].join(" · ");
+    const tvMeta = [plural("hero.channels", tvStations.length), ...topCategories(tvStations)].join(" · ");
+    const radioMeta = [plural("hero.stations", radioStations.length), ...topCategories(radioStations)].join(" · ");
 
     const out: Slide[] = [];
     if (tvStations.length > 0) {
@@ -124,10 +126,10 @@ export function HomeHero({
         key: "tv",
         type: "tv",
         image: TV_IMAGE,
-        eyebrow: "Live now",
-        title: "Live TV",
+        eyebrow: t("hero.tvEyebrow"),
+        title: t("hero.tvTitle"),
         meta: tvMeta,
-        cta: "Watch now",
+        cta: t("hero.tvCta"),
         station: tvPick,
         href: "/tv",
       });
@@ -137,16 +139,16 @@ export function HomeHero({
         key: "radio",
         type: "radio",
         image: RADIO_IMAGE,
-        eyebrow: "On air",
-        title: "Radio",
+        eyebrow: t("hero.radioEyebrow"),
+        title: t("hero.radioTitle"),
         meta: radioMeta,
-        cta: "Listen now",
+        cta: t("hero.radioCta"),
         station: radioPick,
         href: "/radio",
       });
     }
     return out;
-  }, [tvStations, radioStations, featuredStations]);
+  }, [tvStations, radioStations, featuredStations, t, plural]);
 
   const count = slides.length;
 
@@ -282,6 +284,7 @@ interface HeroSlideProps {
 }
 
 function HeroSlide({ slide, index, scrollX, scrollY, width, height, reduceMotion }: HeroSlideProps) {
+  const { t } = useT();
   const router = useRouter();
   // Light mode fades the photo into the page and draws the copy in ink;
   // dark mode keeps white copy over a dark scrim.
@@ -359,7 +362,7 @@ function HeroSlide({ slide, index, scrollX, scrollY, width, height, reduceMotion
             size={48}
             iconSize={22}
             onPress={() => router.push(slide.href)}
-            accessibilityLabel={slide.type === "tv" ? "Browse all TV channels" : "Browse all radio stations"}
+            accessibilityLabel={slide.type === "tv" ? t("hero.browseTv") : t("hero.browseRadio")}
           />
         </View>
       </Animated.View>

@@ -6,12 +6,18 @@
  */
 export const STATIONS_URL = "https://laba.yasinwalum.com/stations.json";
 
+/** Public site. Station links (`/station/<id>`) open the app when installed. */
+export const SITE_URL = "https://laba.yasinwalum.com";
+
+export const SUPPORT_EMAIL = "ywalum@gmail.com";
+
 export const CACHE_KEYS = {
   STATIONS: "@laba/stations",
   STATIONS_TIMESTAMP: "@laba/stations_timestamp",
   FAVOURITES: "@laba/favourites",
   RECENTS: "@laba/recents",
   THEME_MODE: "@laba/theme_mode",
+  LOCALE: "@laba/locale",
 } as const;
 
 // 24 hours in milliseconds

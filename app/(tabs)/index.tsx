@@ -7,6 +7,7 @@ import { LIST_BOTTOM_PADDING } from "@/components/StationList";
 import { COMPACT_BAR_HEIGHT, CompactHeader, useCollapsingHeader } from "@/components/ui/CollapsingHeader";
 import { ShimmerGroup } from "@/components/ui/Shimmer";
 import { Text } from "@/components/ui/Text";
+import { useT } from "@/lib/i18n";
 import { duration } from "@/lib/motion";
 import { mixInternational, rankFeatured } from "@/lib/homeSections";
 import { useTheme } from "@/lib/useTheme";
@@ -26,6 +27,7 @@ const ROW_LIMIT = 12;
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
+  const { t } = useT();
   const heroHeight = useHomeHeroHeight();
   const light = useTheme().resolved === "light";
   const isFocused = useIsFocused();
@@ -140,14 +142,14 @@ export default function HomeScreen() {
               }
             />
             <View className="mt-6">
-              <CategoryRow index={0} title="Featured" headerVariant="inline" stations={featuredRow} />
+              <CategoryRow index={0} title={t("home.featured")} headerVariant="inline" stations={featuredRow} />
             </View>
-            <CategoryRow index={1} title="Around the world" headerVariant="inline" stations={worldStations} />
+            <CategoryRow index={1} title={t("home.world")} headerVariant="inline" stations={worldStations} />
           </Animated.View>
         )}
       </Animated.ScrollView>
       <CompactHeader
-        title="Home"
+        title={t("home.title")}
         scrollY={scrollY}
         handoff={handoff}
         hideY={hideY}

@@ -3,6 +3,7 @@ import { StationArtwork } from "@/components/StationArtwork";
 import { Equalizer } from "@/components/ui/Equalizer";
 import { PressableScale } from "@/components/ui/PressableScale";
 import { Text } from "@/components/ui/Text";
+import { useT } from "@/lib/i18n";
 import type { Station } from "@/lib/schemas";
 import { useTheme } from "@/lib/useTheme";
 import { usePlayerStore } from "@/stores/usePlayerStore";
@@ -24,8 +25,7 @@ export function openStation(router: ReturnType<typeof useRouter>, station: Stati
   router.push({ pathname: "/station/[id]", params: { id: station.id } });
 }
 
-function metaLabel(station: Station) {
-  const kind = station.type === "tv" ? "Live TV" : "Radio";
+function metaLabel(station: Station, kind: string) {
   const category = station.categories[0];
   return category ? `${kind} · ${category.charAt(0).toUpperCase()}${category.slice(1)}` : kind;
 }
@@ -33,6 +33,8 @@ function metaLabel(station: Station) {
 export const StationCard = memo(function StationCard({ station }: StationCardProps) {
   const router = useRouter();
   const { colors } = useTheme();
+  // Card is memoised; subscribing here re-renders it when the language changes.
+  const { t } = useT();
   const isOnAir = usePlayerStore(
     (s) => s.currentStation?.id === station.id && s.status === "playing",
   );
@@ -42,7 +44,7 @@ export const StationCard = memo(function StationCard({ station }: StationCardPro
     <PressableScale
       onPress={() => openStation(router, station)}
       accessibilityRole="button"
-      accessibilityLabel={`Play ${station.name}, ${station.type === "tv" ? "TV channel" : "radio station"}`}
+      accessibilityLabel={t(station.type === "tv" ? "card.playTv" : "card.playRadio", { name: station.name })}
       scaleTo={0.965}
     >
       <View style={[styles.art, { backgroundColor: colors.surfaceLight }]}>
@@ -57,7 +59,7 @@ export const StationCard = memo(function StationCard({ station }: StationCardPro
               style={{ backgroundColor: colors.primary }}
             >
               <Equalizer size={10} color={colors.onPrimary} />
-              <Text className="text-[11px] font-bold text-primary-foreground">Playing</Text>
+              <Text className="text-[11px] font-bold text-primary-foreground">{t("card.playing")}</Text>
             </Animated.View>
           ) : null}
         </View>
@@ -78,7 +80,7 @@ export const StationCard = memo(function StationCard({ station }: StationCardPro
         <View className="mt-1 flex-row items-center gap-1.5">
           <StationTypeIcon type={station.type} size={13} color={accent} strokeWidth={2} />
           <Text numberOfLines={1} className="flex-1 text-[12px] font-medium leading-4 text-text-secondary">
-            {metaLabel(station)}
+            {metaLabel(station, t(station.type === "tv" ? "card.liveTv" : "card.radio"))}
           </Text>
         </View>
       </View>

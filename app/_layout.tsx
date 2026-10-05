@@ -1,4 +1,5 @@
 import InitialLayout from "@/components/layouts/InitialLayout";
+import { initTelemetry, withTelemetry } from "@/lib/telemetry";
 import * as SplashScreen from "expo-splash-screen";
 import { LogBox } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -11,8 +12,9 @@ import "../global.css";
 LogBox.ignoreLogs(["new NativeEventEmitter"]);
 
 SplashScreen.preventAutoHideAsync();
+initTelemetry();
 
-export default function RootLayout() {
+function RootLayout() {
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <GestureHandlerRootView className="flex-1">
@@ -21,3 +23,5 @@ export default function RootLayout() {
     </SafeAreaProvider>
   );
 }
+
+export default withTelemetry(RootLayout);

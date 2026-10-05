@@ -1,6 +1,7 @@
 import { StationArtwork } from "@/components/StationArtwork";
 import { PressableScale } from "@/components/ui/PressableScale";
 import { Text } from "@/components/ui/Text";
+import { useT } from "@/lib/i18n";
 import { duration, easing, haptic } from "@/lib/motion";
 import type { Station } from "@/lib/schemas";
 import { useTheme } from "@/lib/useTheme";
@@ -38,6 +39,7 @@ export default function RootIndex() {
 function Onboarding() {
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
+  const { t } = useT();
   const complete = useOnboardingStore((s) => s.complete);
   const stations = useStationStore((s) => s.stations);
 
@@ -71,16 +73,16 @@ function Onboarding() {
       <View style={{ paddingBottom: insets.bottom + 24 }} className="flex-1 justify-end px-6">
         <Animated.View entering={enter(0)} className="mb-4 flex-row items-center gap-2 self-start rounded-full bg-primary/15 px-3 py-1.5">
           <View className="h-1.5 w-1.5 rounded-full bg-primary" />
-          <Text className="text-xs font-bold uppercase tracking-widest text-primary">Live TV & Radio</Text>
+          <Text className="text-xs font-bold uppercase tracking-widest text-primary">{t("onboarding.badge")}</Text>
         </Animated.View>
         <Animated.View entering={enter(1)}>
           <Text className="text-[40px] font-bold leading-[44px] tracking-tight">
-            Everything live.{"\n"}All in one place.
+            {t("onboarding.headline")}
           </Text>
         </Animated.View>
         <Animated.View entering={enter(2)}>
           <Text className="mt-4 text-base leading-6 text-text-secondary">
-            Stream Uganda&apos;s favourite TV channels and radio stations, plus international news, free.
+            {t("onboarding.body")}
           </Text>
         </Animated.View>
         <Animated.View entering={enter(3)} className="mt-10">
@@ -88,11 +90,11 @@ function Onboarding() {
             onPress={onGetStarted}
             haptics={false}
             accessibilityRole="button"
-            accessibilityLabel="Get started"
+            accessibilityLabel={t("onboarding.cta")}
             className="h-14 flex-row items-center justify-center gap-2 rounded-2xl bg-primary"
             style={styles.ctaShadow}
           >
-            <Text className="text-base font-semibold text-primary-foreground">Get started</Text>
+            <Text className="text-base font-semibold text-primary-foreground">{t("onboarding.cta")}</Text>
             <HugeiconsIcon icon={ArrowRight01Icon} size={18} color={colors.onPrimary} />
           </PressableScale>
         </Animated.View>

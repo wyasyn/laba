@@ -12,9 +12,23 @@ interface PlayerStore {
   wantsPlaying: boolean;
   status: PlaybackStatus;
   error: string | null;
+  /** True while `loading` is the engine recovering a stream that dropped, not a first connect. */
+  reconnecting: boolean;
+  /**
+   * True while the system has paused playback (a phone call, another app taking
+   * audio focus, the lock-screen controls). The OS resumes it on its own when
+   * the interruption ends, so the engine leaves the player alone meanwhile.
+   */
+  interrupted: boolean;
   volume: number;
   /** Bumped on every new load attempt (play or retry) so the engine reloads the stream. */
   reloadToken: number;
+  /** Automatic reload attempts since the stream last played. Reset by a user retry. */
+  reconnectAttempt: number;
+  /** What the station says is on now (ICY StreamTitle), when the stream sends it. Android only. */
+  nowPlaying: string | null;
+  /** Wall-clock time (ms) at which the sleep timer pauses playback, or null when off. */
+  sleepUntil: number | null;
 
   // Actions
   setPending: (stationId: string) => void;
@@ -27,9 +41,17 @@ interface PlayerStore {
   retry: () => void;
   setVolume: (volume: number) => void;
   toggleMute: () => void;
+  /** Pause playback after `minutes`, or turn the timer off with null. */
+  setSleepTimer: (minutes: number | null) => void;
 
   /** Engine only: report the real playback state. */
-  reportStatus: (status: PlaybackStatus, error?: string | null) => void;
+  reportStatus: (status: PlaybackStatus, error?: string | null, reconnecting?: boolean) => void;
+  /** Engine only: reload the stream after it dropped, counting the attempt. */
+  reconnect: () => void;
+  /** Engine only: the system paused or resumed playback behind our back. */
+  setInterrupted: (interrupted: boolean) => void;
+  /** Engine only: the stream's "now playing" text changed. */
+  setNowPlaying: (nowPlaying: string | null) => void;
 }
 
 let volumeBeforeMute = 1;
@@ -40,8 +62,13 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   wantsPlaying: false,
   status: "idle",
   error: null,
+  reconnecting: false,
+  interrupted: false,
   volume: 1,
   reloadToken: 0,
+  reconnectAttempt: 0,
+  nowPlaying: null,
+  sleepUntil: null,
 
   setPending: (stationId) => set({ pendingStationId: stationId }),
 
@@ -51,7 +78,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
     const { currentStation, status } = get();
     // Re-opening the station that is already on: keep the stream, just make sure it plays.
     if (currentStation?.id === station.id && status !== "error") {
-      set({ pendingStationId: null, wantsPlaying: true });
+      set({ pendingStationId: null, wantsPlaying: true, interrupted: false });
       return;
     }
     // A fresh attempt token, so reopening a station that previously timed out gets
@@ -62,18 +89,27 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
       wantsPlaying: true,
       status: "loading",
       error: null,
+      reconnecting: false,
+      interrupted: false,
       reloadToken: s.reloadToken + 1,
+      reconnectAttempt: 0,
     }));
   },
 
-  pause: () => set({ wantsPlaying: false }),
+  pause: () => set({ wantsPlaying: false, interrupted: false }),
 
-  resume: () => set({ wantsPlaying: true }),
+  resume: () => set({ wantsPlaying: true, interrupted: false }),
 
   togglePlayback: () => {
-    const { status, wantsPlaying } = get();
+    const { status, wantsPlaying, interrupted } = get();
     if (status === "error") {
       get().retry();
+      return;
+    }
+    // After an interruption the user still "wants" playback, but hears nothing,
+    // so a tap means play.
+    if (interrupted) {
+      set({ wantsPlaying: true, interrupted: false });
       return;
     }
     set({ wantsPlaying: !wantsPlaying });
@@ -86,6 +122,10 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
       wantsPlaying: false,
       status: "idle",
       error: null,
+      reconnecting: false,
+      interrupted: false,
+      reconnectAttempt: 0,
+      sleepUntil: null,
     }),
 
   retry: () =>
@@ -93,7 +133,10 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
       wantsPlaying: true,
       status: "loading",
       error: null,
+      reconnecting: false,
+      interrupted: false,
       reloadToken: s.reloadToken + 1,
+      reconnectAttempt: 0,
     })),
 
   setVolume: (volume) => set({ volume }),
@@ -108,9 +151,35 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
     }
   },
 
-  reportStatus: (status, error = null) => {
+  setSleepTimer: (minutes) =>
+    set({ sleepUntil: minutes === null ? null : Date.now() + minutes * 60_000 }),
+
+  reportStatus: (status, error = null, reconnecting = false) => {
     const prev = get();
-    if (prev.status === status && prev.error === error) return;
-    set({ status, error });
+    // A stream that plays again has recovered, so the next drop gets a full set of retries.
+    const reconnectAttempt = status === "playing" ? 0 : prev.reconnectAttempt;
+    if (
+      prev.status === status &&
+      prev.error === error &&
+      prev.reconnecting === reconnecting &&
+      prev.reconnectAttempt === reconnectAttempt
+    ) {
+      return;
+    }
+    set({ status, error, reconnecting, reconnectAttempt });
+  },
+
+  reconnect: () =>
+    set((s) => ({
+      reloadToken: s.reloadToken + 1,
+      reconnectAttempt: s.reconnectAttempt + 1,
+    })),
+
+  setInterrupted: (interrupted) => {
+    if (get().interrupted !== interrupted) set({ interrupted });
+  },
+
+  setNowPlaying: (nowPlaying) => {
+    if (get().nowPlaying !== nowPlaying) set({ nowPlaying });
   },
 }));

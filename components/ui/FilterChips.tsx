@@ -1,6 +1,7 @@
+import { useT } from "@/lib/i18n";
 import { duration, haptic, spring } from "@/lib/motion";
 import { useTheme } from "@/lib/useTheme";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Pressable, ScrollView, View, type LayoutChangeEvent } from "react-native";
 import Animated, {
   interpolateColor,
@@ -20,6 +21,8 @@ interface FilterChipsProps {
   counts?: Record<string, number>;
   /** Display labels keyed by option; options are shown as-is otherwise. */
   labels?: Record<string, string>;
+  /** Rendered after the rail, e.g. a button for more filters. */
+  trailing?: ReactNode;
 }
 
 export const FILTER_CHIPS_HEIGHT = 44;
@@ -33,8 +36,17 @@ type Frame = { x: number; width: number };
  * only the tabs scroll inside it. A single indicator slides between tabs, and
  * the selected tab is scrolled towards the middle so the next options show.
  */
-export function FilterChips({ options, selected, onSelect, allLabel = "All", counts, labels }: FilterChipsProps) {
+export function FilterChips({
+  options,
+  selected,
+  onSelect,
+  allLabel,
+  counts,
+  labels,
+  trailing,
+}: FilterChipsProps) {
   const { colors } = useTheme();
+  const { t } = useT();
   const scrollRef = useRef<ScrollView>(null);
   const frames = useRef<Record<string, Frame>>({});
   const [viewport, setViewport] = useState(0);
@@ -72,7 +84,7 @@ export function FilterChips({ options, selected, onSelect, allLabel = "All", cou
     opacity: indicatorW.get() > 0 ? 1 : 0,
   }));
 
-  if (options.length === 0) return null;
+  if (options.length === 0 && !trailing) return null;
 
   const onChipLayout = (value: string) => (e: LayoutChangeEvent) => {
     const { x, width } = e.nativeEvent.layout;
@@ -81,14 +93,18 @@ export function FilterChips({ options, selected, onSelect, allLabel = "All", cou
   };
 
   const items: { value: string | null; label: string }[] = [
-    { value: null, label: allLabel },
+    { value: null, label: allLabel ?? t("filters.all") },
     ...options.map((o) => ({ value: o, label: labels?.[o] ?? o })),
   ];
 
-  return (
+  const rail = (
     <View
       className="overflow-hidden rounded-full border border-border bg-surface"
-      style={{ marginHorizontal: GUTTER, height: FILTER_CHIPS_HEIGHT, padding: RAIL_PADDING }}
+      style={
+        trailing
+          ? { flex: 1, height: FILTER_CHIPS_HEIGHT, padding: RAIL_PADDING }
+          : { marginHorizontal: GUTTER, height: FILTER_CHIPS_HEIGHT, padding: RAIL_PADDING }
+      }
     >
       <ScrollView
         ref={scrollRef}
@@ -127,6 +143,14 @@ export function FilterChips({ options, selected, onSelect, allLabel = "All", cou
           ))}
         </View>
       </ScrollView>
+    </View>
+  );
+
+  if (!trailing) return rail;
+  return (
+    <View className="flex-row items-center gap-2" style={{ marginHorizontal: GUTTER }}>
+      {rail}
+      {trailing}
     </View>
   );
 }

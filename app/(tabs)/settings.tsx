@@ -4,6 +4,9 @@ import { LIST_BOTTOM_PADDING } from "@/components/StationList";
 import { COMPACT_BAR_HEIGHT, CompactHeader, LargeTitle, useCollapsingHeader } from "@/components/ui/CollapsingHeader";
 import { PressableScale } from "@/components/ui/PressableScale";
 import { Text } from "@/components/ui/Text";
+import { LanguageSheet } from "@/components/LanguageSheet";
+import { SUPPORT_EMAIL } from "@/lib/constants";
+import { LANGUAGE_NAMES, t as translateNow, useT, type MessageKey } from "@/lib/i18n";
 import { haptic, spring } from "@/lib/motion";
 import type { Station } from "@/lib/schemas";
 import { useTheme } from "@/lib/useTheme";
@@ -11,11 +14,13 @@ import { useHideTabBarOnScroll } from "@/stores/useChromeStore";
 import { useFavouritesStore } from "@/stores/useFavouritesStore";
 import { useRecentsStore } from "@/stores/useRecentsStore";
 import { useStationStore } from "@/stores/useStationStore";
+import { useLocaleStore } from "@/stores/useLocaleStore";
 import { useThemeStore, type ThemeMode } from "@/stores/useThemeStore";
 import {
   ArrowRight01Icon,
   FavouriteIcon,
   InformationCircleIcon,
+  LanguageCircleIcon,
   Mail01Icon,
   Moon02Icon,
   SmartPhone01Icon,
@@ -27,7 +32,7 @@ import { HugeiconsIcon } from "@hugeicons/react-native";
 import Constants from "expo-constants";
 import { useRouter } from "expo-router";
 import * as StoreReview from "expo-store-review";
-import { useEffect, useMemo, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Alert, Linking, Pressable, View, type LayoutChangeEvent } from "react-native";
 import Animated, {
   interpolateColor,
@@ -42,10 +47,10 @@ type IconSvg = Parameters<typeof HugeiconsIcon>[0]["icon"];
 const APP_VERSION = Constants.expoConfig?.version ?? "1.0.0";
 const APP_NAME = Constants.expoConfig?.name ?? "Laba";
 
-const THEME_OPTIONS: { mode: ThemeMode; label: string; icon: IconSvg }[] = [
-  { mode: "light", label: "Light", icon: Sun03Icon },
-  { mode: "dark", label: "Dark", icon: Moon02Icon },
-  { mode: "system", label: "Auto", icon: SmartPhone01Icon },
+const THEME_OPTIONS: { mode: ThemeMode; label: MessageKey; icon: IconSvg }[] = [
+  { mode: "light", label: "settings.themeLight", icon: Sun03Icon },
+  { mode: "dark", label: "settings.themeDark", icon: Moon02Icon },
+  { mode: "system", label: "settings.themeAuto", icon: SmartPhone01Icon },
 ];
 
 async function rateApp() {
@@ -70,10 +75,10 @@ function useRecentStations() {
 }
 
 function confirmClearRecents() {
-  Alert.alert("Clear recently viewed?", "This removes your viewing history from this device.", [
-    { text: "Cancel", style: "cancel" },
+  Alert.alert(translateNow("settings.clearConfirmTitle"), translateNow("settings.clearConfirmMessage"), [
+    { text: translateNow("common.cancel"), style: "cancel" },
     {
-      text: "Clear",
+      text: translateNow("settings.clear"),
       style: "destructive",
       onPress: () => {
         haptic.tap();
@@ -84,15 +89,16 @@ function confirmClearRecents() {
 }
 
 function ClearRecentsButton() {
+  const { t } = useT();
   return (
     <PressableScale
       onPress={confirmClearRecents}
       hitSlop={10}
       accessibilityRole="button"
-      accessibilityLabel="Clear recently viewed"
+      accessibilityLabel={t("settings.clearLabel")}
       className="rounded-full bg-surface-light px-3 py-1.5"
     >
-      <Text className="text-[13px] font-semibold text-text-secondary">Clear</Text>
+      <Text className="text-[13px] font-semibold text-text-secondary">{t("settings.clear")}</Text>
     </PressableScale>
   );
 }
@@ -104,6 +110,9 @@ export default function SettingsScreen() {
   const favouriteCount = useFavouritesStore((s) => s.ids.length);
   const recentStations = useRecentStations();
   const router = useRouter();
+  const { t, plural, locale } = useT();
+  const languagePreference = useLocaleStore((s) => s.preference);
+  const [languageOpen, setLanguageOpen] = useState(false);
 
   return (
     <View className="flex-1 bg-background">
@@ -113,66 +122,76 @@ export default function SettingsScreen() {
         onScroll={onScroll}
         scrollEventThrottle={16}
       >
-        <LargeTitle title="Settings" scrollY={scrollY} />
+        <LargeTitle title={t("settings.title")} scrollY={scrollY} />
 
         {recentStations.length > 0 ? (
           <CategoryRow
-            title="Recently viewed"
-            subtitle="Pick up where you left off"
+            title={t("settings.recent")}
+            subtitle={t("settings.recentSubtitle")}
             stations={recentStations}
             headerAction={<ClearRecentsButton />}
           />
         ) : null}
 
-        <View style={{ paddingHorizontal: 20, gap: 28 }}>
+        {/* Capped and centred so rows stay readable on tablets. */}
+        <View style={{ paddingHorizontal: 20, gap: 28, width: "100%", maxWidth: 680, alignSelf: "center" }}>
           <View className="flex-row items-center gap-4">
             <View className="h-16 w-16 items-center justify-center rounded-full bg-primary/15">
               <HugeiconsIcon icon={UserIcon} size={28} color={colors.primary} />
             </View>
             <View className="flex-1">
-              <Text className="text-xl font-bold">Your Laba</Text>
+              <Text className="text-xl font-bold">{t("settings.yourLaba")}</Text>
               <Text className="mt-0.5 text-sm text-text-secondary">
-                {favouriteCount} favourite{favouriteCount === 1 ? "" : "s"} saved on this device
+                {plural("settings.favouritesSaved", favouriteCount)}
               </Text>
             </View>
           </View>
 
-          <Section title="Appearance" plain>
+          <Section title={t("settings.appearance")} plain>
             <ThemeSegmentedControl />
           </Section>
 
-          <Section title="Library">
+          <Section title={t("settings.language")}>
+            <Row
+              icon={LanguageCircleIcon}
+              tint="#10B981"
+              label={t("settings.language")}
+              value={languagePreference === "system" ? t("settings.languageSystem") : LANGUAGE_NAMES[locale]}
+              onPress={() => setLanguageOpen(true)}
+            />
+          </Section>
+
+          <Section title={t("settings.library")}>
             <Row
               icon={FavouriteIcon}
               tint={colors.primary}
-              label="Favourites"
+              label={t("settings.favourites")}
               value={String(favouriteCount)}
               onPress={() => router.push("/favourites")}
             />
-            <Row icon={UserIcon} tint="#6366F1" label="Account" onPress={() => router.push("/account")} />
           </Section>
 
-          <Section title="Support">
+          <Section title={t("settings.support")}>
             <Row
               icon={Mail01Icon}
               tint="#0EA5E9"
-              label="Contact support"
-              onPress={() => Linking.openURL("mailto:ywalum@gmail.com").catch(() => {})}
+              label={t("settings.contact")}
+              onPress={() => Linking.openURL(`mailto:${SUPPORT_EMAIL}`).catch(() => {})}
             />
-            <Row icon={StarIcon} tint="#F59E0B" label="Rate the app" onPress={() => void rateApp()} />
+            <Row icon={StarIcon} tint="#F59E0B" label={t("settings.rate")} onPress={() => void rateApp()} />
           </Section>
 
-          <Section title="About">
+          <Section title={t("settings.about")}>
             <Row icon={InformationCircleIcon} tint="#64748B" label={APP_NAME} value={`v${APP_VERSION}`} />
           </Section>
 
           <Text className="text-center text-xs leading-[18px] text-text-tertiary">
-            Free-to-air TV and radio, with a Uganda focus and international channels.{"\n"}
-            Made with care in Uganda.
+            {t("settings.tagline")}
           </Text>
         </View>
       </Animated.ScrollView>
-      <CompactHeader title="Settings" scrollY={scrollY} hideY={hideY} right={<HeaderActions />} />
+      <CompactHeader title={t("settings.title")} scrollY={scrollY} hideY={hideY} right={<HeaderActions />} />
+      <LanguageSheet visible={languageOpen} onClose={() => setLanguageOpen(false)} />
     </View>
   );
 }
@@ -249,6 +268,7 @@ function Row({ icon, tint, label, value, onPress }: RowProps) {
 
 function ThemeSegmentedControl() {
   const { colors, mode } = useTheme();
+  const { t } = useT();
   const setMode = useThemeStore((s) => s.setMode);
   const index = Math.max(0, THEME_OPTIONS.findIndex((o) => o.mode === mode));
 
@@ -298,12 +318,12 @@ function ThemeSegmentedControl() {
             }}
             accessibilityRole="button"
             accessibilityState={{ selected: active }}
-            accessibilityLabel={`${opt.label} theme`}
+            accessibilityLabel={t("settings.themeLabel", { label: t(opt.label) })}
             className="flex-1 flex-row items-center justify-center gap-1.5 py-2.5"
           >
             <HugeiconsIcon icon={opt.icon} size={16} color={active ? colors.textPrimary : colors.textSecondary} />
             <Text className={active ? "text-[13px] font-semibold" : "text-[13px] font-medium text-text-secondary"}>
-              {opt.label}
+              {t(opt.label)}
             </Text>
           </Pressable>
         );

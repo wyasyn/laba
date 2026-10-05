@@ -1,3 +1,4 @@
+import { useT } from "@/lib/i18n";
 import { duration, haptic } from "@/lib/motion";
 import { useTheme } from "@/lib/useTheme";
 import { cn } from "@/lib/utils";
@@ -28,10 +29,11 @@ interface SearchBarProps {
 
 export const SearchBar = memo(
   forwardRef<TextInput, SearchBarProps>(function SearchBar(
-    { value, onChangeText, placeholder = "Search stations", trailingAccessory, compact, autoFocus, className },
+    { value, onChangeText, placeholder, trailingAccessory, compact, autoFocus, className },
     ref,
   ) {
     const { colors } = useTheme();
+    const { t } = useT();
     const focus = useSharedValue(0);
 
     const shellStyle = useAnimatedStyle(() => ({
@@ -58,7 +60,7 @@ export const SearchBar = memo(
             style={{ paddingVertical: 0, includeFontPadding: false, textAlignVertical: "center" }}
             value={value}
             onChangeText={onChangeText}
-            placeholder={placeholder}
+            placeholder={placeholder ?? t("search.defaultPlaceholder")}
             placeholderTextColor={colors.textTertiary}
             selectionColor={colors.primary}
             autoCapitalize="none"
@@ -77,7 +79,7 @@ export const SearchBar = memo(
                 }}
                 hitSlop={12}
                 accessibilityRole="button"
-                accessibilityLabel="Clear search"
+                accessibilityLabel={t("search.clear")}
                 className="h-6 w-6 items-center justify-center rounded-full bg-surface-light"
               >
                 <HugeiconsIcon icon={Cancel01Icon} size={13} color={colors.textSecondary} />

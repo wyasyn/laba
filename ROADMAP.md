@@ -20,7 +20,13 @@ top to bottom. Tick a box when the item is merged, and add a short note
 
 Small items that fix real failures a new user would hit. Do these first.
 
-### [ ] 1.1 Bundle radio stations in the offline fallback
+### [x] 1.1 Bundle radio stations in the offline fallback
+
+> Done in `cb5c491` on `feat/phase-1-reliability`. `pnpm stations:snapshot`
+> writes the full catalog (65 stations, 28 KB, so no trimming). Kept as a
+> manual pre-release step in the README rather than an EAS hook, so builds
+> stay reproducible. Verified on the Android emulator: data cleared, wifi and
+> data off, Radio tab lists 46 stations. Not checked on iOS.
 
 **Problem:** `data/fallback-stations.json` has 29 TV stations and 0 radio.
 On a first launch with no network the Radio tab is empty
@@ -38,7 +44,15 @@ On a first launch with no network the Radio tab is empty
 
 **Done when:** airplane mode, fresh install, Radio tab shows stations.
 
-### [ ] 1.2 Radio auto-reconnect and interruption recovery
+### [x] 1.2 Radio auto-reconnect and interruption recovery
+
+> Done in `2d513bb`. Connect timeout 15s, then reloads after 2s, 5s, 10s;
+> error only after all three fail. expo-audio already pauses and resumes
+> natively around transient interruptions, so the engine now just marks the
+> stream `interrupted` and stays out of the way. Verified on the Android
+> emulator: network off mid-stream retries on schedule then errors; network
+> back during retries resumes on its own; a simulated incoming call shows
+> "Paused" and playback resumes after hang-up. Not checked on iOS.
 
 **Problem:** any stream drop becomes an error that needs a manual retry
 (`components/audio/AudioEngine.tsx`). No resume after a phone call.
@@ -57,7 +71,14 @@ On a first launch with no network the Radio tab is empty
 **Done when:** toggling network off and on mid-stream resumes on its own;
 a phone call or other audio app pausing it resumes afterwards.
 
-### [ ] 1.3 Network awareness
+### [x] 1.3 Network awareness
+
+> Done in `3a1cc65`. NetInfo-backed `useNetworkStore` (unknown reachability
+> counts as online). One global "You're offline" pill under the status bar
+> rather than per-screen banners. Verified on the Android emulator: pill
+> appears within about 3s of cutting wifi and data; opening radio offline
+> errors at once with "You're offline"; reconnecting hides the pill and the
+> stream resumes by itself. Not checked on iOS.
 
 **Problem:** no connectivity detection. A failed refresh sets
 `useStationStore.error` but nothing shows it; playing offline waits 20s
@@ -75,7 +96,13 @@ for a generic error.
 **Done when:** going offline shows the banner within a second or two; coming
 back online hides it and recovers playback and data.
 
-### [ ] 1.4 Remove the placeholder Account screen
+### [x] 1.4 Remove the placeholder Account screen
+
+> Done in `636f1b9`. `RECORD_AUDIO` was only there because the expo-audio
+> plugin adds it by default; the app never records, so the plugin now runs
+> with `recordAudioAndroid: false` and `microphonePermission: false`, and
+> the permission is in `blockedPermissions`. Clean Android prebuild and
+> build pass; the merged manifest marks `RECORD_AUDIO` as removed.
 
 **Problem:** `app/account.tsx` says "Accounts are coming". Unused deps and an
 unused iOS photo permission can trigger App Store rejection.
@@ -98,7 +125,23 @@ and a prebuild pass.
 
 ## Phase 2: features users expect
 
-### [ ] 2.1 Share a station and deep links
+### [x] 2.1 Share a station and deep links
+
+> Done in `a53dfab` on `feat/phase-2-features`. Verified on the Android
+> emulator: share sheet sends "Watch <name> live on Laba: <link>"; with the
+> domain approved by hand (`pm set-app-links-user-selection`), opening
+> `https://laba.yasinwalum.com/station/<id>` lands on that station and plays.
+> **Still to do before this works for real users:**
+> - `docs/.well-known/assetlinks.json` has the EAS release key and the local
+>   debug key. Once on Google Play, also add the Play App Signing key (Play
+>   Console, App integrity).
+> - `docs/.well-known/apple-app-site-association` has an `APPLE_TEAM_ID`
+>   placeholder; replace it with the Apple Developer Team ID.
+> - Merge to `main` so `deploy-docs.yml` publishes `.well-known/` and
+>   `404.html`, then check `https://laba.yasinwalum.com/.well-known/assetlinks.json`.
+> - The web fallback's "Get the app" link points at the docs home page; point
+>   it at the store listing once there is one.
+> Not checked on iOS or on a second device.
 
 **Approach:**
 - Share button on the station screen (`app/station/[id].tsx`, both TV and
@@ -115,7 +158,12 @@ and a prebuild pass.
 **Done when:** sharing from one device and tapping the link on another opens
 the station in the app.
 
-### [ ] 2.2 Sleep timer for radio
+### [x] 2.2 Sleep timer for radio
+
+> Done in `e2ab124`. JS timers stop when an Android app is backgrounded, so
+> the timer is checked on expo-audio's native status events instead.
+> Verified on the Android emulator with a temporary 1-minute option: app
+> backgrounded and screen locked, playback paused on time. Not checked on iOS.
 
 **Approach:**
 - `sleepUntil: number | null` plus `setSleepTimer(minutes | null)` in
@@ -128,7 +176,11 @@ the station in the app.
 **Done when:** timer pauses playback at the right time, including with the
 app backgrounded and screen locked.
 
-### [ ] 2.3 Picture-in-picture and background audio for TV
+### [x] 2.3 Picture-in-picture and background audio for TV
+
+> Done in `2fdb2da`. Verified on the Android emulator: Bukedde TV 1 (HLS)
+> keeps playing in a PiP window after pressing Home. YouTube channels are
+> WebView-based and not covered. Not checked on iOS (needs a device build).
 
 **Approach:**
 - `components/VideoPlayer.tsx`: enable `react-native-video` PiP
@@ -144,7 +196,13 @@ app backgrounded and screen locked.
 **Done when:** an HLS TV stream continues in a PiP window on both platforms
 when leaving the app.
 
-### [ ] 2.4 Report a broken stream
+### [x] 2.4 Report a broken stream
+
+> Done in `e279a37`. "Report a problem" sits on the radio error card, the
+> video error overlay and a footer link on both station screens, rather
+> than a header menu (there is no menu to put it in). Verified on the
+> Android emulator: the mailto intent carries the station id, name, stream
+> URL, app version and platform.
 
 **Approach:**
 - "Report a problem" action on the station error state (radio player and
@@ -157,7 +215,12 @@ when leaving the app.
 
 **Done when:** tapping report opens a prefilled message with the right details.
 
-### [ ] 2.5 Country and language filters
+### [x] 2.5 Country and language filters
+
+> Done in `1639e17`. One filter button at the end of the category rail opens
+> a sheet with both filters. Also fixed a grid bug the filters exposed:
+> recycled FlashList cells kept the wrong column gutters. Verified on the
+> Android emulator: Uganda + English + Religious narrows Radio to 5 stations.
 
 **Approach:**
 - `lib/search.ts`: helpers for top countries and languages, like
@@ -177,19 +240,57 @@ language, and the filters combine with categories.
 Bigger or lower-priority items. Each one deserves its own short design pass
 before coding.
 
-- [ ] **3.1 Radio "now playing" metadata.** Read ICY `StreamTitle` metadata
-  (check expo-audio support; may need a native module or a metadata proxy).
-  Show it in the player, mini-player and lock screen.
-- [ ] **3.2 Android Auto and CarPlay.** Likely needs a media-session based
-  audio library or native modules; scope separately.
-- [ ] **3.3 Crash and stream-failure reporting.** Sentry (`@sentry/react-native`
-  with the Expo plugin). Log stream failures with station id to learn which
-  stations fail in the field. Update `docs/privacy.md` accordingly.
-- [ ] **3.4 Localization.** `expo-localization` plus a small i18n layer;
-  English first, then Luganda and Swahili. Extract strings screen by screen.
-- [ ] **3.5 Tablet layout.** `supportsTablet` is on but layouts are
-  phone-only. More grid columns, wider player, maybe split view.
-- [ ] **3.6 Tests and docs.** Jest plus React Native Testing Library for
-  stores (`usePlayerStore`, `useStationStore`, `lib/search.ts`,
-  `lib/homeSections.ts`) first. Update the README (still says SDK 54, lists
-  a Favourites tab) and refresh screenshots.
+> Phase 3 landed as one commit, `714e083` on `feat/phase-3-later`, because
+> localization touched almost every file the other items changed. Device
+> checks for 3.1, 3.4 and 3.5 were finished afterwards on the Android
+> emulator (Pixel 10 Pro XL); see the notes under each.
+
+- [x] **3.1 Radio "now playing" metadata.** A pnpm patch to expo-audio
+  (`patches/expo-audio.patch`) reads ICY `StreamTitle` from ExoPlayer's
+  timed metadata into the player status; the app shows it in the player,
+  mini-player and lock screen. Multi-field titles ("a | b | url") are
+  trimmed to two fields. expo-audio is built from source
+  (`expo.autolinking.android.buildFromSource` in package.json): SDK 57
+  links a precompiled AAR that silently ignored the patch at first.
+  Verified: many catalogue streams send titles (curl), the patched module
+  compiles from source, and on the emulator .977 Hitz showed the song
+  ("Shakira - Dai Dai (feat. Burna Boy)") in the player and mini-player,
+  with the lock screen session reading song, then station. Android only;
+  iOS needs an
+  `AVPlayerItemMetadataOutput` patch.
+- [ ] **3.2 Android Auto and CarPlay.** Scoped, not built. Needs: a
+  Media3 `MediaLibraryService` exposing a browse tree (Favourites, Radio
+  by category) and playback through the same ExoPlayer, which means
+  moving radio off expo-audio to a native module or
+  `react-native-track-player`; `automotive_app_desc.xml` and Play
+  Console review for Auto; for CarPlay, Apple's audio-app entitlement
+  (request via developer.apple.com, can take weeks) plus a
+  `CPTemplateApplicationScene`. Suggest: start with Android Auto, test in
+  the Desktop Head Unit.
+- [x] **3.3 Crash and stream-failure reporting.** `@sentry/react-native`,
+  on only when `EXPO_PUBLIC_SENTRY_DSN` is set in a release build
+  (`lib/telemetry.ts`). Radio stations that fail every retry and TV
+  stream errors are reported per station. `docs/privacy.md` updated.
+  Deferred by choice: no Sentry project for now, so nothing is sent and
+  the code stays inert. When wanted: create the project, set the DSN in
+  EAS env vars, turn on "Prevent storing of IP addresses", and for
+  readable stack traces add the `@sentry/react-native/expo` plugin with
+  `SENTRY_AUTH_TOKEN` (the `@sentry/cli` postinstall is disabled in
+  `pnpm-workspace.yaml` until then).
+- [x] **3.4 Localization.** `expo-localization` plus `lib/i18n` (typed
+  keys, `{param}` fill, `_one`/`_other` plurals); English, Kiswahili and
+  Luganda; picker in Settings; every UI string extracted. A test checks
+  that translations cover every key and keep the same placeholders.
+  Luganda and Kiswahili copy reviewed and accepted. Station data (names, categories, countries) stays
+  in English. Verified on the emulator: switching to Kiswahili and
+  Luganda updates tabs, Settings, lists and the mini-player at once; the
+  choice survives a restart; "Same as phone" goes back to English.
+- [x] **3.5 Tablet layout.** Grids use 2, 3 or 4 columns by window width
+  with equal card widths; Settings, radio controls and TV details are
+  width-capped. Verified on the emulator by lowering the density to
+  simulate wider screens: 3 columns at about 670dp, 4 at about 980dp, with
+  even gutters after scrolling. Not checked on a real tablet.
+- [x] **3.6 Tests and docs.** Jest via `jest-expo` (`pnpm test`): 33 tests
+  over search, home sections, stream titles, i18n, the player store and
+  the station store. README updated (SDK 57, tabs, new features, Sentry).
+  Screenshots in `docs/assets/screenshots` not refreshed.

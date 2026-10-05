@@ -1,3 +1,4 @@
+import { useT } from "@/lib/i18n";
 import { useTheme } from "@/lib/useTheme";
 import { haptic, spring } from "@/lib/motion";
 import { useEffect } from "react";
@@ -36,9 +37,10 @@ export function Slider({
   fillColor,
   thumbColor = "#FFFFFF",
   height = 36,
-  accessibilityLabel = "Volume",
+  accessibilityLabel,
 }: SliderProps) {
   const { colors } = useTheme();
+  const { t } = useT();
   const width = useSharedValue(0);
   const progress = useSharedValue(value);
   const lastEmitted = useSharedValue(value);
@@ -103,7 +105,7 @@ export function Slider({
       <View
         accessible
         accessibilityRole="adjustable"
-        accessibilityLabel={accessibilityLabel}
+        accessibilityLabel={accessibilityLabel ?? t("player.volume")}
         accessibilityValue={{ min: 0, max: 100, now: Math.round(value * 100) }}
         accessibilityActions={[{ name: "increment" }, { name: "decrement" }]}
         onAccessibilityAction={(e) => {

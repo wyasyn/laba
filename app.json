@@ -10,9 +10,9 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.yasinwalum.laba",
-      "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "Allow Laba to use your photos to set a profile picture."
-      }
+      "associatedDomains": [
+        "applinks:laba.yasinwalum.com"
+      ]
     },
     "android": {
       "adaptiveIcon": {
@@ -22,12 +22,31 @@
       },
       "predictiveBackGestureEnabled": false,
       "permissions": [
-        "android.permission.RECORD_AUDIO",
         "android.permission.MODIFY_AUDIO_SETTINGS",
         "android.permission.FOREGROUND_SERVICE",
         "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
       ],
-      "package": "com.yasinwalum.laba"
+      "package": "com.yasinwalum.laba",
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "laba.yasinwalum.com",
+              "pathPrefix": "/station/"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -36,7 +55,14 @@
     },
     "plugins": [
       "expo-router",
-      "react-native-video",
+      [
+        "react-native-video",
+        {
+          "enableAndroidPictureInPicture": true,
+          "enableBackgroundAudio": true,
+          "enableNotificationControls": true
+        }
+      ],
       [
         "expo-splash-screen",
         {
@@ -46,8 +72,13 @@
           "backgroundColor": "#0C0C09"
         }
       ],
-      "expo-secure-store",
-      "expo-audio",
+      [
+        "expo-audio",
+        {
+          "microphonePermission": false,
+          "recordAudioAndroid": false
+        }
+      ],
       [
         "expo-font",
         {

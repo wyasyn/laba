@@ -5,3 +5,5 @@ markdown: kramdown
 permalink: /:basename/
 baseurl: ""
 url: "https://laba.yasinwalum.com"
+# Serve the app-link verification files (Jekyll skips dot folders by default).
+include: [".well-known"]

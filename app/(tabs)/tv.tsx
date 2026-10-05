@@ -1,5 +1,7 @@
+import { useT } from "@/lib/i18n";
 import { StationList } from "@/components/StationList";
 
 export default function TVScreen() {
-  return <StationList type="tv" title="Live TV" subtitle="Free-to-air channels, streaming now" />;
+  const { t } = useT();
+  return <StationList type="tv" title={t("lists.tvTitle")} subtitle={t("lists.tvSubtitle")} />;
 }

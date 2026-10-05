@@ -1,3 +1,4 @@
+import { useT } from "@/lib/i18n";
 import {
   ArrowDown01Icon,
   FullscreenIcon,
@@ -30,6 +31,7 @@ export function YouTubePlayer({
   borderless = false,
   onBack,
 }: YouTubePlayerProps) {
+  const { t } = useT();
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showBack, setShowBack] = useState(false);
   const backTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -80,7 +82,7 @@ export function YouTubePlayer({
       className="absolute bottom-3 right-4 rounded-full bg-black/50 p-2"
       hitSlop={8}
       accessibilityRole="button"
-      accessibilityLabel={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+      accessibilityLabel={isFullscreen ? t("video.exitFullscreen") : t("video.enterFullscreen")}
     >
       <HugeiconsIcon
         icon={isFullscreen ? MinimizeScreenIcon : FullscreenIcon}
@@ -97,7 +99,7 @@ export function YouTubePlayer({
         onPress={revealBack}
         className="absolute left-0 top-0 h-16 w-20"
         accessibilityRole="button"
-        accessibilityLabel="Show back button"
+        accessibilityLabel={t("video.showBack")}
       />
       {showBack && (
         <Pressable
@@ -105,7 +107,7 @@ export function YouTubePlayer({
           className="absolute left-3 top-3 rounded-full bg-black/60 p-2"
           hitSlop={8}
           accessibilityRole="button"
-          accessibilityLabel="Close player"
+          accessibilityLabel={t("station.close")}
         >
           <HugeiconsIcon icon={ArrowDown01Icon} size={20} color="#fff" />
         </Pressable>

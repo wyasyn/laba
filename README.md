@@ -4,7 +4,7 @@
 
 **A cross-platform React Native client for streaming free-to-air Ugandan and international live TV and radio, engineered around a type-safe data layer, offline-first caching, and a dual media pipeline for HLS video and live audio.**
 
-[![Expo SDK](https://img.shields.io/badge/Expo-SDK%2054-000020?logo=expo&logoColor=white)](https://expo.dev)
+[![Expo SDK](https://img.shields.io/badge/Expo-SDK%2057-000020?logo=expo&logoColor=white)](https://expo.dev)
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![NativeWind](https://img.shields.io/badge/NativeWind-4-06B6D4?logo=tailwindcss&logoColor=white)](https://www.nativewind.dev)
@@ -49,15 +49,22 @@ Targets **iOS**, **Android**, and **Web** from a single Expo codebase.
 - **Search and favorites** — instant client-side search across all stations; favorites persist locally with optimistic updates.
 - **Derived station slices** — featured, international, TV-only, and radio-only lists computed in a single O(n) pass and exposed via stable Zustand selectors.
 - **Animated, themable UI** — dark and light themes, haptics, a Reanimated-powered waveform visualizer, and smooth file-based route transitions.
+- **Resilient radio**: automatic reconnect with backoff when a stream drops, recovery after phone calls and other interruptions, an offline banner, and a sleep timer that fades out.
+- **Now playing**: song titles from the stream's ICY metadata in the player, mini-player and lock screen (Android).
+- **Picture-in-picture TV**: HLS channels keep playing in a floating window, with background audio.
+- **Share and deep links**: station links (`laba.yasinwalum.com/station/<id>`) open the app, with a web fallback.
+- **Filters**: narrow TV and radio by category, country and language.
+- **Languages**: English, Kiswahili and Luganda, following the phone or chosen in Settings.
+- **Tablet-ready grids**: two, three or four columns by screen width.
 - **Typed routes** — `expo-router` typed routes plus the React Compiler experiment enabled for better runtime performance.
 
 ---
 
 ## Tech Stack
 
-![Expo](https://img.shields.io/badge/Expo_SDK_54-000020?logo=expo&logoColor=white)
+![Expo](https://img.shields.io/badge/Expo_SDK_57-000020?logo=expo&logoColor=white)
 ![React](https://img.shields.io/badge/React_19-61DAFB?logo=react&logoColor=black)
-![React Native](https://img.shields.io/badge/React_Native_0.81-20232A?logo=react&logoColor=61DAFB)
+![React Native](https://img.shields.io/badge/React_Native_0.86-20232A?logo=react&logoColor=61DAFB)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
 ![Expo Router](https://img.shields.io/badge/Expo_Router_6-000020?logo=expo&logoColor=white)
 ![NativeWind](https://img.shields.io/badge/NativeWind_4-06B6D4?logo=tailwindcss&logoColor=white)
@@ -88,8 +95,8 @@ constants/           Theme tokens, shared config
 
 ### Highlights
 
-- **File-based routing** — `app/` uses an onboarding entry route and a main tab layout (Home, TV, Radio, Favorites, Settings), with typed routes enabled in `app.json`.
-- **Zustand stores** — `stores/` holds separate `player`, `stations`, `favorites`, and `theme` stores. Derived lists (featured / international / per-type) are computed once per fetch rather than per render, keeping subscriptions cheap and stable.
+- **File-based routing** — `app/` uses an onboarding entry route and a main tab layout (Home, TV, Radio, Settings; Favourites opens from Settings), with typed routes enabled in `app.json`.
+- **Zustand stores** — `stores/` holds separate `player`, `stations`, `favourites`, `recents`, `network`, `locale` and `theme` stores. Derived lists (featured / international / per-type) are computed once per fetch rather than per render, keeping subscriptions cheap and stable.
 - **Data pipeline** — `station-builder/` is a standalone Node script that pulls from IPTV-org and Radio-Browser, probes every stream with a timeout, and writes a single `stations.json`. The app consumes that index, caches it for 24 hours, and falls back to the bundled `data/` catalog when offline or on first launch. Everything that crosses the network boundary is parsed through Zod, so invalid payloads never reach the UI.
 - **Pending-station pattern** — when a user taps a station, the player store captures a "pending" station so playback can warm up before the detail screen is even mounted, shaving perceived latency off every tune-in.
 
@@ -135,6 +142,16 @@ node station-builder/build.js
 
 This fetches, validates, and writes a fresh `stations.json` that the app can consume.
 
+### 5. Refresh the bundled fallback (before every release)
+
+```bash
+pnpm stations:snapshot
+```
+
+Downloads the published catalog, validates it, and writes it to
+`data/fallback-stations.json`. This is what a fresh install shows with no
+network, so run it and commit the result before each release build.
+
 ---
 
 ## Scripts
@@ -149,6 +166,14 @@ This fetches, validates, and writes a fresh `stations.json` that the app can con
 | `pnpm prebuild:clean` | Regenerate native projects from scratch |
 | `pnpm build` | Create an EAS build |
 | `pnpm lint` | Lint the project with `eslint-config-expo` |
+| `pnpm stations:snapshot` | Refresh the bundled offline station catalog |
+| `pnpm test` | Run the Jest unit tests (stores, search, i18n) |
+
+### Crash reporting
+
+Release builds report crashes and failing streams to Sentry when
+`EXPO_PUBLIC_SENTRY_DSN` is set (for example as an EAS environment
+variable). Without it, nothing is sent.
 
 ---
 
