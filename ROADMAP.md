@@ -132,9 +132,9 @@ and a prebuild pass.
 > domain approved by hand (`pm set-app-links-user-selection`), opening
 > `https://laba.yasinwalum.com/station/<id>` lands on that station and plays.
 > **Still to do before this works for real users:**
-> - `docs/.well-known/assetlinks.json` only has the local debug key. Add the
->   SHA-256 of the EAS release key (`eas credentials -p android`) and, once
->   on Google Play, the Play App Signing key.
+> - `docs/.well-known/assetlinks.json` has the EAS release key and the local
+>   debug key. Once on Google Play, also add the Play App Signing key (Play
+>   Console, App integrity).
 > - `docs/.well-known/apple-app-site-association` has an `APPLE_TEAM_ID`
 >   placeholder; replace it with the Apple Developer Team ID.
 > - Merge to `main` so `deploy-docs.yml` publishes `.well-known/` and
