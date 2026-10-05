@@ -240,19 +240,51 @@ language, and the filters combine with categories.
 Bigger or lower-priority items. Each one deserves its own short design pass
 before coding.
 
-- [ ] **3.1 Radio "now playing" metadata.** Read ICY `StreamTitle` metadata
-  (check expo-audio support; may need a native module or a metadata proxy).
-  Show it in the player, mini-player and lock screen.
-- [ ] **3.2 Android Auto and CarPlay.** Likely needs a media-session based
-  audio library or native modules; scope separately.
-- [ ] **3.3 Crash and stream-failure reporting.** Sentry (`@sentry/react-native`
-  with the Expo plugin). Log stream failures with station id to learn which
-  stations fail in the field. Update `docs/privacy.md` accordingly.
-- [ ] **3.4 Localization.** `expo-localization` plus a small i18n layer;
-  English first, then Luganda and Swahili. Extract strings screen by screen.
-- [ ] **3.5 Tablet layout.** `supportsTablet` is on but layouts are
-  phone-only. More grid columns, wider player, maybe split view.
-- [ ] **3.6 Tests and docs.** Jest plus React Native Testing Library for
-  stores (`usePlayerStore`, `useStationStore`, `lib/search.ts`,
-  `lib/homeSections.ts`) first. Update the README (still says SDK 54, lists
-  a Favourites tab) and refresh screenshots.
+> Phase 3 landed as one commit, `714e083` on `feat/phase-3-later`, because
+> localization touched almost every file the other items changed. Device
+> checks for this phase were cut short by two environment resets (each
+> rolled the emulator back to an old build); see "Not verified" under each.
+
+- [x] **3.1 Radio "now playing" metadata.** A pnpm patch to expo-audio
+  (`patches/expo-audio.patch`) reads ICY `StreamTitle` from ExoPlayer's
+  timed metadata into the player status; the app shows it in the player,
+  mini-player and lock screen. Multi-field titles ("a | b | url") are
+  trimmed to two fields. expo-audio is built from source
+  (`expo.autolinking.android.buildFromSource` in package.json): SDK 57
+  links a precompiled AAR that silently ignored the patch at first.
+  Verified: many catalogue streams send titles (curl), the patched module
+  compiles from source. **Not verified:** a title on screen; the last
+  check was interrupted. Android only; iOS needs an
+  `AVPlayerItemMetadataOutput` patch.
+- [ ] **3.2 Android Auto and CarPlay.** Scoped, not built. Needs: a
+  Media3 `MediaLibraryService` exposing a browse tree (Favourites, Radio
+  by category) and playback through the same ExoPlayer, which means
+  moving radio off expo-audio to a native module or
+  `react-native-track-player`; `automotive_app_desc.xml` and Play
+  Console review for Auto; for CarPlay, Apple's audio-app entitlement
+  (request via developer.apple.com, can take weeks) plus a
+  `CPTemplateApplicationScene`. Suggest: start with Android Auto, test in
+  the Desktop Head Unit.
+- [x] **3.3 Crash and stream-failure reporting.** `@sentry/react-native`,
+  on only when `EXPO_PUBLIC_SENTRY_DSN` is set in a release build
+  (`lib/telemetry.ts`). Radio stations that fail every retry and TV
+  stream errors are reported per station. `docs/privacy.md` updated.
+  **To do:** create the Sentry project, set the DSN in EAS env vars, turn
+  on "Prevent storing of IP addresses", and for readable stack traces add
+  the `@sentry/react-native/expo` plugin with `SENTRY_AUTH_TOKEN` (the
+  `@sentry/cli` postinstall is disabled in `pnpm-workspace.yaml` until
+  then). Not verified (no DSN).
+- [x] **3.4 Localization.** `expo-localization` plus `lib/i18n` (typed
+  keys, `{param}` fill, `_one`/`_other` plurals); English, Kiswahili and
+  Luganda; picker in Settings; every UI string extracted. A test checks
+  that translations cover every key and keep the same placeholders.
+  **To do:** have a native speaker review `lib/i18n/lg.ts` (first draft)
+  and ideally `sw.ts`. Station data (names, categories, countries) stays
+  in English. Not verified on device.
+- [x] **3.5 Tablet layout.** Grids use 2, 3 or 4 columns by window width
+  with equal card widths; Settings, radio controls and TV details are
+  width-capped. Not verified on a tablet-size screen.
+- [x] **3.6 Tests and docs.** Jest via `jest-expo` (`pnpm test`): 33 tests
+  over search, home sections, stream titles, i18n, the player store and
+  the station store. README updated (SDK 57, tabs, new features, Sentry).
+  Screenshots in `docs/assets/screenshots` not refreshed.
