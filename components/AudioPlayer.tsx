@@ -1,3 +1,4 @@
+import { SleepTimerButton } from "@/components/SleepTimerButton";
 import { StationArtwork } from "@/components/StationArtwork";
 import { IconButton } from "@/components/ui/IconButton";
 import { LiveDot } from "@/components/ui/LiveDot";
@@ -149,6 +150,10 @@ export function AudioPlayer({ station }: { station: Station }) {
       <View className="mt-8 w-full flex-row items-center gap-3 px-8">
         <HugeiconsIcon icon={volumeIcon} size={18} color={colors.textSecondary} />
         <Slider value={volume} onChange={setVolume} accessibilityLabel="Volume" />
+      </View>
+
+      <View className="mt-6">
+        <SleepTimerButton />
       </View>
 
       {status === "error" ? (

@@ -25,6 +25,8 @@ interface PlayerStore {
   reloadToken: number;
   /** Automatic reload attempts since the stream last played. Reset by a user retry. */
   reconnectAttempt: number;
+  /** Wall-clock time (ms) at which the sleep timer pauses playback, or null when off. */
+  sleepUntil: number | null;
 
   // Actions
   setPending: (stationId: string) => void;
@@ -37,6 +39,8 @@ interface PlayerStore {
   retry: () => void;
   setVolume: (volume: number) => void;
   toggleMute: () => void;
+  /** Pause playback after `minutes`, or turn the timer off with null. */
+  setSleepTimer: (minutes: number | null) => void;
 
   /** Engine only: report the real playback state. */
   reportStatus: (status: PlaybackStatus, error?: string | null, reconnecting?: boolean) => void;
@@ -59,6 +63,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   volume: 1,
   reloadToken: 0,
   reconnectAttempt: 0,
+  sleepUntil: null,
 
   setPending: (stationId) => set({ pendingStationId: stationId }),
 
@@ -115,6 +120,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
       reconnecting: false,
       interrupted: false,
       reconnectAttempt: 0,
+      sleepUntil: null,
     }),
 
   retry: () =>
@@ -139,6 +145,9 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
       set({ volume: volumeBeforeMute || 1 });
     }
   },
+
+  setSleepTimer: (minutes) =>
+    set({ sleepUntil: minutes === null ? null : Date.now() + minutes * 60_000 }),
 
   reportStatus: (status, error = null, reconnecting = false) => {
     const prev = get();
