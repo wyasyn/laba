@@ -11,13 +11,16 @@
  * Requirements:  Node.js 18+ (built-in fetch + AbortSignal.timeout)
  */
 
-import { writeFileSync, mkdirSync } from "fs";
+import { readFileSync, writeFileSync, mkdirSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUTPUT_DIR = join(__dirname, "output");
 const OUTPUT_FILE = join(OUTPUT_DIR, "stations.json");
+// Channel avatars by YouTube channel id, collected once from a machine YouTube
+// serves normally; CI runners get a bot check instead of the channel page.
+const YOUTUBE_LOGOS = JSON.parse(readFileSync(join(__dirname, "youtube-logos.json"), "utf8"));
 
 // ─── External API endpoints ──────────────────────────────────────────────────
 
@@ -94,10 +97,9 @@ const UGANDA_NAMES_LOWER = UGANDA_CHANNEL_NAMES.map((n) => n.toLowerCase());
 // ─── TV supplements ───────────────────────────────────────────────────────────
 
 // YouTube channels that broadcast live. Each id was checked against YouTube
-// (official channel, not a fan re-upload). At build time a channel is added
-// when it is live; once shipped it stays while the channel exists, because
-// most local channels are live only for news hours. The app plays them with
-// YouTube's embedded player. When the same channel has a working direct
+// (official channel, not a fan re-upload). They ship while the channel exists;
+// most local ones are live only for news hours, and the apps say so when a
+// channel is off air. The apps play them with YouTube's embedded player. When the same channel has a working direct
 // stream from iptv-org, that stream wins and the YouTube entry is skipped.
 // [id, name, youtubeChannelId, country, language, categories, featured]
 const YOUTUBE_TV_CHANNELS = [
@@ -513,9 +515,10 @@ async function isYouTubeChannelLive(channelId, timeoutMs) {
 }
 
 /**
- * YouTube stations to ship: live now, or shipped before and the channel still
- * exists (local channels are live only part of the day, and the app shows
- * "not live right now" for those). Fills in the channel avatar as the logo.
+ * YouTube stations to ship: every listed channel unless YouTube says it no longer exists.
+ * Live status is only reported, not required: YouTube shows CI runners a bot check (so
+ * every channel reads as offline there), and the apps say "not live right now" when a
+ * channel is off air. Fills in the channel avatar as the logo when the page is readable.
  *
  * @param {Map<string, object>} previousByChannel shipped stations by youtubeChannelId
  */
@@ -523,6 +526,7 @@ async function validateYouTubeSupplements(stations, previousByChannel, timeoutMs
   const valid = [];
   let live = 0;
   let missing = 0;
+  let unreadable = 0;
   // One channel at a time: YouTube throttles bursts from one address.
   for (const station of stations) {
     const channel = await fetchYouTubeChannel(station.youtubeChannelId, timeoutMs);
@@ -530,15 +534,16 @@ async function validateYouTubeSupplements(stations, previousByChannel, timeoutMs
       missing++;
       continue;
     }
+    if (channel.status === "unknown") unreadable++;
+    else if (await isYouTubeChannelLive(station.youtubeChannelId, timeoutMs)) live++;
     const previous = previousByChannel.get(station.youtubeChannelId);
-    const isLive = await isYouTubeChannelLive(station.youtubeChannelId, timeoutMs);
-    if (isLive) live++;
-    if (!isLive && !previous) continue;
-    valid.push({ ...station, logo: channel.avatar ?? previous?.logo ?? station.logo });
+    const logo =
+      channel.avatar ?? YOUTUBE_LOGOS[station.youtubeChannelId] ?? previous?.logo ?? station.logo;
+    valid.push({ ...station, logo });
   }
   console.log(
     `  YouTube: ${valid.length}/${stations.length} kept (${live} live now, ` +
-      `${valid.length - live} shipped before, ${missing} channels not found)`
+      `${unreadable} pages unreadable, ${missing} channels not found)`
   );
   return valid;
 }
