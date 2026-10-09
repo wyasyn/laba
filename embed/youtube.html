@@ -1,0 +1,127 @@
+<!doctype html>
+<!--
+  YouTube live player for the Laba desktop app.
+
+  The app runs from a tauri:// (or tauri.localhost) origin, and YouTube refuses to play
+  embeds whose page has no web address (error 153). The app frames this page instead,
+  which hosts YouTube's player under laba.yasinwalum.com.
+
+  Usage: /embed/youtube.html?channel=<YouTube channel id>[&controls=1]
+  With controls=1 YouTube shows its own controls (the mobile app); without, the page is
+  driven by messages (the desktop app draws its own controls on top).
+
+  The parent window sends {source: "laba-app", command: "play" | "pause" | "volume",
+  volume: 0..1, muted: boolean} and receives {source: "laba-youtube", event: "ready" |
+  "playing" | "paused" | "buffering" | "ended" | "error", code?: number}.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="robots" content="noindex" />
+    <title>Laba player</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+        background: #000;
+      }
+      #player {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="player"></div>
+    <script>
+      (function () {
+        var params = new URLSearchParams(location.search);
+        var channel = params.get("channel") || "";
+        var player = null;
+        var ready = false;
+        // Commands that arrive before the player is ready, applied once it is.
+        var pending = { play: true, volume: null };
+
+        function post(message) {
+          message.source = "laba-youtube";
+          // Events carry no private data, and the app's origin differs per platform.
+          parent.postMessage(message, "*");
+        }
+
+        if (!/^UC[\w-]{22}$/.test(channel)) {
+          post({ event: "error", code: 0 });
+          return;
+        }
+
+        function applyVolume(volume) {
+          if (!player || !volume) return;
+          player.setVolume(Math.round(Math.min(1, Math.max(0, volume.volume)) * 100));
+          if (volume.muted) player.mute();
+          else player.unMute();
+        }
+
+        window.addEventListener("message", function (event) {
+          var data = event.data;
+          if (!data || data.source !== "laba-app" || event.source !== parent) return;
+          if (data.command === "volume") {
+            pending.volume = { volume: data.volume, muted: data.muted };
+            if (ready) applyVolume(pending.volume);
+          } else if (data.command === "play" || data.command === "pause") {
+            pending.play = data.command === "play";
+            if (!ready) return;
+            if (pending.play) player.playVideo();
+            else player.pauseVideo();
+          }
+        });
+
+        var STATES = { 0: "ended", 1: "playing", 2: "paused", 3: "buffering" };
+
+        window.onYouTubeIframeAPIReady = function () {
+          player = new YT.Player("player", {
+            videoId: "live_stream",
+            playerVars: {
+              channel: channel,
+              autoplay: 1,
+              controls: params.get("controls") === "1" ? 1 : 0,
+              disablekb: params.get("controls") === "1" ? 0 : 1,
+              fs: 0,
+              playsinline: 1,
+              rel: 0,
+              iv_load_policy: 3,
+              origin: location.origin,
+            },
+            events: {
+              onReady: function () {
+                ready = true;
+                applyVolume(pending.volume);
+                if (pending.play) player.playVideo();
+                post({ event: "ready" });
+              },
+              onStateChange: function (event) {
+                var name = STATES[event.data];
+                if (name) post({ event: name });
+              },
+              onError: function (event) {
+                post({ event: "error", code: event.data });
+              },
+            },
+          });
+        };
+
+        var script = document.createElement("script");
+        script.src = "https://www.youtube.com/iframe_api";
+        script.onerror = function () {
+          post({ event: "error", code: -1 });
+        };
+        document.head.appendChild(script);
+      })();
+    </script>
+  </body>
+</html>
