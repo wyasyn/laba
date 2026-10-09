@@ -23,6 +23,8 @@ const OUTPUT_FILE = join(OUTPUT_DIR, "stations.json");
 
 const IPTV_CHANNELS = "https://iptv-org.github.io/api/channels.json";
 const IPTV_STREAMS = "https://iptv-org.github.io/api/streams.json";
+const IPTV_FEEDS = "https://iptv-org.github.io/api/feeds.json";
+const IPTV_LOGOS = "https://iptv-org.github.io/api/logos.json";
 const UGANDA_M3U = "https://iptv-org.github.io/iptv/countries/ug.m3u";
 // The catalog the apps use today: its ids are kept stable (favourites and
 // recents are stored by id) and its radio stations stay while they still work.
@@ -33,7 +35,31 @@ const RADIO_USER_AGENT = "Laba/1.0 (github.com/wyasyn/laba)";
 
 // ─── Filtering constants ──────────────────────────────────────────────────────
 
-const INTERNATIONAL_ENGLISH_CAP = 200;
+// TV: every Ugandan channel with a public stream, a capped number per East
+// African country, then English channels from elsewhere with well-known news
+// channels first and a per-country cap.
+const EAST_AFRICA_TV_PER_COUNTRY_CAP = 15;
+const INTERNATIONAL_TV_CAP = 80;
+const INTERNATIONAL_TV_PER_COUNTRY_CAP = 5;
+const PRIORITY_TV_NAMES = [
+  "al jazeera english", "bbc news", "dw", "france 24 english", "euronews",
+  "africanews", "trt world", "cna", "nhk world", "sky news", "abc news",
+  "cbs news", "nbc news", "bloomberg", "cgtn", "arirang", "wion", "sabc news",
+  "enca", "channels", "arise news", "tvc news", "kbc", "citizen", "ntv kenya",
+  "ktn", "k24", "nasa",
+];
+// Category order for the rest: news first.
+const TV_CATEGORY_RANK = [
+  "news", "documentary", "science", "education", "business", "kids", "sports",
+  "general", "entertainment",
+];
+// iptv-org language codes (ISO 639-3) to the names the app shows.
+const LANGUAGE_NAMES = {
+  eng: "English", swa: "Swahili", lug: "Luganda", kin: "Kinyarwanda",
+  run: "Kirundi", fra: "French", ara: "Arabic", spa: "Spanish", por: "Portuguese",
+  deu: "German", hin: "Hindi", zho: "Chinese", jpn: "Japanese", kor: "Korean",
+  rus: "Russian", tur: "Turkish", ita: "Italian", nld: "Dutch", lin: "Lingala",
+};
 
 // Radio: every healthy Ugandan station, a capped slice of East Africa, then
 // the most listened-to stations worldwide with a per-country cap so no single
@@ -65,82 +91,76 @@ const UGANDA_CHANNEL_NAMES = [
 
 const UGANDA_NAMES_LOWER = UGANDA_CHANNEL_NAMES.map((n) => n.toLowerCase());
 
-// ─── Hardcoded supplement stations ───────────────────────────────────────────
-// Major channels whose streams often fail validation on GitHub Actions servers
-// (YouTube proxies, etc.) but are known to work on devices. These are always
-// merged into the final output — they supplement rather than replace API results.
+// ─── TV supplements ───────────────────────────────────────────────────────────
 
-// NBS, NTV, UBC, Sanyuka, Spark, Urban, Pearl Magic, BBS, Record: YouTube Live only.
-// Each youtubeChannelId is checked at build time (must be live) before inclusion.
+// YouTube channels that broadcast live. Each id was checked against YouTube
+// (official channel, not a fan re-upload). At build time a channel is added
+// when it is live; once shipped it stays while the channel exists, because
+// most local channels are live only for news hours. The app plays them with
+// YouTube's embedded player. When the same channel has a working direct
+// stream from iptv-org, that stream wins and the YouTube entry is skipped.
+// [id, name, youtubeChannelId, country, language, categories, featured]
+const YOUTUBE_TV_CHANNELS = [
+  // Uganda
+  ["ntv-uganda", "NTV Uganda", "UCwga1dPCqBddbtq5KYRii2g", "UG", "English", ["news", "entertainment"], true],
+  ["nbs-tv", "NBS TV", "UCMSOrdwslAbPmN4w-Z74iyA", "UG", "English", ["news", "entertainment"], true],
+  ["ubc-tv", "UBC TV", "UCvTflPL_YBQdrHcKFI5xdYg", "UG", "English", ["news", "general"], true],
+  ["bukedde-tv", "Bukedde TV", "UCbL0amMi8Ggvtzrmq5W_xTQ", "UG", "Luganda", ["news", "entertainment"], true],
+  ["bbs-terefayina", "BBS Terefayina", "UCrkQ4OlgtOQICQ4NFTExttw", "UG", "Luganda", ["news", "entertainment"], true],
+  ["sanyuka-tv", "Sanyuka TV", "UCFGT4NnhoWYCB8pb-XPTQkA", "UG", "Luganda", ["entertainment"], false],
+  ["spark-tv", "Spark TV", "UC6NjYHurvba2778xqDsd-5g", "UG", "English", ["entertainment"], false],
+  ["urban-tv", "Urban TV", "UCNEvA5GEeJ9KuynQWHtcgXw", "UG", "English", ["entertainment"], false],
+  ["pearl-magic-prime", "Pearl Magic Prime", "UC1dFlIxChczGfAZrfdP7Edw", "UG", "English", ["entertainment"], false],
+  ["galaxy-tv", "Galaxy TV", "UCieXipFD2nEVKoJ7J_Rarow", "UG", "English", ["entertainment"], false],
+  ["kingdom-tv", "Kingdom TV", "UCkP2CFxmoKUego_dzX2Ch2w", "UG", "English", ["religious"], false],
+  ["salt-tv", "Salt TV", "UCJWxzCeGTFkX7OiGSaOpGbw", "UG", "English", ["religious"], false],
+  ["tv-west", "TV West", "UCL8O1K8TK81uv75Fd6i6sJw", "UG", "Runyankore", ["news", "entertainment"], false],
+  ["top-tv", "Top TV", "UC6Qi7b7SlhDKrc8XtRe1NzQ", "UG", "English", ["entertainment"], false],
+  ["baba-tv", "Baba TV", "UCilQ77_bUV7m9fFAmyfB9hQ", "UG", "English", ["entertainment"], false],
+  ["delta-tv", "Delta TV", "UCrfPzJhfFi13FBQ-CUQqKsA", "UG", "Luganda", ["entertainment"], false],
+  // East Africa
+  ["citizen-tv-kenya", "Citizen TV Kenya", "UChBQgieUidXV1CmDxSdRm3g", "KE", "English", ["news"], false],
+  ["ntv-kenya", "NTV Kenya", "UCqBJ47FjJcl61fmSbcadAVg", "KE", "English", ["news"], false],
+  ["ktn-news-kenya", "KTN News Kenya", "UCKVsdeoHExltrWMuK0hOWmg", "KE", "English", ["news"], false],
+  ["k24-tv", "K24 TV", "UCt3SE-Mvs3WwP7UW-PiFdqQ", "KE", "English", ["news"], false],
+  ["kbc-channel-1", "KBC Channel 1", "UCypNjM5hP1qcUqQZe57jNfg", "KE", "English", ["news", "general"], false],
+  ["tv47-kenya", "TV47 Kenya", "UC_zA9UIWE1fB-jfFk_DBSYw", "KE", "Swahili", ["news"], false],
+  ["clouds-tv", "Clouds TV", "UC6rj98Znu_n_42hRgaObFGA", "TZ", "Swahili", ["entertainment"], false],
+  ["itv-tanzania", "ITV Tanzania", "UCRmReUqNqc-GSZeD48QKjhQ", "TZ", "Swahili", ["news"], false],
+  ["wasafi-tv", "Wasafi TV", "UCJ__AKbzt6oJSGLZ7G790Zw", "TZ", "Swahili", ["entertainment", "music"], false],
+  ["tbc-tanzania", "TBC Tanzania", "UCEz71zXmApKBYiH1fReemeA", "TZ", "Swahili", ["news", "general"], false],
+  ["azam-tv", "Azam TV", "UCpHiA0taMn231yDiUeqoANw", "TZ", "Swahili", ["entertainment", "sports"], false],
+  ["rwanda-tv", "Rwanda TV", "UCyRvjnhiC0MOXWS-7COPtyQ", "RW", "Kinyarwanda", ["news", "general"], false],
+  ["tv1-rwanda", "TV1 Rwanda", "UCweH7GISNi4dkJLXtO1tqDQ", "RW", "Kinyarwanda", ["news", "entertainment"], false],
+  ["ssbc-south-sudan", "SSBC South Sudan", "UCXG4tODjjS58Rd-zkdRUGzg", "SS", "English", ["news", "general"], false],
+  ["rtnb-burundi", "RTNB Burundi", "UCIezoDoTPTETVTc9HRC05xg", "BI", "Kirundi", ["news", "general"], false],
+  // Africa and international news
+  ["africanews", "Africanews", "UC1_E8NeF5QHY2dtdLRBCCLA", "CG", "English", ["news"], false],
+  ["sabc-news", "SABC News", "UC8yH-uI81UUtEMDsowQyx1g", "ZA", "English", ["news"], false],
+  ["enca", "eNCA", "UCI3RT5PGmdi1KVp9FG_CneA", "ZA", "English", ["news"], false],
+  ["channels-television", "Channels Television", "UCEXGDNclvmg6RW0vipJYsTQ", "NG", "English", ["news"], false],
+  ["al-jazeera-english", "Al Jazeera English", "UCNye-wNBqNL5ZzHSJj3l8Bg", "QA", "English", ["news"], true],
+  ["dw-english", "DW News", "UCknLrEdhRCp1aegoMqRaCZg", "DE", "English", ["news"], false],
+  ["france-24-english", "France 24 English", "UCQfwfsi5VrQ8yKZ-UWmAEFg", "FR", "English", ["news"], false],
+  ["euronews-english", "Euronews English", "UCSrZ3UV4jOidv8ppoVuvW9Q", "FR", "English", ["news"], false],
+  ["sky-news", "Sky News", "UCoMdktPbSTixAyNGwb-UYkQ", "GB", "English", ["news"], false],
+  ["trt-world", "TRT World", "UC7fWeaHhqgM4Ry-RMpM2YYw", "TR", "English", ["news"], false],
+  ["cna", "CNA", "UC83jt4dlz1Gjl58fzQrrKZg", "SG", "English", ["news"], false],
+  ["wion", "WION", "UC_gUM8rL-Lrg6O3adPW9K1g", "IN", "English", ["news"], false],
+  ["abc-news", "ABC News", "UCBi2mrWuNuyYy4gbM6fU18Q", "US", "English", ["news"], false],
+  ["abc-news-australia", "ABC News Australia", "UCVgO39Bk5sMo66-6o6Spn6Q", "AU", "English", ["news"], false],
+  ["nbc-news", "NBC News", "UCeY0bbntWzzVIaj2z3QigXg", "US", "English", ["news"], false],
+  ["cbs-news", "CBS News", "UC8p1vwvWtl6T73JiExfWs1g", "US", "English", ["news"], false],
+  ["nasa", "NASA", "UCLA_DiR1FfKNvjuUpBHmylQ", "US", "English", ["science", "documentary"], false],
+  ["al-jazeera-arabic", "Al Jazeera Arabic", "UCfiwzLy-8yKzIbsmZTzxDgw", "QA", "Arabic", ["news"], false],
+].map(([id, name, youtubeChannelId, country, language, categories, isFeatured]) => ({
+  id, name, type: "tv", youtubeChannelId, description: categories.join(", "),
+  language, country, categories, isFeatured,
+}));
 
+// Official direct streams for big international channels, checked like any
+// other stream. iptv-org usually has these too.
 const SUPPLEMENT_TV_STATIONS = [
-  // ── Uganda channels (YouTube Live) ──────────────────────────────────────────
-  // The app uses YouTubePlayer for any station that has a youtubeChannelId field.
-  {
-    id: "nbs-tv", name: "NBS TV", type: "tv",
-    logo: "https://i.imgur.com/DmM8jH6.png",
-    youtubeChannelId: "UCmp-YJRNIHCCNmFJOgJGMwA",
-    description: "Next Broadcasting Services - Uganda's leading entertainment and news channel",
-    language: "English", country: "UG", categories: ["news", "entertainment"],
-    website: "https://www.nbs.ug", isFeatured: true,
-  },
-  {
-    id: "ntv-uganda", name: "NTV Uganda", type: "tv",
-    logo: "https://i.imgur.com/NTV.png",
-    youtubeChannelId: "UCzIwTMsmMSGIdZPYShYbnPQ",
-    description: "Nation Television Uganda - Premier news and current affairs",
-    language: "English", country: "UG", categories: ["news", "general"],
-    website: "https://www.ntv.co.ug", isFeatured: true,
-  },
-  {
-    id: "ubc-tv", name: "UBC TV", type: "tv",
-    youtubeChannelId: "UCa7s2SKcRQDpMEB-yPbXkvA",
-    description: "Uganda Broadcasting Corporation - National public broadcaster",
-    language: "English", country: "UG", categories: ["general", "news"],
-    website: "https://www.ubc.go.ug", isFeatured: true,
-  },
-  {
-    id: "sanyuka-tv", name: "Sanyuka TV", type: "tv",
-    youtubeChannelId: "UC1YJ4mMOExwmnOYgiAWbKtQ",
-    description: "Entertainment and lifestyle television",
-    language: "Luganda", country: "UG", categories: ["entertainment"],
-    isFeatured: true,
-  },
-  {
-    id: "spark-tv", name: "Spark TV", type: "tv",
-    youtubeChannelId: "UCF-5JhTmMFJwTEygqBPfQLg",
-    description: "Youth-oriented entertainment and music channel",
-    language: "English", country: "UG", categories: ["entertainment", "music"],
-    isFeatured: true,
-  },
-  {
-    id: "urban-tv", name: "Urban TV", type: "tv",
-    youtubeChannelId: "UCJrvFPaz4DF96mWbiOSGXkA",
-    description: "Urban entertainment and lifestyle",
-    language: "English", country: "UG", categories: ["entertainment"],
-    isFeatured: false,
-  },
-  {
-    id: "pearl-magic", name: "Pearl Magic", type: "tv",
-    youtubeChannelId: "UCp-RVKH9VwArl8cD7XtZiqQ",
-    description: "Local drama and entertainment",
-    language: "English", country: "UG", categories: ["entertainment", "drama"],
-    isFeatured: false,
-  },
-  {
-    id: "bbs-tv", name: "BBS TV", type: "tv",
-    youtubeChannelId: "UCp90V7fUBeBGAa5jc_v2b0g",
-    description: "Buganda Broadcasting Service Television",
-    language: "Luganda", country: "UG", categories: ["general", "cultural"],
-    isFeatured: false,
-  },
-  {
-    id: "record-tv-uganda", name: "Record TV Uganda", type: "tv",
-    youtubeChannelId: "UCfwhx3cp2bLnkxMjRmPgiHQ",
-    description: "News and entertainment from Record TV",
-    language: "English", country: "UG", categories: ["news", "entertainment"],
-    isFeatured: false,
-  },
   // ── International channels (direct HLS CDN) ──────────────────────────────────
   // These have official CDN-hosted HLS streams and broadcast in English.
   {
@@ -384,6 +404,9 @@ async function checkUrl(url, timeoutMs, type = "tv") {
         redirect: "follow",
       });
     }
+    // Only the headers matter here. A live stream ignores Range and would keep
+    // downloading in the background, starving every check after it.
+    res.body?.cancel().catch(() => {});
 
     if (!(res.status >= 200 && res.status < 300)) return false;
 
@@ -407,54 +430,135 @@ async function checkUrl(url, timeoutMs, type = "tv") {
   }
 }
 
-/**
- * True only when the channel is broadcasting live right now (strict list policy).
- */
-async function isYouTubeChannelLive(channelId, timeoutMs = 12000) {
-  try {
-    const res = await fetch(
-      `https://www.youtube.com/embed/live_stream?channel=${encodeURIComponent(channelId)}`,
-      {
-        headers: { "User-Agent": "Mozilla/5.0 (Linux; Android 13)" },
-        signal: AbortSignal.timeout(timeoutMs),
-        redirect: "follow",
+// YouTube answers a plain request with a consent page in some regions; these
+// cookies skip it. A browser User-Agent gets the full page with its JSON.
+const YOUTUBE_HEADERS = {
+  "User-Agent":
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130 Safari/537.36",
+  "Accept-Language": "en-US",
+  Cookie: "CONSENT=YES+1; SOCS=CAI",
+};
+
+/** The JSON object right after `marker` in a page, or null (string-aware brace matching). */
+function extractJsonObject(text, marker) {
+  const start = text.indexOf(marker);
+  if (start < 0) return null;
+  const from = start + marker.length;
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+  for (let i = from; i < text.length; i++) {
+    const c = text[i];
+    if (inString) {
+      if (escaped) escaped = false;
+      else if (c === "\\") escaped = true;
+      else if (c === '"') inString = false;
+    } else if (c === '"') {
+      inString = true;
+    } else if (c === "{") {
+      depth++;
+    } else if (c === "}" && --depth === 0) {
+      try {
+        return JSON.parse(text.slice(from, i + 1));
+      } catch {
+        return null;
       }
-    );
-    if (!res.ok) return false;
-    const body = await res.text();
-    if (
-      /LIVE_STREAM_OFFLINE|OFFLINE_PLACEHOLDER|"status":"ERROR"/.test(body)
-    ) {
-      return false;
     }
-    const m = body.match(/"videoId":"([a-zA-Z0-9_-]{11})"/);
-    return !!m && m[1] !== "live_stream";
+  }
+  return null;
+}
+
+/**
+ * The channel's name and avatar from its home page. "missing" when YouTube
+ * says the channel does not exist, "unknown" when the page could not be read
+ * (network error, or a bot check on CI runners).
+ */
+async function fetchYouTubeChannel(channelId, timeoutMs) {
+  try {
+    const res = await fetch(`https://www.youtube.com/channel/${channelId}`, {
+      headers: YOUTUBE_HEADERS,
+      signal: AbortSignal.timeout(timeoutMs),
+    });
+    if (res.status === 404) return { status: "missing" };
+    if (!res.ok) return { status: "unknown" };
+    const html = await res.text();
+    const meta = (property) =>
+      html.match(new RegExp(`<meta property="og:${property}" content="([^"]*)"`))?.[1];
+    const title = meta("title");
+    if (!title) return { status: "unknown" };
+    return { status: "ok", title, avatar: httpUrlOrUndefined(meta("image")) };
+  } catch {
+    return { status: "unknown" };
+  }
+}
+
+/**
+ * True when the channel is broadcasting right now. The /live page of a live
+ * channel carries the stream's videoDetails with isLive; otherwise it shows the
+ * channel page or an upcoming or past video. (The embed page can't be used: it
+ * answers requests without a referrer with error 153.)
+ */
+async function isYouTubeChannelLive(channelId, timeoutMs) {
+  try {
+    const res = await fetch(`https://www.youtube.com/channel/${channelId}/live`, {
+      headers: YOUTUBE_HEADERS,
+      signal: AbortSignal.timeout(timeoutMs),
+    });
+    if (!res.ok) return false;
+    const details = extractJsonObject(await res.text(), '"videoDetails":');
+    return details?.channelId === channelId && details.isLive === true;
   } catch {
     return false;
   }
 }
 
-async function validateYouTubeSupplements(stations, concurrency = 5, timeoutMs = 12000) {
+/**
+ * YouTube stations to ship: live now, or shipped before and the channel still
+ * exists (local channels are live only part of the day, and the app shows
+ * "not live right now" for those). Fills in the channel avatar as the logo.
+ *
+ * @param {Map<string, object>} previousByChannel shipped stations by youtubeChannelId
+ */
+async function validateYouTubeSupplements(stations, previousByChannel, timeoutMs = 20000) {
   const valid = [];
-  const total = stations.length;
-  let done = 0;
-
-  for (let i = 0; i < stations.length; i += concurrency) {
-    const batch = stations.slice(i, i + concurrency);
-    const results = await Promise.all(
-      batch.map(async (station) => ({
-        station,
-        ok: await isYouTubeChannelLive(station.youtubeChannelId, timeoutMs),
-      }))
-    );
-    for (const { station, ok } of results) {
-      if (ok) valid.push(station);
+  let live = 0;
+  let missing = 0;
+  // One channel at a time: YouTube throttles bursts from one address.
+  for (const station of stations) {
+    const channel = await fetchYouTubeChannel(station.youtubeChannelId, timeoutMs);
+    if (channel.status === "missing") {
+      missing++;
+      continue;
     }
-    done += batch.length;
-    process.stdout.write(`  YouTube ${done}/${total} checked (${valid.length} live)\r`);
+    const previous = previousByChannel.get(station.youtubeChannelId);
+    const isLive = await isYouTubeChannelLive(station.youtubeChannelId, timeoutMs);
+    if (isLive) live++;
+    if (!isLive && !previous) continue;
+    valid.push({ ...station, logo: channel.avatar ?? previous?.logo ?? station.logo });
   }
-  process.stdout.write("\n");
+  console.log(
+    `  YouTube: ${valid.length}/${stations.length} kept (${live} live now, ` +
+      `${valid.length - live} shipped before, ${missing} channels not found)`
+  );
   return valid;
+}
+
+/**
+ * Loose channel name for spotting one channel listed twice: "Bukedde TV 1"
+ * becomes "bukedde 1", "BBS TV" becomes "bbs".
+ */
+function tvNameKey(name) {
+  return name
+    .toLowerCase()
+    .replace(/\(.*?\)/g, " ")
+    .split(/[^\p{L}\p{N}]+/u)
+    .filter((w) => w && !["tv", "television", "channel", "live", "hd", "the", "english", "news"].includes(w))
+    .join(" ");
+}
+
+/** Same channel when one key equals or extends the other ("bukedde" / "bukedde 1"). */
+function isSameTvChannel(a, b) {
+  return a === b || a.startsWith(`${b} `) || b.startsWith(`${a} `);
 }
 
 /**
@@ -505,72 +609,153 @@ async function validateStreamUrls(
 
 // ─── TV: iptv-org ─────────────────────────────────────────────────────────────
 
-function mergeChannelsAndStreams(channels, streams) {
-  const stations = [];
-  const seen = new Set();
+const QUALITY_RANK = (stream) => Number.parseInt(stream.quality ?? "", 10) || 0;
 
-  const streamsByChannel = new Map();
-  const unmatchedStreams = [];
+function tvRank(channel) {
+  const name = channel.name.toLowerCase();
+  const priority = PRIORITY_TV_NAMES.findIndex((p) => name.startsWith(p));
+  const categoryRanks = (channel.categories ?? [])
+    .map((c) => TV_CATEGORY_RANK.indexOf(c))
+    .filter((r) => r >= 0);
+  return [
+    priority >= 0 ? priority : PRIORITY_TV_NAMES.length,
+    categoryRanks.length ? Math.min(...categoryRanks) : TV_CATEGORY_RANK.length,
+  ];
+}
 
-  for (const stream of streams) {
-    if (stream.channel) {
-      const existing = streamsByChannel.get(stream.channel) ?? [];
-      existing.push(stream);
-      streamsByChannel.set(stream.channel, existing);
-    } else {
-      unmatchedStreams.push(stream);
+function compareTvChannels(a, b) {
+  const [pa, ca] = tvRank(a);
+  const [pb, cb] = tvRank(b);
+  return pa - pb || ca - cb || a.name.localeCompare(b.name);
+}
+
+/**
+ * TV from the iptv-org API. Languages live on feeds and logos in their own
+ * list (the channel entries no longer carry them).
+ */
+async function fetchIptvStations() {
+  const fetchJson = async (url) => {
+    const res = await fetch(url, { signal: AbortSignal.timeout(60000) });
+    if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
+    return res.json();
+  };
+  const [channels, streams, feeds, logos] = await Promise.all(
+    [IPTV_CHANNELS, IPTV_STREAMS, IPTV_FEEDS, IPTV_LOGOS].map(fetchJson)
+  );
+
+  const channelById = new Map(channels.map((c) => [c.id, c]));
+
+  const languagesByFeed = new Map();
+  const mainLanguages = new Map();
+  for (const feed of feeds) {
+    const langs = Array.isArray(feed.languages) ? feed.languages : [];
+    languagesByFeed.set(`${feed.channel}@${feed.id}`, langs);
+    if (feed.is_main || !mainLanguages.has(feed.channel)) mainLanguages.set(feed.channel, langs);
+  }
+
+  // A channel-wide logo in use beats a feed-specific one.
+  const logoByChannel = new Map();
+  for (const logo of logos) {
+    if (!logo.in_use || typeof logo.url !== "string") continue;
+    if (!logoByChannel.has(logo.channel) || logo.feed === null) {
+      logoByChannel.set(logo.channel, logo.url);
     }
   }
 
-  for (const channel of channels) {
-    if (channel.closed) continue;
+  const streamsByChannel = new Map();
+  let needsHeaders = 0;
+  for (const stream of streams) {
+    if (!stream?.channel || typeof stream.url !== "string") continue;
+    if (!/^https?:\/\//.test(stream.url)) continue;
+    // The apps can't send a custom User-Agent or Referer with a stream.
+    if (stream.user_agent || stream.referrer) {
+      needsHeaders++;
+      continue;
+    }
+    const list = streamsByChannel.get(stream.channel) ?? [];
+    list.push(stream);
+    streamsByChannel.set(stream.channel, list);
+  }
 
-    const channelStreams = streamsByChannel.get(channel.id);
-    if (!channelStreams || channelStreams.length === 0) continue;
+  const uganda = [];
+  const eastAfrica = new Map(EAST_AFRICA_COUNTRIES.map((cc) => [cc, []]));
+  const international = [];
+  for (const [channelId, list] of streamsByChannel) {
+    const channel = channelById.get(channelId);
+    if (!channel || channel.closed || channel.is_nsfw) continue;
+    const feedLangs = list.flatMap((s) => languagesByFeed.get(`${channelId}@${s.feed}`) ?? []);
+    const languages = feedLangs.length ? feedLangs : mainLanguages.get(channelId) ?? [];
+    const entry = { channel, streams: list, languages };
 
-    const bestStream =
-      channelStreams.find((s) => s.quality === "1080p") ||
-      channelStreams.find((s) => s.quality === "720p") ||
-      channelStreams[0];
+    if (channel.country === "UG") uganda.push(entry);
+    else if (eastAfrica.has(channel.country)) eastAfrica.get(channel.country).push(entry);
+    else if (
+      languages.includes("eng") &&
+      (channel.categories ?? []).some((c) => WANTED_TV_CATEGORIES.has(c))
+    ) {
+      international.push(entry);
+    }
+  }
 
+  const byRank = (x, y) => compareTvChannels(x.channel, y.channel);
+  const perCountry = new Map();
+  const intlPicked = [];
+  // One channel per family ("ABC News Live 1", "ABC News Live 2", "Sky News
+  // Extra 3"), so sub-feeds don't use up a country's places.
+  const families = new Set();
+  for (const entry of international.sort(byRank)) {
+    const family = tvNameKey(entry.channel.name)
+      .split(" ")
+      .filter((w) => !/^\d+$/.test(w) && w !== "extra")
+      .join(" ");
+    if (families.has(family)) continue;
+    families.add(family);
+    const cc = entry.channel.country;
+    const count = perCountry.get(cc) ?? 0;
+    if (count >= INTERNATIONAL_TV_PER_COUNTRY_CAP) continue;
+    perCountry.set(cc, count + 1);
+    intlPicked.push(entry);
+    if (intlPicked.length >= INTERNATIONAL_TV_CAP) break;
+  }
+
+  const picked = [
+    ...uganda.sort(byRank),
+    ...[...eastAfrica.values()].flatMap((list) =>
+      list.sort(byRank).slice(0, EAST_AFRICA_TV_PER_COUNTRY_CAP)
+    ),
+    ...intlPicked,
+  ];
+
+  const stations = [];
+  for (const { channel, streams: list, languages } of picked) {
+    const ordered = [...list].sort((x, y) => QUALITY_RANK(y) - QUALITY_RANK(x));
+    const [best, ...rest] = ordered;
+    const categories = channel.categories ?? [];
     const id = slugify(channel.name);
-    if (seen.has(id)) continue;
-    seen.add(id);
-
+    const language = languages[0];
     stations.push({
       id,
       name: channel.name,
-      type: inferType(channel.categories ?? []),
-      logo: channel.logo ?? undefined,
-      streamUrl: bestStream.url,
-      description: (channel.categories ?? []).join(", ") || "Live channel",
-      language: channel.languages?.[0] ?? "English",
+      type: inferType(categories),
+      logo: logoByChannel.get(channel.id),
+      streamUrl: best.url,
+      description: categories.join(", ") || "Live channel",
+      language: LANGUAGE_NAMES[language] ?? (language ? titleCase(language) : "English"),
       country: channel.country,
-      categories: channel.categories ?? [],
-      website: channel.website ?? undefined,
+      categories,
+      website: httpUrlOrUndefined(channel.website),
       isFeatured: channel.country === "UG",
     });
+    const alternates = [...new Set(rest.map((s) => s.url))].filter((u) => u !== best.url);
+    if (alternates.length) ALTERNATE_STREAM_URLS.set(id, alternates);
   }
 
-  // Orphan streams (no channel ID) — only add well-known Uganda names
-  for (const stream of unmatchedStreams) {
-    if (!isUgandaChannelName(stream.title)) continue;
-    const id = slugify(stream.title);
-    if (seen.has(id)) continue;
-    seen.add(id);
-    stations.push({
-      id,
-      name: stream.title,
-      type: "tv",
-      streamUrl: stream.url,
-      description: "Live channel",
-      language: "English",
-      country: "UG",
-      categories: [],
-      isFeatured: false,
-    });
-  }
-
+  console.log(
+    `  iptv-org: ${uganda.length} Uganda, ` +
+      `${[...eastAfrica.values()].reduce((n, l) => n + l.length, 0)} East Africa, ` +
+      `${intlPicked.length}/${international.length} international channels picked ` +
+      `(${needsHeaders} streams skipped: need custom headers)`
+  );
   return stations;
 }
 
@@ -627,71 +812,11 @@ async function fetchTvStations() {
   const seenUrls = new Set();
 
   try {
-    const [channelsRes, streamsRes] = await Promise.all([
-      fetch(IPTV_CHANNELS),
-      fetch(IPTV_STREAMS),
-    ]);
-
-    if (channelsRes.ok && streamsRes.ok) {
-      const channelsRaw = await channelsRes.json();
-      const streamsRaw = await streamsRes.json();
-
-      const wantedChannelIds = new Set();
-      const candidateChannels = [];
-      let internationalCount = 0;
-
-      for (const c of channelsRaw) {
-        if (!c || typeof c !== "object") continue;
-        if (c.closed || c.is_nsfw) continue;
-        if (typeof c.name !== "string" || typeof c.id !== "string") continue;
-
-        const langs = Array.isArray(c.languages)
-          ? c.languages.filter((l) => typeof l === "string")
-          : [];
-        const cats = Array.isArray(c.categories)
-          ? c.categories.filter((cat) => typeof cat === "string")
-          : [];
-
-        const isUganda = c.country === "UG";
-
-        // International: must claim English language AND have a relevant category.
-        // We do NOT restrict by country — channels like Al Jazeera (QA),
-        // France 24 (FR), DW (DE), and NHK World (JP) all broadcast in English
-        // but their countries are not English-speaking.
-        const isIntlEnglish =
-          !isUganda &&
-          langs.includes("eng") &&
-          cats.some((cat) => WANTED_TV_CATEGORIES.has(cat.toLowerCase())) &&
-          internationalCount < INTERNATIONAL_ENGLISH_CAP;
-
-        if (!isUganda && !isIntlEnglish) continue;
-        if (!isUganda) internationalCount++;
-
-        wantedChannelIds.add(c.id);
-        candidateChannels.push(c);
-      }
-
-      const candidateStreams = [];
-      for (const s of streamsRaw) {
-        if (!s || typeof s !== "object") continue;
-        if (typeof s.url !== "string") continue;
-        if (s.channel && wantedChannelIds.has(s.channel)) {
-          candidateStreams.push(s);
-        }
-        // Orphan streams without a channel ID are handled via M3U below
-      }
-
-      console.log(
-        `  iptv-org: ${candidateChannels.length} candidate channels, ${candidateStreams.length} streams`
-      );
-
-      const merged = mergeChannelsAndStreams(candidateChannels, candidateStreams);
-      for (const s of merged) {
-        if (!seenIds.has(s.id) && !seenUrls.has(s.streamUrl)) {
-          seenIds.add(s.id);
-          seenUrls.add(s.streamUrl);
-          stations.push(s);
-        }
+    for (const s of await fetchIptvStations()) {
+      if (!seenIds.has(s.id) && !seenUrls.has(s.streamUrl)) {
+        seenIds.add(s.id);
+        seenUrls.add(s.streamUrl);
+        stations.push(s);
       }
     }
   } catch (e) {
@@ -1087,37 +1212,41 @@ async function main() {
     `  Radio: ${validRadio.length}/${rawRadio.length} streams working\n`
   );
 
-  // Merge supplement stations — only after validation (YouTube = live now;
-  // direct CDN = same stream checks as API results).
+  // Supplements, only after validation: direct streams get the same checks as
+  // API results; YouTube channels are kept per validateYouTubeSupplements.
   const validatedIds = new Set([...validTv, ...validRadio].map((s) => s.id));
   const validatedUrls = new Set(
     [...validTv, ...validRadio].map((s) => s.streamUrl).filter(Boolean)
   );
 
-  const youtubeSupp = SUPPLEMENT_TV_STATIONS.filter((s) => s.youtubeChannelId);
-  const directSupp = SUPPLEMENT_TV_STATIONS.filter(
-    (s) => s.streamUrl && !s.youtubeChannelId
-  );
-
-  const youtubeCandidates = youtubeSupp.filter((s) => !validatedIds.has(s.id));
-  const directCandidates = directSupp.filter(
+  const directCandidates = SUPPLEMENT_TV_STATIONS.filter(
     (s) => !validatedIds.has(s.id) && !validatedUrls.has(s.streamUrl)
   );
 
   // Run direct CDN and YouTube checks sequentially with modest concurrency so
   // we don't exhaust sockets right after validating hundreds of radio streams.
-  console.log("Validating supplement stations (direct CDN, then YouTube live)...");
+  console.log("Validating supplement stations (direct CDN, then YouTube)...");
   const validDirectSupp = await validateStreamUrls(directCandidates, 3, 15000);
-  const validYoutubeSupp = await validateYouTubeSupplements(
-    youtubeCandidates,
-    3,
-    12000
+  console.log(
+    `  Direct CDN: ${validDirectSupp.length}/${directCandidates.length} working`
   );
 
-  console.log(
-    `  Supplement: ${validYoutubeSupp.length}/${youtubeCandidates.length} YouTube live, ` +
-      `${validDirectSupp.length}/${directCandidates.length} direct CDN working\n`
+  // A working direct stream of the same channel beats the YouTube embed.
+  const directTv = [...validTv, ...validDirectSupp];
+  const directIds = new Set(directTv.map((s) => s.id));
+  const directKeys = directTv.map((s) => tvNameKey(s.name));
+  const youtubeCandidates = YOUTUBE_TV_CHANNELS.filter((s) => {
+    const key = tvNameKey(s.name);
+    return !directIds.has(s.id) && !directKeys.some((k) => isSameTvChannel(k, key));
+  });
+  const previousByChannel = new Map(
+    previous.filter((s) => s?.youtubeChannelId).map((s) => [s.youtubeChannelId, s])
   );
+  const validYoutubeSupp = await validateYouTubeSupplements(
+    youtubeCandidates,
+    previousByChannel
+  );
+  console.log("");
 
   const supplemented = [...validYoutubeSupp, ...validDirectSupp];
 
@@ -1130,7 +1259,14 @@ async function main() {
     return true;
   });
   const ugTv = all.filter((s) => s.type === "tv" && s.country === "UG");
-  const intlTv = all.filter((s) => s.type === "tv" && s.country !== "UG");
+  const eaTv = all.filter(
+    (s) => s.type === "tv" && EAST_AFRICA_COUNTRIES.includes(s.country)
+  );
+  const intlTv = all.filter(
+    (s) =>
+      s.type === "tv" && s.country !== "UG" && !EAST_AFRICA_COUNTRIES.includes(s.country)
+  );
+  const youtubeTv = all.filter((s) => s.youtubeChannelId);
   const ugRadio = all.filter((s) => s.type === "radio" && s.country === "UG");
   const eaRadio = all.filter(
     (s) => s.type === "radio" && EAST_AFRICA_COUNTRIES.includes(s.country)
@@ -1148,10 +1284,25 @@ async function main() {
 
   console.log(`Total working stations: ${all.length}`);
   console.log(`  Uganda TV:        ${ugTv.length}`);
+  console.log(`  East Africa TV:   ${eaTv.length}`);
   console.log(`  International TV: ${intlTv.length}`);
+  console.log(`  (YouTube TV:      ${youtubeTv.length})`);
   console.log(`  Uganda Radio:     ${ugRadio.length}`);
   console.log(`  East Africa Radio:   ${eaRadio.length}`);
   console.log(`  International Radio: ${intlRadio.length}`);
+
+  // A run on a bad network finds most streams "dead". Publishing that would wipe
+  // the catalog for every user, so keep the live one instead.
+  for (const type of ["radio", "tv"]) {
+    const before = previous.filter((s) => s?.type === type).length;
+    const now = all.filter((s) => s.type === type).length;
+    if (before > 0 && now < before * 0.5) {
+      throw new Error(
+        `Only ${now} ${type} stations work, the live catalog has ${before}; ` +
+          "refusing to publish a degraded catalog"
+      );
+    }
+  }
 
   mkdirSync(OUTPUT_DIR, { recursive: true });
   writeFileSync(OUTPUT_FILE, JSON.stringify(all, null, 2));

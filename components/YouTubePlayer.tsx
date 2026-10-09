@@ -19,10 +19,13 @@ interface YouTubePlayerProps {
 
 const BACK_TIMEOUT = 4000;
 
+// YouTube refuses embeds loaded without a referring web page (error 153), which is
+// what a WebView opening the embed URL directly is. This page on the Laba site hosts
+// YouTube's player instead (docs/embed/youtube.html).
 function buildEmbedUrl(channelId: string) {
   return (
-    `https://www.youtube.com/embed/live_stream` +
-    `?channel=${channelId}&autoplay=1&playsinline=1&rel=0&modestbranding=1`
+    `https://laba.yasinwalum.com/embed/youtube.html` +
+    `?channel=${encodeURIComponent(channelId)}&controls=1`
   );
 }
 
