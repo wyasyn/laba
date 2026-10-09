@@ -239,21 +239,6 @@
     "isFeatured": false
   },
   {
-    "id": "meru-tv",
-    "name": "MERU TV",
-    "type": "tv",
-    "logo": "https://i.imgur.com/EPmWNfz.jpg",
-    "streamUrl": "https://goliveafrica.media:9998/live/628e5c1991061/index.m3u8",
-    "description": "general",
-    "language": "English",
-    "country": "KE",
-    "categories": [
-      "general"
-    ],
-    "website": "http://merudigital.co.ke/",
-    "isFeatured": false
-  },
-  {
     "id": "dodoma-tv",
     "name": "Dodoma TV",
     "type": "tv",
@@ -2034,7 +2019,7 @@
     "id": "radio-beat-fm-kampala-96-3-fm-mp3-ug",
     "name": "Beat FM - Kampala - 96.3 FM",
     "type": "radio",
-    "streamUrl": "http://5230.cloudrad.io:8354/",
+    "streamUrl": "http://5230.cloudrad.io:8354/live",
     "description": "music",
     "language": "English",
     "country": "UG",
@@ -2489,21 +2474,6 @@
     "isFeatured": false
   },
   {
-    "id": "radio-christian-life-radio-ug",
-    "name": "Christian life radio",
-    "type": "radio",
-    "streamUrl": "https://ice64.securenetsystems.net/CLR1MP3",
-    "logo": "https://www.communitynetradio.org/favicon.ico",
-    "description": "christian",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "christian"
-    ],
-    "website": "https://www.communitynetradio.org/christianliferadio",
-    "isFeatured": false
-  },
-  {
     "id": "radio-bnx-media-fm-kampala-mp3-ug",
     "name": "BNX Media FM - Kampala",
     "type": "radio",
@@ -2519,20 +2489,6 @@
       "talk"
     ],
     "website": "https://www.bnxmediafm.co.ug/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-isaiah-fm-ug",
-    "name": "Isaiah Fm",
-    "type": "radio",
-    "streamUrl": "https://ice66.securenetsystems.net/FFBN?playSessionID=8D29A2B7-D966-0B14-AFCD7A340AFA6C15",
-    "description": "the promise",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "the promise"
-    ],
-    "website": "https://ice66.securenetsystems.net/FFBN?playSessionID=8D29A2B7-D966-0B14-AFCD7A340AFA6C15",
     "isFeatured": false
   },
   {
@@ -3004,21 +2960,6 @@
       "kadongo kamu"
     ],
     "website": "https://stream-44.zeno.fm/1uhqawtfk5zuv",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-dove-radio-ug",
-    "name": "Dove Radio",
-    "type": "radio",
-    "streamUrl": "https://ice64.securenetsystems.net/DOVEMAIN",
-    "logo": "https://firebasestorage.googleapis.com/v0/b/radiogalaxy-580f4.appspot.com/o/images%2FIMG_20240128_195126328.jpg?alt=media&token=2fdca8aa-06c4-41a2-bd6b-b217df4731ab",
-    "description": "religious",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "religious"
-    ],
-    "website": "https://ice64.securenetsystems.net/DOVEMAIN",
     "isFeatured": false
   },
   {
@@ -4007,6 +3948,18 @@
     "isFeatured": false
   },
   {
+    "id": "radio-nuru-fm-tz",
+    "name": "Nuru FM",
+    "type": "radio",
+    "streamUrl": "https://radiotadio.co.tz/nuru-fm-stream",
+    "description": "Radio station",
+    "language": "English",
+    "country": "TZ",
+    "categories": [],
+    "website": "https://radiotadio.co.tz/nurufm/",
+    "isFeatured": false
+  },
+  {
     "id": "radio-capital-radio-tz",
     "name": "Capital Radio",
     "type": "radio",
@@ -4324,21 +4277,6 @@
     "isFeatured": false
   },
   {
-    "id": "radio-radio-svein-cd",
-    "name": "Radio Svein",
-    "type": "radio",
-    "streamUrl": "https://radiosvein2.ice.infomaniak.ch/radiosvein2-64.mp3",
-    "logo": "https://sveinmedia.info/wp-content/uploads/2023/02/sveinlogo-2.png",
-    "description": "radio comunitaria",
-    "language": "French",
-    "country": "CD",
-    "categories": [
-      "radio comunitaria"
-    ],
-    "website": "https://sveinmedia.info/",
-    "isFeatured": false
-  },
-  {
     "id": "radio-millenium-radio-cd",
     "name": "MILLENIUM RADIO",
     "type": "radio",
@@ -4430,19 +4368,6 @@
       "religious"
     ],
     "website": "http://www.radiomaria.bi/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-sports-radio-brila-fm-ng",
-    "name": "Sports Radio Brila FM",
-    "type": "radio",
-    "streamUrl": "https://atunwadigital.streamguys1.com/brilafm",
-    "logo": "https://brila.net/wp-content/uploads/2025/07/brila-logo-white.png",
-    "description": "Radio station",
-    "language": "English",
-    "country": "NG",
-    "categories": [],
-    "website": "https://brila.net/",
     "isFeatured": false
   },
   {
@@ -5826,6 +5751,20 @@
     "isFeatured": false
   },
   {
+    "id": "radio-talksport-gb",
+    "name": "talkSPORT",
+    "type": "radio",
+    "streamUrl": "https://radio.talksport.com/stream",
+    "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAcdmwRcs4FcWk_OQqxq4EyZH5YA7ixM2dvQ&usqp=CAU",
+    "description": "news",
+    "language": "English",
+    "country": "GB",
+    "categories": [
+      "news"
+    ],
+    "isFeatured": false
+  },
+  {
     "id": "radio-vesti-fm-ru",
     "name": "Вести ФМ (Vesti FM)",
     "type": "radio",
@@ -5956,6 +5895,23 @@
     "isFeatured": false
   },
   {
+    "id": "radio-iraninternational-ir",
+    "name": "iraninternational",
+    "type": "radio",
+    "streamUrl": "https://radio.iraninternational.app/iintl_c",
+    "logo": "https://iranintl.com/favicon.ico",
+    "description": "iran, news, persian",
+    "language": "Persian",
+    "country": "IR",
+    "categories": [
+      "iran",
+      "news",
+      "persian"
+    ],
+    "website": "https://iranintl.com/",
+    "isFeatured": false
+  },
+  {
     "id": "radio-smooth-jazz-sax-piano-guitarra-y-voz-cool-jazz-mx",
     "name": "SMOOTH JAZZ: Sax, piano, guitarra y voz: cool jazz",
     "type": "radio",
@@ -6041,6 +5997,35 @@
     "isFeatured": false
   },
   {
+    "id": "radio-radio-swiss-jazz-ch",
+    "name": "Radio Swiss Jazz",
+    "type": "radio",
+    "streamUrl": "http://stream.srg-ssr.ch/m/rsj/mp3_128",
+    "description": "jazz, public radio, srg ssr",
+    "language": "English",
+    "country": "CH",
+    "categories": [
+      "jazz",
+      "public radio",
+      "srg ssr"
+    ],
+    "website": "http://www.radioswissjazz.ch/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-arrow-classic-rock-nl",
+    "name": "Arrow Classic Rock",
+    "type": "radio",
+    "streamUrl": "http://stream.gal.io/arrow",
+    "logo": "https://www.arrow.nl/wp-content/uploads/2020/08/logo.png",
+    "description": "Radio station",
+    "language": "English",
+    "country": "NL",
+    "categories": [],
+    "website": "https://www.arrow.nl/",
+    "isFeatured": false
+  },
+  {
     "id": "radio-bossa-jazz-brasil-br",
     "name": "Bossa Jazz Brasil",
     "type": "radio",
@@ -6055,6 +6040,22 @@
       "mpb"
     ],
     "website": "https://bossajazzbrasil.com/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-box-japan-city-pop-jp",
+    "name": "BOX : Japan City Pop - 日本のシティポップ",
+    "type": "radio",
+    "streamUrl": "https://play.streamafrica.net/japancitypop",
+    "logo": "https://assets.radioapi.me/radios/01J65CR99GVHS3A7CT7D53C415.jpg",
+    "description": "city pop, japanese",
+    "language": "English",
+    "country": "JP",
+    "categories": [
+      "city pop",
+      "japanese"
+    ],
+    "website": "https://boxradio.net/",
     "isFeatured": false
   },
   {
