@@ -161,6 +161,8 @@ export const en = {
   "video.enterFullscreen": "Enter fullscreen",
   "video.exitFullscreen": "Exit fullscreen",
   "video.pip": "Picture in picture",
+  "video.fill": "Fill screen",
+  "video.fit": "Fit to screen",
   "video.volume": "Adjust volume",
   "video.toggleHint": "Toggle playback",
   "video.showBack": "Show back button",

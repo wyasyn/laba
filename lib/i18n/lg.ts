@@ -149,6 +149,8 @@ export const lg: Partial<Record<MessageKey, string>> = {
   "video.enterFullscreen": "Jjuza olutimbe",
   "video.exitFullscreen": "Va ku lutimbe olujjuvu",
   "video.pip": "Akatimbe akatono",
+  "video.fill": "Jjuza olutimbe",
+  "video.fit": "Tereeza ku lutimbe",
   "video.volume": "Kyusa eddoboozi",
   "video.toggleHint": "Kuba oba yimiriza",
   "video.showBack": "Laga eppeesa ery'okuddayo",

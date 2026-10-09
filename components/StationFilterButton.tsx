@@ -1,5 +1,5 @@
 import { PressableScale } from "@/components/ui/PressableScale";
-import { FILTER_CHIPS_HEIGHT } from "@/components/ui/FilterChips";
+import { CHIP_HEIGHT } from "@/components/ui/FilterChips";
 import { Text } from "@/components/ui/Text";
 import { useT } from "@/lib/i18n";
 import { haptic } from "@/lib/motion";
@@ -59,7 +59,7 @@ export function StationFilterButton({ stations, value, onChange }: StationFilter
         accessibilityLabel={active ? t("filters.active", { summary }) : t("filters.open")}
         scaleTo={0.9}
         className={active ? "items-center justify-center rounded-full bg-primary" : "items-center justify-center rounded-full border border-border bg-surface"}
-        style={{ width: FILTER_CHIPS_HEIGHT, height: FILTER_CHIPS_HEIGHT }}
+        style={{ width: CHIP_HEIGHT, height: CHIP_HEIGHT }}
       >
         <HugeiconsIcon icon={FilterHorizontalIcon} size={18} color={active ? colors.onPrimary : colors.textPrimary} />
         {active ? (

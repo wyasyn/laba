@@ -146,6 +146,8 @@ export const sw: Partial<Record<MessageKey, string>> = {
   "video.enterFullscreen": "Skrini nzima",
   "video.exitFullscreen": "Toka kwenye skrini nzima",
   "video.pip": "Picha ndani ya picha",
+  "video.fill": "Jaza skrini",
+  "video.fit": "Toshea skrini",
   "video.volume": "Rekebisha sauti",
   "video.toggleHint": "Cheza au sitisha",
   "video.showBack": "Onyesha kitufe cha kurudi",

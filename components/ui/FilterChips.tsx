@@ -1,5 +1,5 @@
 import { useT } from "@/lib/i18n";
-import { duration, haptic, spring } from "@/lib/motion";
+import { duration, haptic } from "@/lib/motion";
 import { useTheme } from "@/lib/useTheme";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Pressable, ScrollView, View, type LayoutChangeEvent } from "react-native";
@@ -7,7 +7,6 @@ import Animated, {
   interpolateColor,
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
   withTiming,
 } from "react-native-reanimated";
 
@@ -26,15 +25,16 @@ interface FilterChipsProps {
 }
 
 export const FILTER_CHIPS_HEIGHT = 44;
-const RAIL_PADDING = 4;
+/** Height of one pill, and of the filter button that sits beside the row. */
+export const CHIP_HEIGHT = 36;
 const GUTTER = 20;
 
 type Frame = { x: number; width: number };
 
 /**
- * Segmented rail of categories. The rounded rail keeps the content width and
- * only the tabs scroll inside it. A single indicator slides between tabs, and
- * the selected tab is scrolled towards the middle so the next options show.
+ * Category pills on one row that scrolls sideways (never wraps), styled like the desktop
+ * app's: bordered pills, the selected one filled. The selected pill is scrolled towards
+ * the middle so the next options show.
  */
 export function FilterChips({
   options,
@@ -45,51 +45,32 @@ export function FilterChips({
   labels,
   trailing,
 }: FilterChipsProps) {
-  const { colors } = useTheme();
   const { t } = useT();
   const scrollRef = useRef<ScrollView>(null);
   const frames = useRef<Record<string, Frame>>({});
   const [viewport, setViewport] = useState(0);
 
-  const indicatorX = useSharedValue(0);
-  const indicatorW = useSharedValue(0);
-
   const key = selected ?? "";
 
-  const moveTo = (target: string, animate: boolean) => {
+  const centre = (target: string, animate: boolean) => {
     const frame = frames.current[target];
-    if (!frame) return;
-    if (animate) {
-      indicatorX.set(withSpring(frame.x, spring.gentle));
-      indicatorW.set(withSpring(frame.width, spring.gentle));
-    } else {
-      indicatorX.set(frame.x);
-      indicatorW.set(frame.width);
-    }
-    if (viewport > 0) {
-      const centred = frame.x - (viewport - frame.width) / 2;
-      scrollRef.current?.scrollTo({ x: Math.max(0, centred), animated: animate });
-    }
+    if (!frame || viewport === 0) return;
+    const centred = frame.x - (viewport - frame.width) / 2;
+    scrollRef.current?.scrollTo({ x: Math.max(0, centred), animated: animate });
   };
 
   useEffect(() => {
-    moveTo(key, true);
-    // moveTo reads refs only; re-run when the selection or viewport changes.
+    centre(key, true);
+    // centre reads refs only; re-run when the selection or viewport changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key, viewport]);
-
-  const indicatorStyle = useAnimatedStyle(() => ({
-    width: indicatorW.get(),
-    transform: [{ translateX: indicatorX.get() }],
-    opacity: indicatorW.get() > 0 ? 1 : 0,
-  }));
 
   if (options.length === 0 && !trailing) return null;
 
   const onChipLayout = (value: string) => (e: LayoutChangeEvent) => {
     const { x, width } = e.nativeEvent.layout;
     frames.current[value] = { x, width };
-    if (value === key) moveTo(value, false);
+    if (value === key) centre(value, false);
   };
 
   const items: { value: string | null; label: string }[] = [
@@ -98,52 +79,30 @@ export function FilterChips({
   ];
 
   const rail = (
-    <View
-      className="overflow-hidden rounded-full border border-border bg-surface"
-      style={
-        trailing
-          ? { flex: 1, height: FILTER_CHIPS_HEIGHT, padding: RAIL_PADDING }
-          : { marginHorizontal: GUTTER, height: FILTER_CHIPS_HEIGHT, padding: RAIL_PADDING }
-      }
+    <ScrollView
+      ref={scrollRef}
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      keyboardShouldPersistTaps="handled"
+      style={{ flexGrow: trailing ? 1 : 0, flexShrink: 1, height: FILTER_CHIPS_HEIGHT }}
+      contentContainerStyle={{
+        alignItems: "center",
+        gap: 8,
+        paddingHorizontal: trailing ? 0 : GUTTER,
+      }}
+      onLayout={(e) => setViewport(e.nativeEvent.layout.width)}
     >
-      <ScrollView
-        ref={scrollRef}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-        // Round the scroll viewport too, so tabs clip against the rail's curve.
-        style={{ borderRadius: 999 }}
-        onLayout={(e) => setViewport(e.nativeEvent.layout.width)}
-      >
-        {/* Explicit height: the rail's inner room, less its padding and 1px border. */}
-        <View className="flex-row" style={{ height: FILTER_CHIPS_HEIGHT - RAIL_PADDING * 2 - 2 }}>
-          <Animated.View
-            pointerEvents="none"
-            style={[
-              {
-                position: "absolute",
-                top: 0,
-                bottom: 0,
-                left: 0,
-                borderRadius: 999,
-                backgroundColor: colors.primary,
-              },
-              indicatorStyle,
-            ]}
-          />
-          {items.map(({ value, label }) => (
-            <Chip
-              key={value ?? ""}
-              label={label}
-              count={counts?.[value ?? ""]}
-              active={selected === value}
-              onLayout={onChipLayout(value ?? "")}
-              onPress={() => onSelect(value === null || selected === value ? null : value)}
-            />
-          ))}
-        </View>
-      </ScrollView>
-    </View>
+      {items.map(({ value, label }) => (
+        <Chip
+          key={value ?? ""}
+          label={label}
+          count={counts?.[value ?? ""]}
+          active={selected === value}
+          onLayout={onChipLayout(value ?? "")}
+          onPress={() => onSelect(value === null || selected === value ? null : value)}
+        />
+      ))}
+    </ScrollView>
   );
 
   if (!trailing) return rail;
@@ -175,6 +134,11 @@ function Chip({
     progress.set(withTiming(active ? 1 : 0, { duration: duration.base }));
   }, [active, progress]);
 
+  const chipStyle = useAnimatedStyle(() => ({
+    backgroundColor: interpolateColor(progress.get(), [0, 1], [colors.surface, colors.primary]),
+    borderColor: interpolateColor(progress.get(), [0, 1], [colors.border, colors.primary]),
+  }));
+
   const textStyle = useAnimatedStyle(() => ({
     color: interpolateColor(progress.get(), [0, 1], [colors.textSecondary, colors.onPrimary]),
   }));
@@ -194,16 +158,20 @@ function Chip({
       accessibilityRole="tab"
       accessibilityState={{ selected: active }}
       accessibilityLabel={count != null ? `${label}, ${count}` : label}
-      className="h-full flex-row items-center gap-1.5 rounded-full px-4"
     >
-      <Animated.Text style={textStyle} className="font-sans text-[13px] font-semibold capitalize">
-        {label}
-      </Animated.Text>
-      {count != null ? (
-        <Animated.Text style={countStyle} className="font-sans text-[11px] font-semibold">
-          {count}
+      <Animated.View
+        style={[chipStyle, { height: CHIP_HEIGHT, borderWidth: 1 }]}
+        className="flex-row items-center gap-1.5 rounded-full px-4"
+      >
+        <Animated.Text style={textStyle} className="font-sans text-[13px] font-semibold capitalize">
+          {label}
         </Animated.Text>
-      ) : null}
+        {count != null ? (
+          <Animated.Text style={countStyle} className="font-sans text-[11px] font-semibold">
+            {count}
+          </Animated.Text>
+        ) : null}
+      </Animated.View>
     </Pressable>
   );
 }

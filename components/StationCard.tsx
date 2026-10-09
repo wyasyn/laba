@@ -38,7 +38,6 @@ export const StationCard = memo(function StationCard({ station }: StationCardPro
   const isOnAir = usePlayerStore(
     (s) => s.currentStation?.id === station.id && s.status === "playing",
   );
-  const accent = station.type === "tv" ? colors.primary : colors.success;
 
   return (
     <PressableScale
@@ -78,7 +77,7 @@ export const StationCard = memo(function StationCard({ station }: StationCardPro
           {station.name}
         </Text>
         <View className="mt-1 flex-row items-center gap-1.5">
-          <StationTypeIcon type={station.type} size={13} color={accent} strokeWidth={2} />
+          <StationTypeIcon type={station.type} size={13} color={colors.textTertiary} strokeWidth={2} />
           <Text numberOfLines={1} className="flex-1 text-[12px] font-medium leading-4 text-text-secondary">
             {metaLabel(station, t(station.type === "tv" ? "card.liveTv" : "card.radio"))}
           </Text>

@@ -139,6 +139,7 @@ export function YouTubePlayer({
         animationType="fade"
         supportedOrientations={["landscape"]}
         statusBarTranslucent
+        navigationBarTranslucent
         onRequestClose={exitFullscreen}
       >
         <GestureHandlerRootView className="flex-1">

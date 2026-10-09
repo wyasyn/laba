@@ -1,7 +1,7 @@
 import { StationTypeIcon } from "@/components/icons/StationTypeIcon";
 import type { Station } from "@/lib/schemas";
+import { useTheme } from "@/lib/useTheme";
 import { Image, type ImageProps } from "expo-image";
-import { LinearGradient } from "expo-linear-gradient";
 import { memo, useState } from "react";
 import {
   StyleSheet,
@@ -23,35 +23,11 @@ interface StationArtworkProps {
   transition?: ImageProps["transition"];
 }
 
-/** Curated gradient pairs. Each station gets a stable one, picked from its id. */
-const PALETTES = [
-  ["#6366F1", "#312E81"],
-  ["#8B5CF6", "#4C1D95"],
-  ["#EC4899", "#831843"],
-  ["#F43F5E", "#7F1D1D"],
-  ["#F97316", "#9A3412"],
-  ["#F59E0B", "#B45309"],
-  ["#10B981", "#065F46"],
-  ["#14B8A6", "#134E4A"],
-  ["#0EA5E9", "#1E3A8A"],
-  ["#64748B", "#1E293B"],
-] as const;
-
 /** Words that say nothing about which station this is. */
 const GENERIC_WORDS = new Set(["tv", "fm", "am", "radio", "uganda", "the", "channel", "station", "online", "live"]);
 
-/** Below this size the logo fills the tile instead of sitting on a plate. */
-const PLATE_MIN_SIZE = 64;
-
-function hash(value: string) {
-  let h = 0;
-  for (let i = 0; i < value.length; i++) h = (h * 31 + value.charCodeAt(i)) | 0;
-  return Math.abs(h);
-}
-
-export function stationPalette(station: Station) {
-  return PALETTES[hash(station.id) % PALETTES.length];
-}
+/** Below this size the logo fills the tile with less padding and no watermark. */
+const SMALL_MAX_SIZE = 64;
 
 /** "NBS TV" -> "NBS", "Pearl Magic" -> "PM", "Bukedde TV 1" -> "B1". */
 export function stationMonogram(name: string) {
@@ -67,6 +43,10 @@ export function stationMonogram(name: string) {
     .toUpperCase();
 }
 
+/**
+ * Station artwork on one neutral tile colour (the same for every station): the logo as it
+ * is when there is one, else a monogram, with a faint TV or radio mark in the corner.
+ */
 export const StationArtwork = memo(function StationArtwork({
   station,
   variant,
@@ -74,14 +54,15 @@ export const StationArtwork = memo(function StationArtwork({
   blurRadius,
   transition = 220,
 }: StationArtworkProps) {
+  const { colors } = useTheme();
   // Remember which logo URL failed rather than a boolean, so a recycled list
   // cell showing a different station never inherits the failure.
   const [failedLogo, setFailedLogo] = useState<string | null>(null);
   const [size, setSize] = useState(0);
 
   const showLogo = Boolean(station.logo) && failedLogo !== station.logo;
-  const [from, to] = stationPalette(station);
   const onError = showLogo ? () => setFailedLogo(station.logo ?? null) : undefined;
+  const background = { backgroundColor: colors.surfaceLight };
 
   const onLayout = (e: LayoutChangeEvent) => {
     const { width, height } = e.nativeEvent.layout;
@@ -89,12 +70,10 @@ export const StationArtwork = memo(function StationArtwork({
     if (next !== size) setSize(next);
   };
 
-  // Ambient backdrops only need the colour: the station's gradient plus its
-  // logo stretched and blurred.
+  // Ambient backdrops only need the colour: the logo stretched and blurred.
   if (blurRadius != null) {
     return (
-      <View style={[styles.fill, style]}>
-        <LinearGradient colors={[from, to]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
+      <View style={[styles.fill, background, style]}>
         {showLogo ? (
           <Image
             source={{ uri: station.logo }}
@@ -111,68 +90,49 @@ export const StationArtwork = memo(function StationArtwork({
     );
   }
 
-  const small = size > 0 && size < PLATE_MIN_SIZE;
-  const plate = Math.round(size * (variant === "hero" ? 0.36 : 0.54));
+  const small = size > 0 && size < SMALL_MAX_SIZE;
+  // The logo's box: most of a small tile, a comfortable share of a big one.
+  const logoBox = Math.round(size * (small ? 0.8 : variant === "hero" ? 0.42 : 0.62));
   const monogram = stationMonogram(station.name);
   const monoSize = size * (monogram.length === 1 ? 0.46 : monogram.length === 2 ? 0.36 : 0.26);
 
   return (
-    <View style={[styles.fill, style]} onLayout={onLayout}>
-      <LinearGradient colors={[from, to]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
-      {/* Soft light from the top-left corner gives the flat gradient some depth. */}
-      <LinearGradient
-        colors={["rgba(255,255,255,0.22)", "rgba(255,255,255,0)"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0.7, y: 0.7 }}
-        style={StyleSheet.absoluteFill}
-      />
-
-      {size === 0 ? null : showLogo && small ? (
-        <View style={[StyleSheet.absoluteFill, styles.smallPlate]}>
-          <Image
-            source={{ uri: station.logo }}
-            recyclingKey={station.id}
-            style={styles.smallLogo}
-            contentFit="contain"
-            cachePolicy="memory-disk"
-            transition={transition}
-            onError={onError}
-          />
-        </View>
-      ) : (
+    <View style={[styles.fill, background, style]} onLayout={onLayout}>
+      {size === 0 ? null : (
         <>
           {!small ? (
             <View
               pointerEvents="none"
               style={[styles.watermark, { right: -size * 0.12, bottom: -size * 0.1 }]}
             >
-              <StationTypeIcon type={station.type} size={size * 0.62} color="rgba(255,255,255,0.13)" filled />
+              <StationTypeIcon
+                type={station.type}
+                size={size * 0.62}
+                color={`${colors.textPrimary}14`}
+                filled
+              />
             </View>
           ) : null}
 
           <View style={[StyleSheet.absoluteFill, styles.center, variant === "hero" && styles.heroCenter]}>
             {showLogo ? (
-              <View
-                style={[
-                  styles.plate,
-                  { width: plate, height: plate, borderRadius: plate * 0.26, padding: plate * 0.14 },
-                ]}
-              >
-                <Image
-                  source={{ uri: station.logo }}
-                  recyclingKey={station.id}
-                  style={styles.plateLogo}
-                  contentFit="contain"
-                  cachePolicy="memory-disk"
-                  transition={transition}
-                  onError={onError}
-                />
-              </View>
+              <Image
+                source={{ uri: station.logo }}
+                recyclingKey={station.id}
+                style={{ width: logoBox, height: logoBox }}
+                contentFit="contain"
+                cachePolicy="memory-disk"
+                transition={transition}
+                onError={onError}
+              />
             ) : (
               <Text
                 allowFontScaling={false}
                 numberOfLines={1}
-                style={[styles.monogram, { fontSize: monoSize, letterSpacing: -monoSize * 0.04 }]}
+                style={[
+                  styles.monogram,
+                  { color: colors.textSecondary, fontSize: monoSize, letterSpacing: -monoSize * 0.04 },
+                ]}
               >
                 {monogram}
               </Text>
@@ -203,33 +163,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     transform: [{ rotate: "-12deg" }],
   },
-  plate: {
-    backgroundColor: "#FFFFFF",
-    borderCurve: "continuous",
-    shadowColor: "#000000",
-    shadowOpacity: 0.25,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 6,
-  },
-  plateLogo: {
-    width: "100%",
-    height: "100%",
-  },
-  smallPlate: {
-    backgroundColor: "#FFFFFF",
-    padding: "12%",
-  },
-  smallLogo: {
-    width: "100%",
-    height: "100%",
-  },
   monogram: {
-    color: "#FFFFFF",
     fontFamily: "Inter",
     fontWeight: "700",
-    textShadowColor: "rgba(0,0,0,0.18)",
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 8,
   },
 });

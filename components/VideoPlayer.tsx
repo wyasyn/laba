@@ -7,19 +7,23 @@ import { useTheme } from "@/lib/useTheme";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import {
   ArrowDown01Icon,
+  ArrowExpandIcon,
   ArrowLeft01Icon,
+  ArrowShrinkIcon,
   FullscreenIcon,
   MinimizeScreenIcon,
   PauseIcon,
   PictureInPictureOnIcon,
-  PlayCircleIcon,
+  PlayIcon,
   ReloadIcon,
   VolumeHighIcon,
   VolumeLowIcon,
   VolumeMuteIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
+import type { IconSvgElement } from "@hugeicons/react-native";
 import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import {
@@ -27,10 +31,11 @@ import {
   Modal,
   Pressable,
   StatusBar,
+  StyleSheet,
   View,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, {
   FadeIn,
   FadeOut,
@@ -60,6 +65,7 @@ interface VideoPlayerProps {
 }
 
 const CONTROLS_TIMEOUT = 4000;
+const NO_INSETS = { top: 0, bottom: 0, left: 0, right: 0 };
 const HIT_SLOP = 16;
 
 type PlaybackStatus =
@@ -113,6 +119,9 @@ export function VideoPlayer({
   const [volume, setVolume] = useState(1);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
   const [isPip, setIsPip] = useState(false);
+  const [fill, setFill] = useState(true);
+  const insets = useSafeAreaInsets();
+  const edges = isFullscreen ? insets : NO_INSETS;
 
   // TV and radio never talk over each other: if radio starts while this
   // player is still mounted (a radio screen opened on top), pause the video.
@@ -320,129 +329,131 @@ export function VideoPlayer({
         </View>
       )}
 
-      {/* Controls overlay */}
+      {/* Controls: a tap on the picture shows them, and they fade after a few seconds.
+          Scrims darken only the top and bottom edges so the picture stays visible. */}
       {!hasError && !isLoading && (
         <Pressable onPress={toggleControls} className="absolute inset-0">
           <Animated.View className="flex-1" style={controlsStyle}>
             {controlsVisible && (
-              <View className="absolute inset-0 bg-black/40">
-                {/* Top bar — back (fullscreen only) + volume */}
-                <View className="flex-row items-center justify-between px-4 pt-3">
-                  {isFullscreen ? (
-                    <Pressable
-                      onPress={toggleFullscreen}
-                      className="rounded-full bg-black/50 p-2"
-                      hitSlop={HIT_SLOP}
-                      accessibilityRole="button"
-                      accessibilityLabel={t("video.exitFullscreen")}
-                    >
-                      <HugeiconsIcon
+              <View className="absolute inset-0">
+                <LinearGradient
+                  pointerEvents="none"
+                  colors={["rgba(0,0,0,0.75)", "rgba(0,0,0,0)"]}
+                  style={[styles.scrim, styles.scrimTop]}
+                />
+                <LinearGradient
+                  pointerEvents="none"
+                  colors={["rgba(0,0,0,0)", "rgba(0,0,0,0.8)"]}
+                  style={[styles.scrim, styles.scrimBottom]}
+                />
+
+                <View
+                  className="flex-1"
+                  style={{
+                    paddingTop: edges.top,
+                    paddingBottom: edges.bottom,
+                    paddingLeft: edges.left,
+                    paddingRight: edges.right,
+                  }}
+                >
+                  {/* Top bar: back, what is on, picture options */}
+                  <View className="flex-row items-center gap-3 px-4 pt-3">
+                    {isFullscreen ? (
+                      <ControlButton
                         icon={ArrowLeft01Icon}
-                        size={20}
-                        color="#fff"
+                        label={t("video.exitFullscreen")}
+                        onPress={toggleFullscreen}
                       />
-                    </Pressable>
-                  ) : onBack ? (
+                    ) : onBack ? (
+                      <ControlButton icon={ArrowDown01Icon} label={t("station.close")} onPress={onBack} />
+                    ) : null}
+                    <View className="min-w-0 flex-1">
+                      {isFullscreen && title ? (
+                        <>
+                          <Text numberOfLines={1} className="text-[16px] font-bold text-white">
+                            {title}
+                          </Text>
+                          <Text numberOfLines={1} className="text-[12px] text-white/70">
+                            {t("video.lockScreenSubtitle")}
+                          </Text>
+                        </>
+                      ) : null}
+                    </View>
+                    {isFullscreen ? (
+                      <ControlButton
+                        icon={fill ? ArrowShrinkIcon : ArrowExpandIcon}
+                        label={fill ? t("video.fit") : t("video.fill")}
+                        onPress={() => {
+                          setFill((f) => !f);
+                          showControls();
+                        }}
+                      />
+                    ) : null}
+                    <ControlButton icon={PictureInPictureOnIcon} label={t("video.pip")} onPress={enterPip} />
+                  </View>
+
+                  {/* Center play/pause */}
+                  <View className="flex-1 items-center justify-center">
                     <Pressable
-                      onPress={onBack}
-                      className="rounded-full bg-black/50 p-2"
+                      onPress={togglePlay}
                       hitSlop={HIT_SLOP}
                       accessibilityRole="button"
-                      accessibilityLabel={t("station.close")}
+                      accessibilityLabel={isPaused ? t("player.play") : t("player.pause")}
+                      accessibilityHint={t("video.toggleHint")}
+                      className="rounded-full bg-black/40 p-4 active:opacity-70"
                     >
                       <HugeiconsIcon
-                        icon={ArrowDown01Icon}
-                        size={20}
+                        icon={isPaused ? PlayIcon : PauseIcon}
+                        size={isFullscreen ? 40 : 32}
                         color="#fff"
+                        fill="#fff"
                       />
                     </Pressable>
-                  ) : (
-                    <View />
-                  )}
-                  <View className="flex-row items-center gap-3">
-                    <Pressable
-                      onPress={enterPip}
-                      className="rounded-full bg-black/50 p-2"
-                      hitSlop={HIT_SLOP}
-                      accessibilityRole="button"
-                      accessibilityLabel={t("video.pip")}
-                    >
-                      <HugeiconsIcon icon={PictureInPictureOnIcon} size={20} color="#fff" />
-                    </Pressable>
-                    <Pressable
+                  </View>
+
+                  {/* Bottom bar: volume, the live position, fullscreen */}
+                  <View className="flex-row items-center gap-3 px-4 pb-3">
+                    <ControlButton
+                      icon={volumeIcon}
+                      label={t("video.volume")}
                       onPress={() => {
                         setShowVolumeSlider((v) => !v);
                         showControls();
                       }}
-                      className="rounded-full bg-black/50 p-2"
-                      hitSlop={HIT_SLOP}
-                      accessibilityRole="button"
-                      accessibilityLabel={t("video.volume")}
-                    >
-                      <HugeiconsIcon icon={volumeIcon} size={20} color="#fff" />
-                    </Pressable>
-                  </View>
-                </View>
-
-                {/* Volume slider */}
-                {showVolumeSlider && (
-                  <Animated.View
-                    entering={FadeIn.duration(duration.fast)}
-                    exiting={FadeOut.duration(duration.fast)}
-                    className="absolute right-[100px] top-3 h-9 w-[140px] flex-row items-center rounded-full bg-black/60 px-3"
-                  >
-                    <Slider
-                      value={volume}
-                      onChange={(v) => {
-                        setVolume(v);
-                        showControls();
-                      }}
-                      trackColor="rgba(255,255,255,0.3)"
-                      height={36}
                     />
-                  </Animated.View>
-                )}
-
-                {/* Center play/pause */}
-                <View className="flex-1 items-center justify-center">
-                  <Pressable
-                    onPress={togglePlay}
-                    hitSlop={HIT_SLOP}
-                    accessibilityRole="button"
-                    accessibilityLabel={isPaused ? t("player.play") : t("player.pause")}
-                    accessibilityHint={t("video.toggleHint")}
-                    className="rounded-full bg-black/50 p-5"
-                  >
-                    <HugeiconsIcon
-                      icon={isPaused ? PlayCircleIcon : PauseIcon}
-                      size={44}
-                      color="#fff"
-                    />
-                  </Pressable>
-                </View>
-
-                {/* Bottom bar — live badge + fullscreen */}
-                <View className="flex-row items-center justify-between px-4 pb-3">
-                  <View className="flex-row items-center gap-1.5 rounded-md bg-error px-2 py-1">
-                    <LiveDot color="#FFFFFF" size={6} />
-                    <Text className="text-[11px] font-bold uppercase tracking-widest text-white">
-                      {t("player.live")}
-                    </Text>
-                  </View>
-
-                  <Pressable
-                    onPress={toggleFullscreen}
-                    className="rounded-full bg-black/50 p-2"
-                    hitSlop={HIT_SLOP}
-                    accessibilityRole="button"
-                    accessibilityLabel={isFullscreen ? t("video.exitFullscreen") : t("video.enterFullscreen")}
-                  >
-                    <HugeiconsIcon
+                    {showVolumeSlider ? (
+                      <Animated.View
+                        entering={FadeIn.duration(duration.fast)}
+                        exiting={FadeOut.duration(duration.fast)}
+                        className="w-[110px]"
+                      >
+                        <Slider
+                          value={volume}
+                          onChange={(v) => {
+                            setVolume(v);
+                            showControls();
+                          }}
+                          trackColor="rgba(255,255,255,0.3)"
+                          height={32}
+                        />
+                      </Animated.View>
+                    ) : null}
+                    <View className="flex-row items-center gap-1.5 rounded-md bg-error px-2 py-1">
+                      <LiveDot color="#FFFFFF" size={6} />
+                      <Text className="text-[11px] font-bold uppercase tracking-widest text-white">
+                        {t("player.live")}
+                      </Text>
+                    </View>
+                    {/* A live stream always sits at its live edge: a full track. */}
+                    <View className="h-[3px] flex-1 justify-center rounded-full bg-white/85">
+                      <View className="absolute -right-1 h-3 w-3 rounded-full bg-error" />
+                    </View>
+                    <ControlButton
                       icon={isFullscreen ? MinimizeScreenIcon : FullscreenIcon}
-                      size={20}
-                      color="#fff"
+                      label={isFullscreen ? t("video.exitFullscreen") : t("video.enterFullscreen")}
+                      onPress={toggleFullscreen}
                     />
-                  </Pressable>
+                  </View>
                 </View>
               </View>
             )}
@@ -461,7 +472,9 @@ export function VideoPlayer({
         metadata: { title, artist: t("video.lockScreenSubtitle"), imageUri: artworkUrl },
       }}
       style={{ width: "100%", height: "100%" }}
-      resizeMode="contain"
+      // Fullscreen fills the screen by default (a 16:9 picture on a taller phone
+      // screen would otherwise leave bars at the sides); Fit brings the bars back.
+      resizeMode={isFullscreen && fill ? "cover" : "contain"}
       paused={isPaused}
       volume={volume}
       onLoad={handleLoad}
@@ -498,25 +511,56 @@ export function VideoPlayer({
         )}
       </View>
 
-      {/* Fullscreen modal */}
+      {/* Fullscreen: the picture runs edge to edge, under the system bars; only the
+          controls keep clear of the notch and the gesture areas. */}
       <Modal
         visible={isFullscreen}
         animationType="fade"
         supportedOrientations={["landscape"]}
         statusBarTranslucent
+        navigationBarTranslucent
+        onRequestClose={toggleFullscreen}
       >
         <GestureHandlerRootView className="flex-1">
-          <SafeAreaView
-            className="flex-1 bg-black"
-            edges={["top", "bottom", "left", "right"]}
-          >
-            <View className="flex-1 bg-black">
-              {videoElement}
-              {overlays}
-            </View>
-          </SafeAreaView>
+          <View className="flex-1 bg-black">
+            {videoElement}
+            {overlays}
+          </View>
         </GestureHandlerRootView>
       </Modal>
     </>
   );
 }
+
+function ControlButton({
+  icon,
+  label,
+  onPress,
+}: {
+  icon: IconSvgElement;
+  label: string;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      className="rounded-full bg-black/40 p-2 active:opacity-70"
+      hitSlop={HIT_SLOP}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+    >
+      <HugeiconsIcon icon={icon} size={20} color="#fff" />
+    </Pressable>
+  );
+}
+
+const styles = StyleSheet.create({
+  scrim: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    height: "40%",
+  },
+  scrimTop: { top: 0 },
+  scrimBottom: { bottom: 0 },
+});
