@@ -104,21 +104,6 @@
     "isFeatured": true
   },
   {
-    "id": "btv",
-    "name": "BTV",
-    "type": "tv",
-    "logo": "https://i.imgur.com/rcHZ1al.png",
-    "streamUrl": "https://streamfi-alphadgtl1.zettawiseroutes.com:8181/hls/stream.m3u8",
-    "description": "entertainment",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "entertainment"
-    ],
-    "website": "https://imc.ug/",
-    "isFeatured": true
-  },
-  {
     "id": "fort-tv",
     "name": "FORT TV",
     "type": "tv",
@@ -131,21 +116,6 @@
       "entertainment"
     ],
     "website": "https://fort-tv.com/",
-    "isFeatured": true
-  },
-  {
-    "id": "alpha-digital",
-    "name": "Alpha Digital",
-    "type": "tv",
-    "logo": "https://i.imgur.com/sLt242H.png",
-    "streamUrl": "https://streamfi-alphatvdgtl1.zettawiseroutes.com:8181/hls/stream.m3u8",
-    "description": "religious",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "religious"
-    ],
-    "website": "http://imc.ug/",
     "isFeatured": true
   },
   {
@@ -401,6 +371,50 @@
       "entertainment"
     ],
     "website": "https://www.rba.co.rw/kc2",
+    "isFeatured": false
+  },
+  {
+    "id": "isango-tv",
+    "name": "Isango TV",
+    "type": "tv",
+    "logo": "https://i.imgur.com/EfsHaMQ.png",
+    "streamUrl": "http://80.241.215.175:1935/isangostar/isangostar/playlist.m3u8",
+    "description": "music",
+    "language": "Kinyarwanda",
+    "country": "RW",
+    "categories": [
+      "music"
+    ],
+    "website": "http://www.isangostar.rw/",
+    "isFeatured": false
+  },
+  {
+    "id": "baraka-television",
+    "name": "Baraka Television",
+    "type": "tv",
+    "logo": "https://i.imgur.com/IKXddHN.png",
+    "streamUrl": "https://stream.berosat.live:19360/baraka-hd/baraka-hd.m3u8",
+    "description": "news",
+    "language": "French",
+    "country": "CD",
+    "categories": [
+      "news"
+    ],
+    "isFeatured": false
+  },
+  {
+    "id": "le-monde-en-24h",
+    "name": "Le Monde en 24h",
+    "type": "tv",
+    "logo": "https://i.imgur.com/2igwi7g.png",
+    "streamUrl": "https://stream.berosat.live/hls/monde24h-tv-index/monde24h-tv-index.m3u8",
+    "description": "news",
+    "language": "French",
+    "country": "CD",
+    "categories": [
+      "news"
+    ],
+    "website": "https://lemondeen24h.com/",
     "isFeatured": false
   },
   {
@@ -1738,7 +1752,7 @@
       "general"
     ],
     "isFeatured": false,
-    "logo": "https://yt3.googleusercontent.com/ytc/AIdro_mY3CdmZro7K7GMqVFID_9aBTdtqvHNSOqnilPsxvPbj1M=s900-c-k-c0x00ffffff-no-rj"
+    "logo": "https://yt3.googleusercontent.com/ytc/AIdro_m-BQ9cHAlq1jZsVv0311NimqUYlE4g7_EsWTQQtm7eQuBVngvypJrk2Wkalb5TxAxiCQ=s900-c-k-c0x00ffffff-no-rj"
   },
   {
     "id": "azam-tv",
@@ -3416,6 +3430,19 @@
     "isFeatured": false
   },
   {
+    "id": "radio-radio47-ke",
+    "name": "Radio47",
+    "type": "radio",
+    "streamUrl": "https://streaming.shoutcast.com/radio-47?ver=690109",
+    "logo": "https://yt3.googleusercontent.com/a3-veb-GPFI4o15P_DyjAXssVg_TTKGAjdgsWL_Iuvev83rzTB3xUfmoMxrMkbpNfO9IuFmT=s900-c-k-c0x00ffffff-no-rj",
+    "description": "Radio station",
+    "language": "English",
+    "country": "KE",
+    "categories": [],
+    "website": "https://www.radio47.fm/#!",
+    "isFeatured": false
+  },
+  {
     "id": "radio-nation-fm-ke",
     "name": "NATION FM",
     "type": "radio",
@@ -3974,19 +4001,6 @@
     "country": "TZ",
     "categories": [],
     "website": "https://www.radio1.co.tz/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-clouds-fm-tz",
-    "name": "Clouds FM",
-    "type": "radio",
-    "streamUrl": "http://eu6.fastcast4u.com:5306/;",
-    "logo": "https://cloudsmedia.co.tz/build/assets/clouds_icon-4199f5a8.png",
-    "description": "Radio station",
-    "language": "English",
-    "country": "TZ",
-    "categories": [],
-    "website": "https://cloudsmedia.co.tz/home/clouds-fm",
     "isFeatured": false
   },
   {
@@ -6566,6 +6580,23 @@
     "country": "IR",
     "categories": [],
     "website": "http://sarcheshmeh.icdndhcp.com:18452/stream",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-alseraj-radio-quran-iq",
+    "name": "Alseraj Radio Quran",
+    "type": "radio",
+    "streamUrl": "http://192.99.170.8:5550/stream",
+    "logo": "https://cdn.raddio.net/storage/photos/229793/dd4r5adb3503ef462370861608_100x100.webp",
+    "description": "alseraj radio quran, quran radio, quran station",
+    "language": "Arabic",
+    "country": "IQ",
+    "categories": [
+      "alseraj radio quran",
+      "quran radio",
+      "quran station"
+    ],
+    "website": "https://raddio.net/229793-alseraj-radio-quran",
     "isFeatured": false
   },
   {
@@ -10307,25 +10338,6 @@
       "urban"
     ],
     "website": "https://los40.com/seccion/los40urban/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-yojosuknam-radio-kr",
-    "name": "yojosuknam Radio",
-    "type": "radio",
-    "streamUrl": "https://stream.yojosuknam.com/live.mp3",
-    "logo": "https://music.yojosuknam.com/radio/icon-512.png",
-    "description": "24/7, gugak, jazz, korean, lofi",
-    "language": "English",
-    "country": "KR",
-    "categories": [
-      "24/7",
-      "gugak",
-      "jazz",
-      "korean",
-      "lofi"
-    ],
-    "website": "https://music.yojosuknam.com/radio",
     "isFeatured": false
   },
   {
