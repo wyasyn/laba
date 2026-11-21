@@ -119,21 +119,6 @@
     "isFeatured": true
   },
   {
-    "id": "fort-tv",
-    "name": "FORT TV",
-    "type": "tv",
-    "logo": "https://i.ibb.co/4KN5zW9/fort-tv-logo-GENE.png",
-    "streamUrl": "https://fort.co-works.org/memfs/87017643-274a-4bc0-a786-7767a0d159c2.m3u8",
-    "description": "entertainment",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "entertainment"
-    ],
-    "website": "https://fort-tv.com/",
-    "isFeatured": true
-  },
-  {
     "id": "alpha-digital",
     "name": "Alpha Digital",
     "type": "tv",
@@ -161,6 +146,21 @@
       "religious"
     ],
     "website": "https://www.holycityentebbe.org/",
+    "isFeatured": true
+  },
+  {
+    "id": "dream-tv",
+    "name": "Dream TV",
+    "type": "tv",
+    "logo": "https://i.imgur.com/XRUDhqQ.png",
+    "streamUrl": "https://streamfi-dreamtv1.zettawiseroutes.com:8181/hls/stream.m3u8",
+    "description": "religious",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "religious"
+    ],
+    "website": "http://www.imc.ug/",
     "isFeatured": true
   },
   {
@@ -209,18 +209,18 @@
     "isFeatured": false
   },
   {
-    "id": "dodoma-tv",
-    "name": "Dodoma TV",
+    "id": "meru-tv",
+    "name": "MERU TV",
     "type": "tv",
-    "logo": "https://i.imgur.com/bLq9eFa.png",
-    "streamUrl": "https://goliveafrica.media:9998/live/625965017ed69/index.m3u8",
+    "logo": "https://i.imgur.com/EPmWNfz.jpg",
+    "streamUrl": "https://goliveafrica.media:9998/live/628e5c1991061/index.m3u8",
     "description": "general",
-    "language": "Swahili",
-    "country": "TZ",
+    "language": "English",
+    "country": "KE",
     "categories": [
       "general"
     ],
-    "website": "https://dodomafm.co.tz/dodomatv.html",
+    "website": "http://merudigital.co.ke/",
     "isFeatured": false
   },
   {
@@ -400,6 +400,21 @@
     "categories": [
       "news"
     ],
+    "isFeatured": false
+  },
+  {
+    "id": "le-monde-en-24h",
+    "name": "Le Monde en 24h",
+    "type": "tv",
+    "logo": "https://i.imgur.com/2igwi7g.png",
+    "streamUrl": "https://stream.berosat.live/hls/monde24h-tv-index/monde24h-tv-index.m3u8",
+    "description": "news",
+    "language": "French",
+    "country": "CD",
+    "categories": [
+      "news"
+    ],
+    "website": "https://lemondeen24h.com/",
     "isFeatured": false
   },
   {
@@ -910,6 +925,21 @@
     "isFeatured": false
   },
   {
+    "id": "acn-tv",
+    "name": "ACN TV",
+    "type": "tv",
+    "logo": "https://i.imgur.com/aZyKsyN.png",
+    "streamUrl": "https://cdn.acnlive.net/LiveApp/streams/hold_the_line.m3u8",
+    "description": "news",
+    "language": "English",
+    "country": "CM",
+    "categories": [
+      "news"
+    ],
+    "website": "https://www.acnlive.net/",
+    "isFeatured": false
+  },
+  {
     "id": "afghanistan-international",
     "name": "Afghanistan International",
     "type": "tv",
@@ -1242,21 +1272,6 @@
     "isFeatured": false
   },
   {
-    "id": "for-you-tv",
-    "name": "For You TV",
-    "type": "tv",
-    "logo": "https://i.imgur.com/1oMboXL.png",
-    "streamUrl": "https://stream.az-multimedia.com:3325/live/foryoutvlive.m3u8",
-    "description": "news",
-    "language": "French",
-    "country": "CM",
-    "categories": [
-      "news"
-    ],
-    "website": "https://foryoumedia-africa.com/",
-    "isFeatured": false
-  },
-  {
     "id": "fox-sports-news",
     "name": "Fox Sports News",
     "type": "tv",
@@ -1300,6 +1315,21 @@
       "news"
     ],
     "website": "https://www.gbnews.uk/",
+    "isFeatured": false
+  },
+  {
+    "id": "guardian-talk-radio",
+    "name": "Guardian Talk Radio",
+    "type": "tv",
+    "logo": "https://i.imgur.com/o3cWUwL.png",
+    "streamUrl": "https://cdn-edge1.streamcomedia.com/abr_tngr969fm/abr-tngr969fm_streams/playlist.m3u8",
+    "description": "news",
+    "language": "English",
+    "country": "BS",
+    "categories": [
+      "news"
+    ],
+    "website": "https://guardiantalkradio.com/",
     "isFeatured": false
   },
   {
@@ -1913,6 +1943,19 @@
     "isFeatured": true
   },
   {
+    "id": "radio-akaboozi-87-9-fm-ug",
+    "name": "Akaboozi 87.9 FM",
+    "type": "radio",
+    "streamUrl": "http://162.244.80.52:8732/stream",
+    "logo": "https://akaboozi.com/wp-content/uploads/2024/06/favicon-150x150.png",
+    "description": "Radio station",
+    "language": "English",
+    "country": "UG",
+    "categories": [],
+    "website": "https://www.akaboozi.com/",
+    "isFeatured": true
+  },
+  {
     "id": "radio-uganda-djs-ug",
     "name": "Uganda DJs",
     "type": "radio",
@@ -1930,16 +1973,18 @@
     "isFeatured": true
   },
   {
-    "id": "radio-akaboozi-87-9-fm-ug",
-    "name": "Akaboozi 87.9 FM",
+    "id": "radio-95-5-radio-buddu-ug",
+    "name": "BUDDU FM",
     "type": "radio",
-    "streamUrl": "http://162.244.80.52:8732/stream",
-    "logo": "https://akaboozi.com/wp-content/uploads/2024/06/favicon-150x150.png",
-    "description": "Radio station",
-    "language": "English",
+    "streamUrl": "https://dc4.serverse.com/proxy/ccmxrgub/stream",
+    "logo": "https://static.flashscore.com/res/_fs/image/4_favicons/_mobi/touch-icon-180x180.png?v=8",
+    "description": "🪷🪷🪷",
+    "language": "Luganda",
     "country": "UG",
-    "categories": [],
-    "website": "https://www.akaboozi.com/",
+    "categories": [
+      "🪷🪷🪷"
+    ],
+    "website": "https://www.livescore.cz/",
     "isFeatured": true
   },
   {
@@ -1956,31 +2001,18 @@
     "isFeatured": true
   },
   {
-    "id": "radio-91-2-crooze-fm-ug",
-    "name": "91.2 Crooze FM",
+    "id": "radio-beat-fm-kampala-96-3-fm-mp3-ug",
+    "name": "Beat FM 96.3",
     "type": "radio",
-    "streamUrl": "https://stream-159.zeno.fm/vyxwdk08apxtv",
-    "logo": "https://croozefm.com/wp-content/uploads/2024/09/cropped-site-icon-180x180.png",
-    "description": "Radio station",
+    "streamUrl": "http://5230.cloudrad.io:8354/",
+    "logo": "https://www.facebook.com/favicon.ico",
+    "description": "news",
     "language": "English",
     "country": "UG",
-    "categories": [],
-    "website": "https://croozefm.com/",
-    "isFeatured": true
-  },
-  {
-    "id": "radio-95-5-radio-buddu-ug",
-    "name": "BUDDU FM",
-    "type": "radio",
-    "streamUrl": "https://dc4.serverse.com/proxy/ccmxrgub/stream",
-    "logo": "https://static.flashscore.com/res/_fs/image/4_favicons/_mobi/touch-icon-180x180.png?v=8",
-    "description": "🪷🪷🪷",
-    "language": "Luganda",
-    "country": "UG",
     "categories": [
-      "🪷🪷🪷"
+      "news"
     ],
-    "website": "https://www.livescore.cz/",
+    "website": "https://tunein.com/radio/BEAT-FM-963-FM-UGANDA-s255517/",
     "isFeatured": true
   },
   {
@@ -2003,18 +2035,16 @@
     "isFeatured": true
   },
   {
-    "id": "radio-beat-fm-kampala-96-3-fm-mp3-ug",
-    "name": "Beat FM 96.3",
+    "id": "radio-91-2-crooze-fm-ug",
+    "name": "91.2 Crooze FM",
     "type": "radio",
-    "streamUrl": "http://5230.cloudrad.io:8354/",
-    "logo": "https://www.facebook.com/favicon.ico",
-    "description": "news",
+    "streamUrl": "https://stream-159.zeno.fm/vyxwdk08apxtv",
+    "logo": "https://croozefm.com/wp-content/uploads/2024/09/cropped-site-icon-180x180.png",
+    "description": "Radio station",
     "language": "English",
     "country": "UG",
-    "categories": [
-      "news"
-    ],
-    "website": "https://tunein.com/radio/BEAT-FM-963-FM-UGANDA-s255517/",
+    "categories": [],
+    "website": "https://croozefm.com/",
     "isFeatured": true
   },
   {
@@ -2035,48 +2065,18 @@
     "isFeatured": true
   },
   {
-    "id": "radio-94-8-xfm-kampala-ug",
-    "name": "94.8 XFM Kampala",
+    "id": "radio-capital-fm-kampala-91-3-fm-mp3-ug",
+    "name": "CAPITAL FM UG",
     "type": "radio",
-    "streamUrl": "http://stream.hydeinnovations.com:2020/stream/xfm/stream",
-    "logo": "https://i.ibb.co/VBfTj1z/xfm.jpg",
-    "description": "hits, pop",
+    "streamUrl": "http://capitalfm.cloudrad.io/stream",
+    "logo": "https://static.flashscore.com/res/_fs/image/4_favicons/_mobi/touch-icon-180x180.png?v=8",
+    "description": "🌴🌴🌴",
     "language": "English",
     "country": "UG",
     "categories": [
-      "hits",
-      "pop"
+      "🌴🌴🌴"
     ],
-    "website": "http://xfm.co.ug/",
-    "isFeatured": true
-  },
-  {
-    "id": "radio-107-3-bbc-radio-uganda-ug",
-    "name": "107.3 BBC Radio Uganda",
-    "type": "radio",
-    "streamUrl": "https://stream.live.vc.bbcmedia.co.uk/bbc_world_service_west_africa",
-    "description": "news",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "news"
-    ],
-    "website": "https://www.bbc.co.uk/",
-    "isFeatured": true
-  },
-  {
-    "id": "radio-107-9-pearl-fm-ug",
-    "name": "107.9 Pearl Fm",
-    "type": "radio",
-    "streamUrl": "https://dc4.serverse.com/proxy/pearlfm/stream/1/",
-    "logo": "https://firebasestorage.googleapis.com/v0/b/radiogalaxy-580f4.appspot.com/o/images%2FIMG_20240128_215046925.jpg?alt=media&token=bf172eb6-577e-4f36-b025-68e36f614765",
-    "description": "religious",
-    "language": "Luganda",
-    "country": "UG",
-    "categories": [
-      "religious"
-    ],
-    "website": "https://dc4.serverse.com/proxy/pearlfm/stream/1/",
+    "website": "https://www.livescore.cz/",
     "isFeatured": true
   },
   {
@@ -2090,36 +2090,7 @@
     "categories": [
       "christian"
     ],
-    "isFeatured": false
-  },
-  {
-    "id": "radio-capital-fm-kampala-91-3-fm-mp3-ug",
-    "name": "CAPITAL FM UG",
-    "type": "radio",
-    "streamUrl": "http://capitalfm.cloudrad.io/stream",
-    "logo": "https://static.flashscore.com/res/_fs/image/4_favicons/_mobi/touch-icon-180x180.png?v=8",
-    "description": "🌴🌴🌴",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "🌴🌴🌴"
-    ],
-    "website": "https://www.livescore.cz/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-busoga-royal-radio-ug",
-    "name": "BUSOGA ROYAL RADIO",
-    "type": "radio",
-    "streamUrl": "https://cast5.my-control-panel.com/proxy/busogaroyalradio/stream",
-    "description": "music",
-    "language": "Luganda",
-    "country": "UG",
-    "categories": [
-      "music"
-    ],
-    "website": "https://cast5.my-control-panel.com/proxy/busogaroyalradio/stream",
-    "isFeatured": false
+    "isFeatured": true
   },
   {
     "id": "radio-kiis-100-9-kampala-100-9-fm-mp3-ug",
@@ -2134,79 +2105,34 @@
       "hot hits"
     ],
     "website": "http://www.kiis1009.co.ug/",
+    "isFeatured": true
+  },
+  {
+    "id": "radio-107-3-bbc-radio-uganda-ug",
+    "name": "107.3 BBC Radio Uganda",
+    "type": "radio",
+    "streamUrl": "https://stream.live.vc.bbcmedia.co.uk/bbc_world_service_west_africa",
+    "description": "news",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "news"
+    ],
+    "website": "https://www.bbc.co.uk/",
     "isFeatured": false
   },
   {
-    "id": "radio-radio-one-ug",
-    "name": "Radio One",
+    "id": "radio-busoga-royal-radio-ug",
+    "name": "BUSOGA ROYAL RADIO",
     "type": "radio",
-    "streamUrl": "http://162.244.80.52:8740/stream",
-    "logo": "https://firebasestorage.googleapis.com/v0/b/radiogalaxy-580f4.appspot.com/o/images%2FIMG_20240201_175336188.jpg?alt=media&token=3d347a3d-d4e8-4468-9304-1922c57af678",
+    "streamUrl": "https://cast5.my-control-panel.com/proxy/busogaroyalradio/stream",
     "description": "music",
-    "language": "English",
+    "language": "Luganda",
     "country": "UG",
     "categories": [
       "music"
     ],
-    "website": "http://162.244.80.52:8740/stream",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-christian-music-channel-ug",
-    "name": "Christian music channel",
-    "type": "radio",
-    "streamUrl": "http://streaming.live365.com/a08828",
-    "description": "christian",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "christian"
-    ],
-    "website": "https://docradio.org/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-country-music-80-s-ug",
-    "name": "Country music (80's)",
-    "type": "radio",
-    "streamUrl": "http://listen.181fm.com/181-80scountry_128k.mp3",
-    "logo": "https://firebasestorage.googleapis.com/v0/b/radiogalaxy-580f4.appspot.com/o/images%2FIMG_20240317_034805993.jpg?alt=media&token=15b4d339-334b-444d-b0ff-b90b5e8499ab",
-    "description": "country music 80s",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "country music 80s"
-    ],
-    "website": "http://listen.181fm.com/181-80scountry_128k.mp3",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-gospel-radio-east-africa-ug",
-    "name": "Gospel Radio East Africa",
-    "type": "radio",
-    "streamUrl": "https://c32.radioboss.fm:18451/stream?1641237600584",
-    "description": "christian-gospel",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "christian-gospel"
-    ],
-    "website": "http://www.gospelradioeastafrica.org/index.html",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-sanyu-fm-ug",
-    "name": "88.2 Sanyu Fm",
-    "type": "radio",
-    "streamUrl": "http://s44.myradiostream.com:8138/stream",
-    "logo": "https://firebasestorage.googleapis.com/v0/b/radiogalaxy-580f4.appspot.com/o/images%2FIMG_20240128_230827656.jpg?alt=media&token=74ae2676-d017-457e-bf98-f5481ad246fb",
-    "description": "music",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "music"
-    ],
-    "website": "http://s44.myradiostream.com:8138/stream",
+    "website": "https://cast5.my-control-panel.com/proxy/busogaroyalradio/stream",
     "isFeatured": false
   },
   {
@@ -2228,16 +2154,19 @@
     "isFeatured": false
   },
   {
-    "id": "radio-ejazz-xtra-ug",
-    "name": "EJAZZ Xtra",
+    "id": "radio-94-8-xfm-kampala-ug",
+    "name": "94.8 XFM Kampala",
     "type": "radio",
-    "streamUrl": "https://c32.radioboss.fm:18320/stream",
-    "logo": "https://extra.ejazzug.com/favicon.ico",
-    "description": "Radio station",
+    "streamUrl": "http://stream.hydeinnovations.com:2020/stream/xfm/stream",
+    "logo": "https://i.ibb.co/VBfTj1z/xfm.jpg",
+    "description": "hits, pop",
     "language": "English",
     "country": "UG",
-    "categories": [],
-    "website": "https://extra.ejazzug.com/",
+    "categories": [
+      "hits",
+      "pop"
+    ],
+    "website": "http://xfm.co.ug/",
     "isFeatured": false
   },
   {
@@ -2255,31 +2184,32 @@
     "isFeatured": false
   },
   {
-    "id": "radio-nrg-radio-uganda-ug",
-    "name": "NRG Radio Uganda",
+    "id": "radio-christian-music-channel-ug",
+    "name": "Christian music channel",
     "type": "radio",
-    "streamUrl": "https://dc4.serverse.com/proxy/nrgugstream/stream",
-    "logo": "https://www.nrgug.radio/nrg-logo-red.png",
-    "description": "Radio station",
-    "language": "English",
-    "country": "UG",
-    "categories": [],
-    "website": "https://www.nrgug.radio/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-street-deejays-radio-mbarara-mp3-ug",
-    "name": "Street Deejays Radio - Mbarara",
-    "type": "radio",
-    "streamUrl": "http://stream.zeno.fm/nbwdnxz7na0uv",
-    "logo": "https://images.zeno.fm/psoaqXYCmiMezzEGvnQMZ79oLFbyP29TsIyimZh13E8/rs:fit:240:240/g:ce:0:0/aHR0cHM6Ly9zdHJlYW0tdG9vbHMuemVub21lZGlhLmNvbS9jb250ZW50L3N0YXRpb25zL2FneHpmbnBsYm04dGMzUmhkSE55TWdzU0NrRjFkR2hEYkdsbGJuUVlnSURnck92Y2tRa01DeElPVTNSaGRHbHZibEJ5YjJacGJHVVlnSURReUplSnh3b01vZ0VFZW1WdWJ3L2ltYWdlLz91cGRhdGVkPTE2NjE2NzcxNjUwMDA.webp",
-    "description": "music",
+    "streamUrl": "http://streaming.live365.com/a08828",
+    "description": "christian",
     "language": "English",
     "country": "UG",
     "categories": [
-      "music"
+      "christian"
     ],
-    "website": "http://www.streetdeejaysradio.co.ug/",
+    "website": "https://docradio.org/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-107-9-pearl-fm-ug",
+    "name": "107.9 Pearl Fm",
+    "type": "radio",
+    "streamUrl": "https://dc4.serverse.com/proxy/pearlfm/stream/1/",
+    "logo": "https://firebasestorage.googleapis.com/v0/b/radiogalaxy-580f4.appspot.com/o/images%2FIMG_20240128_215046925.jpg?alt=media&token=bf172eb6-577e-4f36-b025-68e36f614765",
+    "description": "religious",
+    "language": "Luganda",
+    "country": "UG",
+    "categories": [
+      "religious"
+    ],
+    "website": "https://dc4.serverse.com/proxy/pearlfm/stream/1/",
     "isFeatured": false
   },
   {
@@ -2292,6 +2222,63 @@
     "country": "UG",
     "categories": [],
     "website": "https://christmas-chor-high.rautemusik.fm/?ref=radiobrowser%20Find%20more%20stations%20in%20app%20:%20https://play.google.com/store/apps/details?id=com.atf.radiogalaxy",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-radio-one-ug",
+    "name": "Radio One",
+    "type": "radio",
+    "streamUrl": "http://162.244.80.52:8740/stream",
+    "logo": "https://firebasestorage.googleapis.com/v0/b/radiogalaxy-580f4.appspot.com/o/images%2FIMG_20240201_175336188.jpg?alt=media&token=3d347a3d-d4e8-4468-9304-1922c57af678",
+    "description": "music",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "music"
+    ],
+    "website": "http://162.244.80.52:8740/stream",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-country-music-80-s-ug",
+    "name": "Country music (80's)",
+    "type": "radio",
+    "streamUrl": "http://listen.181fm.com/181-80scountry_128k.mp3",
+    "logo": "https://firebasestorage.googleapis.com/v0/b/radiogalaxy-580f4.appspot.com/o/images%2FIMG_20240317_034805993.jpg?alt=media&token=15b4d339-334b-444d-b0ff-b90b5e8499ab",
+    "description": "country music 80s",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "country music 80s"
+    ],
+    "website": "http://listen.181fm.com/181-80scountry_128k.mp3",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-ejazz-xtra-ug",
+    "name": "EJAZZ Xtra",
+    "type": "radio",
+    "streamUrl": "https://c32.radioboss.fm:18320/stream",
+    "logo": "https://extra.ejazzug.com/favicon.ico",
+    "description": "Radio station",
+    "language": "English",
+    "country": "UG",
+    "categories": [],
+    "website": "https://extra.ejazzug.com/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-gospel-radio-east-africa-ug",
+    "name": "Gospel Radio East Africa",
+    "type": "radio",
+    "streamUrl": "https://c32.radioboss.fm:18451/stream?1641237600584",
+    "description": "christian-gospel",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "christian-gospel"
+    ],
+    "website": "http://www.gospelradioeastafrica.org/index.html",
     "isFeatured": false
   },
   {
@@ -2310,18 +2297,62 @@
     "isFeatured": false
   },
   {
-    "id": "radio-kiira-fm-88-6-jinja-88-6-fm-mp3-ug",
-    "name": "88.6 Kiira Fm",
+    "id": "radio-akaboozi-fm-87-9-ug",
+    "name": "KABOOZI FM",
     "type": "radio",
-    "streamUrl": "http://stream.zeno.fm/iydttapi8rguv",
-    "logo": "https://firebasestorage.googleapis.com/v0/b/radiogalaxy-580f4.appspot.com/o/images%2FIMG_20240130_184334083.jpg?alt=media&token=4bca77d4-a15c-47e2-90ba-2d832e3c8fc7",
-    "description": "current affairs",
+    "streamUrl": "http://162.244.80.52:8732/stream.mp3",
+    "logo": "https://static.flashscore.com/res/_fs/image/4_favicons/_mobi/touch-icon-180x180.png?v=8",
+    "description": "🍇🍇🍇🍇",
+    "language": "Luganda",
+    "country": "UG",
+    "categories": [
+      "🍇🍇🍇🍇"
+    ],
+    "website": "https://www.livescore.cz/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-nrg-radio-uganda-ug",
+    "name": "NRG Radio Uganda",
+    "type": "radio",
+    "streamUrl": "https://dc4.serverse.com/proxy/nrgugstream/stream",
+    "logo": "https://www.nrgug.radio/nrg-logo-red.png",
+    "description": "Radio station",
+    "language": "English",
+    "country": "UG",
+    "categories": [],
+    "website": "https://www.nrgug.radio/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-country-music-ug",
+    "name": "Country Music",
+    "type": "radio",
+    "streamUrl": "http://ais-sa2.cdnstream1.com/2365_128.mp3",
+    "logo": "https://firebasestorage.googleapis.com/v0/b/radiogalaxy-580f4.appspot.com/o/images%2FIMG_20240317_035102736.jpg?alt=media&token=1413f958-9b3e-4d6d-b611-2a190957ed0d",
+    "description": "country music",
     "language": "English",
     "country": "UG",
     "categories": [
-      "current affairs"
+      "country music"
     ],
-    "website": "http://stream.zeno.fm/iydttapi8rguv",
+    "website": "http://ais-sa2.cdnstream1.com/2365_128.mp3",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-sanyu-fm-ug",
+    "name": "88.2 Sanyu FM - Kampala - 88.2 FM",
+    "type": "radio",
+    "streamUrl": "http://s44.myradiostream.com/8138/listen.mp3",
+    "description": "culture, information, music",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "culture",
+      "information",
+      "music"
+    ],
+    "website": "https://sanyufm.com/",
     "isFeatured": false
   },
   {
@@ -2337,17 +2368,106 @@
     "isFeatured": false
   },
   {
-    "id": "radio-akaboozi-fm-87-9-ug",
-    "name": "104.4 Kaboozi Fm",
+    "id": "radio-rx-radio-ug",
+    "name": "RX Radio",
     "type": "radio",
-    "streamUrl": "http://162.244.80.52:8732/;stream.mp3",
-    "description": "rock",
-    "language": "Luganda",
+    "streamUrl": "https://c14.radioboss.fm:18223/stream?1615807421100=",
+    "logo": "https://static.wixstatic.com/media/d258bf_9ee2ce20728d4cf48214cf55c12914de~mv2.png/v1/crop/x_0,y_168,w_600,h_278/fill/w_140,h_67,al_c,q_85,usm_0.66_1.00_0.01/reckless%20logo%20black%20clear.webp",
+    "description": "afro-pop, entertainment, pop",
+    "language": "English",
     "country": "UG",
     "categories": [
-      "rock"
+      "afro-pop",
+      "entertainment",
+      "pop"
     ],
-    "website": "https://akaboozi.fm/",
+    "website": "https://www.rxradio.ug/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-fun-kids-radio-ug",
+    "name": "FUN KIDS RADIO",
+    "type": "radio",
+    "streamUrl": "https://listen-funkids.sharp-stream.com/funkids.mp3",
+    "description": "🪷🌷🌸🪷🌺💐",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "🪷🌷🌸🪷🌺💐"
+    ],
+    "website": "https://www.livescore.cz/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-radio-buddu-ug",
+    "name": "Radio Buddu",
+    "type": "radio",
+    "streamUrl": "https://dc4.serverse.com/proxy/ccmxrgub/stream?",
+    "logo": "https://www.radiobuddufm.com/images/logom.png",
+    "description": "Radio station",
+    "language": "English",
+    "country": "UG",
+    "categories": [],
+    "website": "https://www.radiobuddufm.com/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-christ-fm-ug",
+    "name": "91.6 Christ Fm",
+    "type": "radio",
+    "streamUrl": "http://5.135.154.69:15664/;",
+    "description": "religious",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "religious"
+    ],
+    "website": "http://5.135.154.69:15664/;",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-radio-pacis-90-9-ug",
+    "name": "Radio Pacis 90.9",
+    "type": "radio",
+    "streamUrl": "https://radiopacisuganda.radioca.st/stream",
+    "description": "christian, english",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "christian",
+      "english"
+    ],
+    "website": "https://www.radiopacis.org/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-chosen-radio-uganda-mp3-ug",
+    "name": "Chosen Radio Uganda",
+    "type": "radio",
+    "streamUrl": "http://stream.zeno.fm/6uxwuag3srhvv",
+    "description": "christian, gospel, religious",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "christian",
+      "gospel",
+      "religious"
+    ],
+    "website": "https://chosenradio.co.ug/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-sport-fm-ug",
+    "name": "Sport Fm",
+    "type": "radio",
+    "streamUrl": "http://n0b.radiojar.com/yb7bcbkfewzuv?rj-ttl=5&rj-tok=AAABhE8OfscAWLZ-gC5hhZqxPA",
+    "description": "sports",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "sports"
+    ],
+    "website": "http://n0b.radiojar.com/yb7bcbkfewzuv?rj-ttl=5&rj-tok=AAABhE8OfscAWLZ-gC5hhZqxPA",
     "isFeatured": false
   },
   {
@@ -2369,19 +2489,33 @@
     "isFeatured": false
   },
   {
-    "id": "radio-christ-fm-ug",
-    "name": "Christ FM 91.6 - Kampala - 91.6 FM",
+    "id": "radio-street-deejays-radio-mbarara-mp3-ug",
+    "name": "Street Deejays Radio - Mbarara",
     "type": "radio",
-    "streamUrl": "http://s39.myradiostream.com/:15664/;",
-    "description": "christian, gospel, religious",
+    "streamUrl": "http://stream.zeno.fm/nbwdnxz7na0uv",
+    "logo": "https://images.zeno.fm/psoaqXYCmiMezzEGvnQMZ79oLFbyP29TsIyimZh13E8/rs:fit:240:240/g:ce:0:0/aHR0cHM6Ly9zdHJlYW0tdG9vbHMuemVub21lZGlhLmNvbS9jb250ZW50L3N0YXRpb25zL2FneHpmbnBsYm04dGMzUmhkSE55TWdzU0NrRjFkR2hEYkdsbGJuUVlnSURnck92Y2tRa01DeElPVTNSaGRHbHZibEJ5YjJacGJHVVlnSURReUplSnh3b01vZ0VFZW1WdWJ3L2ltYWdlLz91cGRhdGVkPTE2NjE2NzcxNjUwMDA.webp",
+    "description": "music",
     "language": "English",
     "country": "UG",
     "categories": [
-      "christian",
-      "gospel",
-      "religious"
+      "music"
     ],
-    "website": "http://www.christfm.co.ug/",
+    "website": "http://www.streetdeejaysradio.co.ug/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-kiira-fm-88-6-jinja-88-6-fm-mp3-ug",
+    "name": "88.6 Kiira Fm",
+    "type": "radio",
+    "streamUrl": "http://stream.zeno.fm/iydttapi8rguv",
+    "logo": "https://firebasestorage.googleapis.com/v0/b/radiogalaxy-580f4.appspot.com/o/images%2FIMG_20240130_184334083.jpg?alt=media&token=4bca77d4-a15c-47e2-90ba-2d832e3c8fc7",
+    "description": "current affairs",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "current affairs"
+    ],
+    "website": "http://stream.zeno.fm/iydttapi8rguv",
     "isFeatured": false
   },
   {
@@ -2400,6 +2534,19 @@
     "isFeatured": false
   },
   {
+    "id": "radio-rukiga-fm-ug",
+    "name": "RUKIGA FM",
+    "type": "radio",
+    "streamUrl": "https://stream1.rcast.net/74102",
+    "logo": "https://www.rukigafm.com/_next/image?url=%2Fimages%2Frukiga-fm-logo.png&w=96&q=75",
+    "description": "Radio station",
+    "language": "English",
+    "country": "UG",
+    "categories": [],
+    "website": "https://www.rukigafm.com/",
+    "isFeatured": false
+  },
+  {
     "id": "radio-nup-radio-91-4-ug",
     "name": "BLOCK FM 103.2",
     "type": "radio",
@@ -2412,6 +2559,52 @@
       "jazz"
     ],
     "website": "https://blockfm.websites.co.in/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-jembe-fm-ug",
+    "name": "Jembe Fm",
+    "type": "radio",
+    "streamUrl": "https://cast3.asurahosting.com/proxy/jembemed/stream",
+    "logo": "https://firebasestorage.googleapis.com/v0/b/radiogalaxy-580f4.appspot.com/o/images%2FIMG_20240129_151358444.jpg?alt=media&token=253d7a5f-64db-4d49-ab9c-de31c964a476",
+    "description": "current affairs",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "current affairs"
+    ],
+    "website": "https://cast3.asurahosting.com/proxy/jembemed/stream",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-voice-of-kyankwanzi-kiboga-89-7-fm-mp3-ug",
+    "name": "Voice of Kyankwanzi - Kiboga - 89.7 FM",
+    "type": "radio",
+    "streamUrl": "http://stream.zeno.fm/eyzf4ddwqcmvv",
+    "description": "adult contemporary",
+    "language": "Luganda",
+    "country": "UG",
+    "categories": [
+      "adult contemporary"
+    ],
+    "website": "http://www.kyankwanzifm.net/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-buyinza-fm-ug",
+    "name": "Buyinza FM",
+    "type": "radio",
+    "streamUrl": "http://stream.zeno.fm/wcancipcbrevv",
+    "logo": "https://images.zeno.fm/ZCOUrj_lTg8BY5gs3x_fsiA7aasxYg8BlCEvoHPEFTc/rs:fit:240:240/g:ce:0:0/aHR0cHM6Ly9zdHJlYW0tdG9vbHMuemVub21lZGlhLmNvbS9jb250ZW50L3N0YXRpb25zLzcyNThjMWRkLTEzZTEtNGQwYi04YzQzLWNlZWQ2NmUxYzlmMC9pbWFnZS8_dXBkYXRlZD0xNjY2MTAzNjYwMDAw.webp",
+    "description": "christian, gospel, religious",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "christian",
+      "gospel",
+      "religious"
+    ],
+    "website": "https://buyinzafm.co.ug/",
     "isFeatured": false
   },
   {
@@ -2448,177 +2641,6 @@
     "isFeatured": false
   },
   {
-    "id": "radio-104-1-favour-fm-gulu-104-1-fm-ug",
-    "name": "104.1 Favour FM - Gulu - 104.1 FM",
-    "type": "radio",
-    "streamUrl": "http://us5new.listen2myradio.com:2199/listen.php?port=8138&type=ice&mount=stream",
-    "logo": "https://res.cloudinary.com/djo14ik7t/image/upload/v1733712575/favicon_drktfs.png",
-    "description": "christian, gospel",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "christian",
-      "gospel"
-    ],
-    "website": "https://www.favourfm.org/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-rx-radio-ug",
-    "name": "RX Radio",
-    "type": "radio",
-    "streamUrl": "https://c14.radioboss.fm:18223/stream?1615807421100=",
-    "logo": "https://static.wixstatic.com/media/d258bf_9ee2ce20728d4cf48214cf55c12914de~mv2.png/v1/crop/x_0,y_168,w_600,h_278/fill/w_140,h_67,al_c,q_85,usm_0.66_1.00_0.01/reckless%20logo%20black%20clear.webp",
-    "description": "afro-pop, entertainment, pop",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "afro-pop",
-      "entertainment",
-      "pop"
-    ],
-    "website": "https://www.rxradio.ug/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-fun-kids-radio-ug",
-    "name": "FUN KIDS RADIO",
-    "type": "radio",
-    "streamUrl": "https://listen-funkids.sharp-stream.com/funkids.mp3",
-    "description": "🪷🌷🌸🪷🌺💐",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "🪷🌷🌸🪷🌺💐"
-    ],
-    "website": "https://www.livescore.cz/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-sport-fm-ug",
-    "name": "Sport Fm",
-    "type": "radio",
-    "streamUrl": "http://n0b.radiojar.com/yb7bcbkfewzuv?rj-ttl=5&rj-tok=AAABhE8OfscAWLZ-gC5hhZqxPA",
-    "description": "sports",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "sports"
-    ],
-    "website": "http://n0b.radiojar.com/yb7bcbkfewzuv?rj-ttl=5&rj-tok=AAABhE8OfscAWLZ-gC5hhZqxPA",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-promise-radio-ug-mp3-ug",
-    "name": "Promise Radio UG",
-    "type": "radio",
-    "streamUrl": "http://stream.zeno.fm/hkzgeqlcjoxuv",
-    "logo": "https://i.ibb.co/YFBWs4tp/images-1.jpg",
-    "description": "christian, gospel, religious, talk",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "christian",
-      "gospel",
-      "religious",
-      "talk"
-    ],
-    "website": "https://christsheart.org/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-country-music-ug",
-    "name": "Country Music",
-    "type": "radio",
-    "streamUrl": "http://ais-sa2.cdnstream1.com/2365_128.mp3",
-    "logo": "https://firebasestorage.googleapis.com/v0/b/radiogalaxy-580f4.appspot.com/o/images%2FIMG_20240317_035102736.jpg?alt=media&token=1413f958-9b3e-4d6d-b611-2a190957ed0d",
-    "description": "country music",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "country music"
-    ],
-    "website": "http://ais-sa2.cdnstream1.com/2365_128.mp3",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-free-sports-radio-ug",
-    "name": "Free Sports Radio",
-    "type": "radio",
-    "streamUrl": "https://stream.zeno.fm/31nnibfpnxktv",
-    "logo": "https://firebasestorage.googleapis.com/v0/b/radiogalaxy-580f4.appspot.com/o/images%2FIMG_20240317_040932953.jpg?alt=media&token=02bb8749-ab43-4244-9e31-f317573e5aa5",
-    "description": "sports",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "sports"
-    ],
-    "website": "https://stream.zeno.fm/31nnibfpnxktv",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-enjiri-radio-mp3-ug",
-    "name": "Enjiri Radio",
-    "type": "radio",
-    "streamUrl": "http://stream.zeno.fm/xdb8nazajqcvv",
-    "logo": "https://images.zeno.fm/Ul6bCR7O_skhKp8i0XZo40RCJPV82us0PbqQYpWYYvE/rs:fit:240:240/g:ce:0:0/aHR0cHM6Ly9zdHJlYW0tdG9vbHMuemVub21lZGlhLmNvbS9jb250ZW50L3N0YXRpb25zL2FkYTJlNDI3LTdlMmItNDIzNS05ZDNmLTllNjExOTk0NWMzNy9pbWFnZS8_dXBkYXRlZD0xNzA4MDg4NzU1MDAw.webp",
-    "description": "christian, gospel, talk",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "christian",
-      "gospel",
-      "talk"
-    ],
-    "website": "http://www.enjiriradio.co.ug/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-radio-pacis-90-9-ug",
-    "name": "Radio Pacis 94.5",
-    "type": "radio",
-    "streamUrl": "http://136.243.44.41:8182/stream",
-    "logo": "https://www.radiopacis.org/wp-content/uploads/2025/11/logo_ris.jpg",
-    "description": "Radio station",
-    "language": "English",
-    "country": "UG",
-    "categories": [],
-    "website": "https://www.radiopacis.org/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-jembe-fm-ug",
-    "name": "Jembe Fm",
-    "type": "radio",
-    "streamUrl": "https://cast3.asurahosting.com/proxy/jembemed/stream",
-    "logo": "https://firebasestorage.googleapis.com/v0/b/radiogalaxy-580f4.appspot.com/o/images%2FIMG_20240129_151358444.jpg?alt=media&token=253d7a5f-64db-4d49-ab9c-de31c964a476",
-    "description": "current affairs",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "current affairs"
-    ],
-    "website": "https://cast3.asurahosting.com/proxy/jembemed/stream",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-buyinza-fm-ug",
-    "name": "Buyinza FM",
-    "type": "radio",
-    "streamUrl": "http://stream.zeno.fm/wcancipcbrevv",
-    "logo": "https://images.zeno.fm/ZCOUrj_lTg8BY5gs3x_fsiA7aasxYg8BlCEvoHPEFTc/rs:fit:240:240/g:ce:0:0/aHR0cHM6Ly9zdHJlYW0tdG9vbHMuemVub21lZGlhLmNvbS9jb250ZW50L3N0YXRpb25zLzcyNThjMWRkLTEzZTEtNGQwYi04YzQzLWNlZWQ2NmUxYzlmMC9pbWFnZS8_dXBkYXRlZD0xNjY2MTAzNjYwMDAw.webp",
-    "description": "christian, gospel, religious",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "christian",
-      "gospel",
-      "religious"
-    ],
-    "website": "https://buyinzafm.co.ug/",
-    "isFeatured": false
-  },
-  {
     "id": "radio-bantu-radio-ug",
     "name": "Bantu Radio",
     "type": "radio",
@@ -2636,32 +2658,34 @@
     "isFeatured": false
   },
   {
-    "id": "radio-chosen-radio-uganda-mp3-ug",
-    "name": "Chosen Radio Uganda",
+    "id": "radio-bugwere-online-radio-ug",
+    "name": "Bugwere Online Radio",
     "type": "radio",
-    "streamUrl": "http://stream.zeno.fm/6uxwuag3srhvv",
-    "description": "christian, gospel, religious",
+    "streamUrl": "https://stream-177.surfernetwork.com/64ol1dwqvuzvv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiI2NG9sMWR3cXZ1enZ2IiwiaG9zdCI6InN0cmVhbS0xNzcuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJCWjJyNkhjaVJBYTQ5Y3RVdVZJVlZ3IiwiaWF0IjoxNzg5MjI4MDQ1LCJleHAiOjE3ODkyMjgxMDV9.sq56yT7Ihva_xRxXdZ2x62273v6Af-4MNb71KbFzTl4",
+    "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGqzjpeSb1qq3HtWwzqmWms-jt3Jqgafefd_ZUX-ri3A&s=10",
+    "description": "culture, folk, pop, regional",
     "language": "English",
     "country": "UG",
     "categories": [
-      "christian",
-      "gospel",
-      "religious"
+      "culture",
+      "folk",
+      "pop",
+      "regional"
     ],
-    "website": "https://chosenradio.co.ug/",
     "isFeatured": false
   },
   {
-    "id": "radio-streamug-radio-ug",
-    "name": "StreamUG Radio",
+    "id": "radio-prayer-alter-radio-ug",
+    "name": "Prayer Alter Radio",
     "type": "radio",
-    "streamUrl": "https://c22.radioboss.fm:8814/stream",
-    "logo": "https://play-lh.googleusercontent.com/QCubFoSjKzUtPRKNacVo11rDcgqdsIeG2dNMLdGy5i9ywl4Cr41DuhD50ioMqtxzLPsyjhD4ox7cIybhnBSgWBk=w240-h480-rw",
-    "description": "Radio station",
-    "language": "English",
+    "streamUrl": "https://node-33.zeno.fm/1gfmyttkephvv",
+    "description": "rock",
+    "language": "Luganda",
     "country": "UG",
-    "categories": [],
-    "website": "https://www.streamugradio.com/",
+    "categories": [
+      "rock"
+    ],
+    "website": "https://theafricanvoiceradio.com/",
     "isFeatured": false
   },
   {
@@ -2696,35 +2720,6 @@
     "isFeatured": false
   },
   {
-    "id": "radio-joy-hits-radio-ug",
-    "name": "Joy hits channel",
-    "type": "radio",
-    "streamUrl": "http://joyhits.online/joyhitshq.mp3",
-    "description": "music",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "music"
-    ],
-    "website": "https://joyhits.online/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-christian-life-radio-ug",
-    "name": "Christian life radio",
-    "type": "radio",
-    "streamUrl": "https://ice64.securenetsystems.net/CLR1MP3",
-    "logo": "https://www.communitynetradio.org/favicon.ico",
-    "description": "christian",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "christian"
-    ],
-    "website": "https://www.communitynetradio.org/christianliferadio",
-    "isFeatured": false
-  },
-  {
     "id": "radio-music-for-kids-ug",
     "name": "Music for kids",
     "type": "radio",
@@ -2736,6 +2731,24 @@
       "music"
     ],
     "website": "http://air.radioart.com/fMusic_for_kids",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-promise-radio-ug-mp3-ug",
+    "name": "Promise Radio UG",
+    "type": "radio",
+    "streamUrl": "http://stream.zeno.fm/hkzgeqlcjoxuv",
+    "logo": "https://i.ibb.co/YFBWs4tp/images-1.jpg",
+    "description": "christian, gospel, religious, talk",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "christian",
+      "gospel",
+      "religious",
+      "talk"
+    ],
+    "website": "https://christsheart.org/",
     "isFeatured": false
   },
   {
@@ -2753,19 +2766,6 @@
       "talk"
     ],
     "website": "http://www.heavenlyaltarchurch.co.ug/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-rukiga-fm-ug",
-    "name": "RUKIGA FM",
-    "type": "radio",
-    "streamUrl": "https://stream1.rcast.net/74102",
-    "logo": "https://www.rukigafm.com/_next/image?url=%2Fimages%2Frukiga-fm-logo.png&w=96&q=75",
-    "description": "Radio station",
-    "language": "English",
-    "country": "UG",
-    "categories": [],
-    "website": "https://www.rukigafm.com/",
     "isFeatured": false
   },
   {
@@ -2815,6 +2815,23 @@
     "isFeatured": false
   },
   {
+    "id": "radio-enjiri-radio-mp3-ug",
+    "name": "Enjiri Radio",
+    "type": "radio",
+    "streamUrl": "http://stream.zeno.fm/xdb8nazajqcvv",
+    "logo": "https://images.zeno.fm/Ul6bCR7O_skhKp8i0XZo40RCJPV82us0PbqQYpWYYvE/rs:fit:240:240/g:ce:0:0/aHR0cHM6Ly9zdHJlYW0tdG9vbHMuemVub21lZGlhLmNvbS9jb250ZW50L3N0YXRpb25zL2FkYTJlNDI3LTdlMmItNDIzNS05ZDNmLTllNjExOTk0NWMzNy9pbWFnZS8_dXBkYXRlZD0xNzA4MDg4NzU1MDAw.webp",
+    "description": "christian, gospel, talk",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "christian",
+      "gospel",
+      "talk"
+    ],
+    "website": "http://www.enjiriradio.co.ug/",
+    "isFeatured": false
+  },
+  {
     "id": "radio-heathafro-fm-ug",
     "name": "Heathafro FM",
     "type": "radio",
@@ -2844,20 +2861,6 @@
     "isFeatured": false
   },
   {
-    "id": "radio-sda-missions-radio-ug",
-    "name": "SDA Missions radio",
-    "type": "radio",
-    "streamUrl": "https://stream-57.zeno.fm/mkkr2bcgkf9uv",
-    "description": "variety",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "variety"
-    ],
-    "website": "https://sdamissionug.com/",
-    "isFeatured": false
-  },
-  {
     "id": "radio-sound-city-ug",
     "name": "Sound City",
     "type": "radio",
@@ -2870,52 +2873,6 @@
       "music"
     ],
     "website": "https://24503.live.streamtheworld.com/977_HITSAAC_SC",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-christian-fm-ug",
-    "name": "Christian fm",
-    "type": "radio",
-    "streamUrl": "http://stream.dar.fm/27203",
-    "description": "christian",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "christian"
-    ],
-    "website": "https://www.christianhits.net/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-bugwere-online-radio-ug",
-    "name": "Bugwere Online Radio",
-    "type": "radio",
-    "streamUrl": "https://stream-177.surfernetwork.com/64ol1dwqvuzvv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiI2NG9sMWR3cXZ1enZ2IiwiaG9zdCI6InN0cmVhbS0xNzcuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiJCWjJyNkhjaVJBYTQ5Y3RVdVZJVlZ3IiwiaWF0IjoxNzg5MjI4MDQ1LCJleHAiOjE3ODkyMjgxMDV9.sq56yT7Ihva_xRxXdZ2x62273v6Af-4MNb71KbFzTl4",
-    "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGqzjpeSb1qq3HtWwzqmWms-jt3Jqgafefd_ZUX-ri3A&s=10",
-    "description": "culture, folk, pop, regional",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "culture",
-      "folk",
-      "pop",
-      "regional"
-    ],
-    "isFeatured": false
-  },
-  {
-    "id": "radio-bible-indepth-radio-ug",
-    "name": "Bible Indepth Radio",
-    "type": "radio",
-    "streamUrl": "https://stream.radiojar.com/n6c576nrga0uv",
-    "description": "bible, christian",
-    "language": "Afrikaans",
-    "country": "UG",
-    "categories": [
-      "bible",
-      "christian"
-    ],
-    "website": "https://bibleindepth.com/radio",
     "isFeatured": false
   },
   {
@@ -2936,6 +2893,22 @@
     "isFeatured": false
   },
   {
+    "id": "radio-104-1-favour-fm-gulu-104-1-fm-ug",
+    "name": "104.1 Favour FM - Gulu - 104.1 FM",
+    "type": "radio",
+    "streamUrl": "http://us5new.listen2myradio.com:2199/listen.php?port=8138&type=ice&mount=stream",
+    "logo": "https://res.cloudinary.com/djo14ik7t/image/upload/v1733712575/favicon_drktfs.png",
+    "description": "christian, gospel",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "christian",
+      "gospel"
+    ],
+    "website": "https://www.favourfm.org/",
+    "isFeatured": false
+  },
+  {
     "id": "radio-97-0-radio-city-ug",
     "name": "97.0 Radio City",
     "type": "radio",
@@ -2945,6 +2918,19 @@
     "country": "UG",
     "categories": [],
     "website": "https://www.radiocity.ug/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-streamug-radio-ug",
+    "name": "StreamUG Radio",
+    "type": "radio",
+    "streamUrl": "https://c22.radioboss.fm:8814/stream",
+    "logo": "https://play-lh.googleusercontent.com/QCubFoSjKzUtPRKNacVo11rDcgqdsIeG2dNMLdGy5i9ywl4Cr41DuhD50ioMqtxzLPsyjhD4ox7cIybhnBSgWBk=w240-h480-rw",
+    "description": "Radio station",
+    "language": "English",
+    "country": "UG",
+    "categories": [],
+    "website": "https://www.streamugradio.com/",
     "isFeatured": false
   },
   {
@@ -2965,6 +2951,18 @@
     "isFeatured": false
   },
   {
+    "id": "radio-ejazz-radio-ug",
+    "name": "EJAZZ Radio",
+    "type": "radio",
+    "streamUrl": "https://eu1.reliastream.com/proxy/ejazzug?mp=/stream",
+    "description": "Radio station",
+    "language": "English",
+    "country": "UG",
+    "categories": [],
+    "website": "https://radio.ejazzug.com/",
+    "isFeatured": false
+  },
+  {
     "id": "radio-christ-love-radio-mp3-ug",
     "name": "Christ Love Radio",
     "type": "radio",
@@ -2981,36 +2979,6 @@
     "isFeatured": false
   },
   {
-    "id": "radio-way-to-god-radio-mp3-ug",
-    "name": "Way To God Radio",
-    "type": "radio",
-    "streamUrl": "http://stream.zeno.fm/g876nxxz8vzuv",
-    "logo": "https://images.zeno.fm/WZoX_AarzsL-ubF-VgFKQu5HZqjWjRlRujPZmVvt53o/rs:fit:240:240/g:ce:0:0/aHR0cHM6Ly9zdHJlYW0tdG9vbHMuemVub21lZGlhLmNvbS9jb250ZW50L3N0YXRpb25zL2FneHpmbnBsYm04dGMzUmhkSE55TWdzU0NrRjFkR2hEYkdsbGJuUVlnSUNRNEthUjdBc01DeElPVTNSaGRHbHZibEJ5YjJacGJHVVlnSUNRa1AyamhRc01vZ0VFZW1WdWJ3L2ltYWdlLz91cGRhdGVkPTE2NTAxODg3MjQwMDA.webp",
-    "description": "christian, gospel, religious",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "christian",
-      "gospel",
-      "religious"
-    ],
-    "website": "http://www.waytogodradio.co.ug/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-radio-buddu-ug",
-    "name": "Radio Buddu",
-    "type": "radio",
-    "streamUrl": "https://dc4.serverse.com/proxy/ccmxrgub/stream?",
-    "logo": "https://www.radiobuddufm.com/images/logom.png",
-    "description": "Radio station",
-    "language": "English",
-    "country": "UG",
-    "categories": [],
-    "website": "https://www.radiobuddufm.com/",
-    "isFeatured": false
-  },
-  {
     "id": "radio-dema-gospel-promotions-mp3-ug",
     "name": "Dema Gospel Promotions",
     "type": "radio",
@@ -3023,6 +2991,20 @@
       "gospel music"
     ],
     "website": "https://demagospel.com/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-joy-hits-radio-ug",
+    "name": "Joy hits channel",
+    "type": "radio",
+    "streamUrl": "http://joyhits.online/joyhitshq.mp3",
+    "description": "music",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "music"
+    ],
+    "website": "https://joyhits.online/",
     "isFeatured": false
   },
   {
@@ -3105,20 +3087,6 @@
     "isFeatured": false
   },
   {
-    "id": "radio-isaiah-fm-ug",
-    "name": "Isaiah Fm",
-    "type": "radio",
-    "streamUrl": "https://ice66.securenetsystems.net/FFBN?playSessionID=8D29A2B7-D966-0B14-AFCD7A340AFA6C15",
-    "description": "the promise",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "the promise"
-    ],
-    "website": "https://ice66.securenetsystems.net/FFBN?playSessionID=8D29A2B7-D966-0B14-AFCD7A340AFA6C15",
-    "isFeatured": false
-  },
-  {
     "id": "radio-voice-of-heaven-kampala-mp3-ug",
     "name": "Voice Of Heaven - Kampala",
     "type": "radio",
@@ -3180,21 +3148,6 @@
       "religious"
     ],
     "website": "https://www.sanctuaryfm.co.ug/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-dove-radio-ug",
-    "name": "Dove Radio",
-    "type": "radio",
-    "streamUrl": "https://ice64.securenetsystems.net/DOVEMAIN",
-    "logo": "https://firebasestorage.googleapis.com/v0/b/radiogalaxy-580f4.appspot.com/o/images%2FIMG_20240128_195126328.jpg?alt=media&token=2fdca8aa-06c4-41a2-bd6b-b217df4731ab",
-    "description": "religious",
-    "language": "English",
-    "country": "UG",
-    "categories": [
-      "religious"
-    ],
-    "website": "https://ice64.securenetsystems.net/DOVEMAIN",
     "isFeatured": false
   },
   {
@@ -3266,6 +3219,21 @@
     "isFeatured": false
   },
   {
+    "id": "radio-free-sports-radio-ug",
+    "name": "Free Sports Radio",
+    "type": "radio",
+    "streamUrl": "https://stream.zeno.fm/31nnibfpnxktv",
+    "logo": "https://firebasestorage.googleapis.com/v0/b/radiogalaxy-580f4.appspot.com/o/images%2FIMG_20240317_040932953.jpg?alt=media&token=02bb8749-ab43-4244-9e31-f317573e5aa5",
+    "description": "sports",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "sports"
+    ],
+    "website": "https://stream.zeno.fm/31nnibfpnxktv",
+    "isFeatured": false
+  },
+  {
     "id": "radio-exodus-comfort-radio-mbarara-mp3-ug",
     "name": "Exodus Comfort Radio",
     "type": "radio",
@@ -3310,17 +3278,31 @@
     "isFeatured": false
   },
   {
-    "id": "radio-voice-of-kyankwanzi-kiboga-89-7-fm-mp3-ug",
-    "name": "Voice of Kyankwanzi - Kiboga - 89.7 FM",
+    "id": "radio-sda-missions-radio-ug",
+    "name": "SDA Missions radio",
     "type": "radio",
-    "streamUrl": "http://stream.zeno.fm/eyzf4ddwqcmvv",
-    "description": "adult contemporary",
-    "language": "Luganda",
+    "streamUrl": "https://stream-57.zeno.fm/mkkr2bcgkf9uv",
+    "description": "variety",
+    "language": "English",
     "country": "UG",
     "categories": [
-      "adult contemporary"
+      "variety"
     ],
-    "website": "http://www.kyankwanzifm.net/",
+    "website": "https://sdamissionug.com/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-christian-fm-ug",
+    "name": "Christian fm",
+    "type": "radio",
+    "streamUrl": "http://stream.dar.fm/27203",
+    "description": "christian",
+    "language": "English",
+    "country": "UG",
+    "categories": [
+      "christian"
+    ],
+    "website": "https://www.christianhits.net/",
     "isFeatured": false
   },
   {
@@ -3357,6 +3339,21 @@
     "isFeatured": false
   },
   {
+    "id": "radio-bible-indepth-radio-ug",
+    "name": "Bible Indepth Radio",
+    "type": "radio",
+    "streamUrl": "https://stream.radiojar.com/n6c576nrga0uv",
+    "description": "bible, christian",
+    "language": "Afrikaans",
+    "country": "UG",
+    "categories": [
+      "bible",
+      "christian"
+    ],
+    "website": "https://bibleindepth.com/radio",
+    "isFeatured": false
+  },
+  {
     "id": "radio-skynet-radio-ug",
     "name": "SKYNET FM",
     "type": "radio",
@@ -3371,29 +3368,20 @@
     "isFeatured": false
   },
   {
-    "id": "radio-prayer-alter-radio-ug",
-    "name": "Prayer Alter Radio",
+    "id": "radio-way-to-god-radio-mp3-ug",
+    "name": "Way To God Radio",
     "type": "radio",
-    "streamUrl": "https://node-33.zeno.fm/1gfmyttkephvv",
-    "description": "rock",
-    "language": "Luganda",
-    "country": "UG",
-    "categories": [
-      "rock"
-    ],
-    "website": "https://theafricanvoiceradio.com/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-ejazz-radio-ug",
-    "name": "EJAZZ Radio",
-    "type": "radio",
-    "streamUrl": "https://eu1.reliastream.com/proxy/ejazzug?mp=/stream",
-    "description": "Radio station",
+    "streamUrl": "http://stream.zeno.fm/g876nxxz8vzuv",
+    "logo": "https://images.zeno.fm/WZoX_AarzsL-ubF-VgFKQu5HZqjWjRlRujPZmVvt53o/rs:fit:240:240/g:ce:0:0/aHR0cHM6Ly9zdHJlYW0tdG9vbHMuemVub21lZGlhLmNvbS9jb250ZW50L3N0YXRpb25zL2FneHpmbnBsYm04dGMzUmhkSE55TWdzU0NrRjFkR2hEYkdsbGJuUVlnSUNRNEthUjdBc01DeElPVTNSaGRHbHZibEJ5YjJacGJHVVlnSUNRa1AyamhRc01vZ0VFZW1WdWJ3L2ltYWdlLz91cGRhdGVkPTE2NTAxODg3MjQwMDA.webp",
+    "description": "christian, gospel, religious",
     "language": "English",
     "country": "UG",
-    "categories": [],
-    "website": "https://radio.ejazzug.com/",
+    "categories": [
+      "christian",
+      "gospel",
+      "religious"
+    ],
+    "website": "http://www.waytogodradio.co.ug/",
     "isFeatured": false
   },
   {
@@ -3438,51 +3426,6 @@
     "isFeatured": false
   },
   {
-    "id": "radio-kbc-ke",
-    "name": "KBC",
-    "type": "radio",
-    "streamUrl": "http://stream.zeno.fm/ud2u96xst5quv",
-    "description": "classical",
-    "language": "English",
-    "country": "KE",
-    "categories": [
-      "classical"
-    ],
-    "isFeatured": false
-  },
-  {
-    "id": "radio-radio-citizen-ke",
-    "name": "Radio Citizen",
-    "type": "radio",
-    "streamUrl": "https://radiocitizen-atunwadigital.streamguys1.com/radiocitizen/playlist.m3u8",
-    "description": "news, swahili, talk",
-    "language": "Swahili",
-    "country": "KE",
-    "categories": [
-      "news",
-      "swahili",
-      "talk"
-    ],
-    "website": "https://citizen.digital/radio/radio-citizen-13",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-radio-jambo-ke",
-    "name": "Radio Jambo",
-    "type": "radio",
-    "streamUrl": "https://radiojambo-atunwadigital.streamguys1.com/radiojambo",
-    "description": "news, sports, talk",
-    "language": "Swahili",
-    "country": "KE",
-    "categories": [
-      "news",
-      "sports",
-      "talk"
-    ],
-    "website": "https://www.radiojambo.co.ke/",
-    "isFeatured": false
-  },
-  {
     "id": "radio-98-4-capital-fm-ke",
     "name": "98.4 Capital FM",
     "type": "radio",
@@ -3502,6 +3445,65 @@
     "isFeatured": false
   },
   {
+    "id": "radio-kiss-fm-100-ke",
+    "name": "Kiss FM 100",
+    "type": "radio",
+    "streamUrl": "https://atunwadigital.streamguys1.com/kiss100fm",
+    "description": "rap hiphop rnb",
+    "language": "English",
+    "country": "KE",
+    "categories": [
+      "rap hiphop rnb"
+    ],
+    "website": "https://atunwadigital.streamguys1.com/kiss100fm",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-kbc-ke",
+    "name": "KBC",
+    "type": "radio",
+    "streamUrl": "http://stream.zeno.fm/ud2u96xst5quv",
+    "description": "classical",
+    "language": "English",
+    "country": "KE",
+    "categories": [
+      "classical"
+    ],
+    "isFeatured": false
+  },
+  {
+    "id": "radio-radio-jambo-ke",
+    "name": "Radio Jambo",
+    "type": "radio",
+    "streamUrl": "https://radiojambo-atunwadigital.streamguys1.com/radiojambo",
+    "description": "news, sports, talk",
+    "language": "Swahili",
+    "country": "KE",
+    "categories": [
+      "news",
+      "sports",
+      "talk"
+    ],
+    "website": "https://www.radiojambo.co.ke/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-radio-citizen-ke",
+    "name": "Radio Citizen",
+    "type": "radio",
+    "streamUrl": "https://radiocitizen-atunwadigital.streamguys1.com/radiocitizen/playlist.m3u8",
+    "description": "news, swahili, talk",
+    "language": "Swahili",
+    "country": "KE",
+    "categories": [
+      "news",
+      "swahili",
+      "talk"
+    ],
+    "website": "https://citizen.digital/radio/radio-citizen-13",
+    "isFeatured": false
+  },
+  {
     "id": "radio-inooro-fm-ke",
     "name": "Inooro FM",
     "type": "radio",
@@ -3518,34 +3520,46 @@
     "isFeatured": false
   },
   {
-    "id": "radio-kiss-fm-100-ke",
-    "name": "Kiss FM 100",
+    "id": "radio-jesus-is-lord-radio-ke",
+    "name": "JESUS IS LORD radio",
     "type": "radio",
-    "streamUrl": "https://atunwadigital.streamguys1.com/kiss100fm",
-    "description": "rap hiphop rnb",
-    "language": "English",
+    "streamUrl": "https://stream-285.surfernetwork.com/thdtw5xd9eiuv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ0aGR0dzV4ZDllaXV2IiwiaG9zdCI6InN0cmVhbS0yODUuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiI0OUMxUU9PMFIyeTl5SThnTno0VTB3IiwiaWF0IjoxNzg1OTU0NjI0LCJleHAiOjE3ODU5NTQ2ODR9.TEC2qyYYTCv3OjNepwCqgyWWPAoxPRanj5XLmznekcA",
+    "description": "holiness, repentance, worship",
+    "language": "Dutch",
     "country": "KE",
     "categories": [
-      "rap hiphop rnb"
+      "holiness",
+      "repentance",
+      "worship"
     ],
-    "website": "https://atunwadigital.streamguys1.com/kiss100fm",
+    "website": "https://jesusislordradio.info/",
     "isFeatured": false
   },
   {
-    "id": "radio-kenya1-fm-ke",
-    "name": "KENYA1 FM",
+    "id": "radio-ghettoke-kenya-ke",
+    "name": "GHETTOKE KENYA",
     "type": "radio",
-    "streamUrl": "https://stream.zeno.fm/cmgkmed5u18uv",
-    "description": "comedy, music, news, talkshow",
-    "language": "Kikuyu Swahili",
+    "streamUrl": "http://stream-47.zeno.fm/gf58b0pt5x8uv?zs=9Rb0nsM4TlCJ9aggk8nWAg",
+    "description": "classical",
+    "language": "English",
     "country": "KE",
     "categories": [
-      "comedy",
-      "music",
-      "news",
-      "talkshow"
+      "classical"
     ],
-    "website": "https://stream.zeno.fm/cmgkmed5u18uv",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-reggae-roots-ke",
+    "name": "REGGAE ROOTS",
+    "type": "radio",
+    "streamUrl": "http://relay5.181.fm:8096/",
+    "description": "classical",
+    "language": "English",
+    "country": "KE",
+    "categories": [
+      "classical"
+    ],
+    "website": "http://relay5.181.fm:8096/",
     "isFeatured": false
   },
   {
@@ -3560,22 +3574,6 @@
       "soul"
     ],
     "website": "https://zeno.fm/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-jesus-is-lord-radio-ke",
-    "name": "JESUS IS LORD radio",
-    "type": "radio",
-    "streamUrl": "https://stream-285.surfernetwork.com/thdtw5xd9eiuv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJ0aGR0dzV4ZDllaXV2IiwiaG9zdCI6InN0cmVhbS0yODUuc3VyZmVybmV0d29yay5jb20iLCJydHRsIjo1LCJqdGkiOiI0OUMxUU9PMFIyeTl5SThnTno0VTB3IiwiaWF0IjoxNzg1OTU0NjI0LCJleHAiOjE3ODU5NTQ2ODR9.TEC2qyYYTCv3OjNepwCqgyWWPAoxPRanj5XLmznekcA",
-    "description": "holiness, repentance, worship",
-    "language": "Dutch",
-    "country": "KE",
-    "categories": [
-      "holiness",
-      "repentance",
-      "worship"
-    ],
-    "website": "https://jesusislordradio.info/",
     "isFeatured": false
   },
   {
@@ -3596,6 +3594,23 @@
     "isFeatured": false
   },
   {
+    "id": "radio-kenya1-fm-ke",
+    "name": "KENYA1 FM",
+    "type": "radio",
+    "streamUrl": "https://stream.zeno.fm/cmgkmed5u18uv",
+    "description": "comedy, music, news, talkshow",
+    "language": "Kikuyu Swahili",
+    "country": "KE",
+    "categories": [
+      "comedy",
+      "music",
+      "news",
+      "talkshow"
+    ],
+    "website": "https://stream.zeno.fm/cmgkmed5u18uv",
+    "isFeatured": false
+  },
+  {
     "id": "radio-taach-fm-ke",
     "name": "Taach FM",
     "type": "radio",
@@ -3606,20 +3621,6 @@
     "country": "KE",
     "categories": [],
     "website": "https://taachfm.co.ke/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-r-maria-kenya-ke",
-    "name": "R MARIA KENYA",
-    "type": "radio",
-    "streamUrl": "http://dreamsiteradiocp2.com:8092/",
-    "description": "classical",
-    "language": "English",
-    "country": "KE",
-    "categories": [
-      "classical"
-    ],
-    "website": "http://dreamsiteradiocp2.com:8092/",
     "isFeatured": false
   },
   {
@@ -3638,144 +3639,6 @@
       "tarab"
     ],
     "website": "https://radiokaya.co.ke/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-at254-radio-ke",
-    "name": "At254 Radio",
-    "type": "radio",
-    "streamUrl": "https://s127.radiolize.com/radio/8100/radio.mp3",
-    "logo": "https://lh3.googleusercontent.com/a/ACg8ocKb4td-nYHKIwBkkjVms791bm7bpD6ciJWCA9Ko0JrPJqSMNymE=s288-c-no",
-    "description": "Radio station",
-    "language": "English",
-    "country": "KE",
-    "categories": [],
-    "website": "https://s127.radiolize.com/public/appsumo__cj6khn_riclf3",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-ramogi-fm-ke",
-    "name": "Ramogi FM",
-    "type": "radio",
-    "streamUrl": "https://ramogifm-atunwadigital.streamguys1.com/ramogifm/playlist.m3u8",
-    "description": "music, news, talk",
-    "language": "Luo",
-    "country": "KE",
-    "categories": [
-      "music",
-      "news",
-      "talk"
-    ],
-    "website": "https://citizen.digital/radio/ramogi-fm-10",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-ghett-kenya-ke",
-    "name": "ghett kenya",
-    "type": "radio",
-    "streamUrl": "http://stream-27.zeno.fm/kvudezx1h2zuv?zs=hCl2Q4ZVSPykhlahMviRpQ",
-    "description": "classical",
-    "language": "English",
-    "country": "KE",
-    "categories": [
-      "classical"
-    ],
-    "website": "http://stream-27.zeno.fm/kvudezx1h2zuv?zs=hCl2Q4ZVSPykhlahMviRpQ",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-ghettoke-kenya-ke",
-    "name": "GHETTOKE KENYA",
-    "type": "radio",
-    "streamUrl": "http://stream-47.zeno.fm/gf58b0pt5x8uv?zs=9Rb0nsM4TlCJ9aggk8nWAg",
-    "description": "classical",
-    "language": "English",
-    "country": "KE",
-    "categories": [
-      "classical"
-    ],
-    "isFeatured": false
-  },
-  {
-    "id": "radio-rasss-kenya-ke",
-    "name": "RASSS KENYA",
-    "type": "radio",
-    "streamUrl": "http://stream-57.zeno.fm/gf58b0pt5x8uv?zs=_88r_Fp8TmC34vmgpzzmzQ",
-    "description": "classical",
-    "language": "English",
-    "country": "KE",
-    "categories": [
-      "classical"
-    ],
-    "website": "http://stream-57.zeno.fm/gf58b0pt5x8uv?zs=_88r_Fp8TmC34vmgpzzmzQ",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-radio-maria-kenya-nyeri-ke",
-    "name": "Radio Maria Kenya - Nairobi",
-    "type": "radio",
-    "streamUrl": "http://141.95.98.87:8069/stream",
-    "description": "Radio station",
-    "language": "English",
-    "country": "KE",
-    "categories": [],
-    "website": "https://www.radiomaria.co.ke/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-mayian-fm-ke",
-    "name": "Mayian FM",
-    "type": "radio",
-    "streamUrl": "https://mayianfm-atunwadigital.streamguys1.com/mayianfm",
-    "description": "christian, music, news, politics",
-    "language": "English",
-    "country": "KE",
-    "categories": [
-      "christian",
-      "music",
-      "news",
-      "politics"
-    ],
-    "isFeatured": false
-  },
-  {
-    "id": "radio-carribean-ke",
-    "name": "CARRIBEAN",
-    "type": "radio",
-    "streamUrl": "https://streams.rautemusik.fm/caribbean-wave/mp3-192/",
-    "description": "classical",
-    "language": "English",
-    "country": "KE",
-    "categories": [
-      "classical"
-    ],
-    "website": "https://streams.rautemusik.fm/caribbean-wave/mp3-192/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-jabulani-radio-eldoret-kenya-ke",
-    "name": "Jabulani Radio - Eldoret (Kenya)",
-    "type": "radio",
-    "streamUrl": "https://listen.radioking.com/radio/626272/stream/688567",
-    "description": "african music",
-    "language": "English",
-    "country": "KE",
-    "categories": [
-      "african music"
-    ],
-    "isFeatured": false
-  },
-  {
-    "id": "radio-kingstone-ke",
-    "name": "KINGSTONE",
-    "type": "radio",
-    "streamUrl": "http://198.57.187.102:8080/kingston12",
-    "description": "classical",
-    "language": "English",
-    "country": "KE",
-    "categories": [
-      "classical"
-    ],
     "isFeatured": false
   },
   {
@@ -3805,17 +3668,125 @@
     "isFeatured": false
   },
   {
-    "id": "radio-reggae-roots-ke",
-    "name": "REGGAE ROOTS",
+    "id": "radio-at254-radio-ke",
+    "name": "At254 Radio",
     "type": "radio",
-    "streamUrl": "http://relay5.181.fm:8096/",
+    "streamUrl": "https://s127.radiolize.com/radio/8100/radio.mp3",
+    "logo": "https://lh3.googleusercontent.com/a/ACg8ocKb4td-nYHKIwBkkjVms791bm7bpD6ciJWCA9Ko0JrPJqSMNymE=s288-c-no",
+    "description": "Radio station",
+    "language": "English",
+    "country": "KE",
+    "categories": [],
+    "website": "https://s127.radiolize.com/public/appsumo__cj6khn_riclf3",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-hot-96-fm-ke",
+    "name": "Hot 96 FM",
+    "type": "radio",
+    "streamUrl": "https://hot96-atunwadigital.streamguys1.com/hot96/playlist.m3u8",
+    "description": "hits, music",
+    "language": "English",
+    "country": "KE",
+    "categories": [
+      "hits",
+      "music"
+    ],
+    "website": "https://citizen.digital/radio/hot-96-fm-2",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-ghetto-kenya-ke",
+    "name": "ghetto kenya",
+    "type": "radio",
+    "streamUrl": "https://stream.zeno.fm/kvudezx1h2zuv",
+    "description": "Radio station",
+    "language": "English",
+    "country": "KE",
+    "categories": [],
+    "website": "https://stream.zeno.fm/kvudezx1h2zuv",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-mayian-fm-ke",
+    "name": "Mayian FM",
+    "type": "radio",
+    "streamUrl": "https://mayianfm-atunwadigital.streamguys1.com/mayianfm",
+    "description": "christian, music, news, politics",
+    "language": "English",
+    "country": "KE",
+    "categories": [
+      "christian",
+      "music",
+      "news",
+      "politics"
+    ],
+    "isFeatured": false
+  },
+  {
+    "id": "radio-jabulani-radio-eldoret-kenya-ke",
+    "name": "Jabulani Radio - Eldoret (Kenya)",
+    "type": "radio",
+    "streamUrl": "https://listen.radioking.com/radio/626272/stream/688567",
+    "description": "african music",
+    "language": "English",
+    "country": "KE",
+    "categories": [
+      "african music"
+    ],
+    "isFeatured": false
+  },
+  {
+    "id": "radio-hiphop-gin-ke",
+    "name": "Hiphop Gin",
+    "type": "radio",
+    "streamUrl": "https://stream.zeno.fm/m25b7vevgm8uv",
+    "description": "Radio station",
+    "language": "English",
+    "country": "KE",
+    "categories": [],
+    "website": "https://zeno.fm/radio/hip-hop-gin-online-radio/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-ghett-kenya-ke",
+    "name": "ghett kenya",
+    "type": "radio",
+    "streamUrl": "http://stream-27.zeno.fm/kvudezx1h2zuv?zs=hCl2Q4ZVSPykhlahMviRpQ",
     "description": "classical",
     "language": "English",
     "country": "KE",
     "categories": [
       "classical"
     ],
-    "website": "http://relay5.181.fm:8096/",
+    "website": "http://stream-27.zeno.fm/kvudezx1h2zuv?zs=hCl2Q4ZVSPykhlahMviRpQ",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-george-jones-ke",
+    "name": "George Jones",
+    "type": "radio",
+    "streamUrl": "https://streaming.exclusive.radio/er/georgejones/icecast.audio",
+    "logo": "https://liveonlineradio.net/wp-content/uploads/2021/02/Exclusively-Kylie-Minogue.jpg",
+    "description": "Radio station",
+    "language": "English",
+    "country": "KE",
+    "categories": [],
+    "website": "https://play.exclusive.radio/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-r-maria-kenya-ke",
+    "name": "R MARIA KENYA",
+    "type": "radio",
+    "streamUrl": "http://dreamsiteradiocp2.com:8092/",
+    "description": "classical",
+    "language": "English",
+    "country": "KE",
+    "categories": [
+      "classical"
+    ],
+    "website": "http://dreamsiteradiocp2.com:8092/",
     "isFeatured": false
   },
   {
@@ -3838,22 +3809,6 @@
     "isFeatured": false
   },
   {
-    "id": "radio-radio-safari-kenya-ke",
-    "name": "Radio Safari Kenya",
-    "type": "radio",
-    "streamUrl": "https://stream.zeno.fm/t65cszbgunhvv",
-    "description": "christian, hits, news, pop",
-    "language": "English",
-    "country": "KE",
-    "categories": [
-      "christian",
-      "hits",
-      "news",
-      "pop"
-    ],
-    "isFeatured": false
-  },
-  {
     "id": "radio-flamingo-radio-ke",
     "name": "Flamingo Radio",
     "type": "radio",
@@ -3871,27 +3826,29 @@
     "isFeatured": false
   },
   {
-    "id": "radio-radio-maria-kenya-kisumu-ke",
-    "name": "Radio Maria Kenya Kisumu",
+    "id": "radio-ras-style-ke",
+    "name": "RAS STYLE",
     "type": "radio",
-    "streamUrl": "http://141.95.98.87:8129/stream",
-    "description": "Radio station",
+    "streamUrl": "http://stream.zeno.fm/gf58b0pt5x8uv",
+    "description": "classical",
     "language": "English",
     "country": "KE",
-    "categories": [],
-    "website": "https://www.radiomaria.co.ke/",
+    "categories": [
+      "classical"
+    ],
     "isFeatured": false
   },
   {
-    "id": "radio-hiphop-gin-ke",
-    "name": "Hiphop Gin",
+    "id": "radio-kingstone-ke",
+    "name": "KINGSTONE",
     "type": "radio",
-    "streamUrl": "https://stream.zeno.fm/m25b7vevgm8uv",
-    "description": "Radio station",
+    "streamUrl": "http://198.57.187.102:8080/kingston12",
+    "description": "classical",
     "language": "English",
     "country": "KE",
-    "categories": [],
-    "website": "https://zeno.fm/radio/hip-hop-gin-online-radio/",
+    "categories": [
+      "classical"
+    ],
     "isFeatured": false
   },
   {
@@ -3909,56 +3866,104 @@
     "isFeatured": false
   },
   {
-    "id": "radio-campus-radio-kenya-ke",
-    "name": "Campus Radio Kenya",
+    "id": "radio-ramogi-fm-ke",
+    "name": "Ramogi FM",
     "type": "radio",
-    "streamUrl": "https://stream.zenolive.com/mayn36v1v8quv.aac",
-    "logo": "https://i0.wp.com/www.campusradio.co.ke/wp-content/uploads/2019/09/2-CRK-Official-Logo-1.png?fit=307%2C138&ssl=1",
-    "description": "Radio station",
-    "language": "English",
+    "streamUrl": "https://ramogifm-atunwadigital.streamguys1.com/ramogifm/playlist.m3u8",
+    "description": "music, news, talk",
+    "language": "Luo",
     "country": "KE",
-    "categories": [],
-    "website": "https://www.campusradio.co.ke/",
+    "categories": [
+      "music",
+      "news",
+      "talk"
+    ],
+    "website": "https://citizen.digital/radio/ramogi-fm-10",
     "isFeatured": false
   },
   {
-    "id": "radio-hot-96-fm-ke",
-    "name": "Hot 96 FM",
+    "id": "radio-rasss-kenya-ke",
+    "name": "RASSS KENYA",
     "type": "radio",
-    "streamUrl": "https://hot96-atunwadigital.streamguys1.com/hot96/playlist.m3u8",
-    "description": "hits, music",
+    "streamUrl": "http://stream-57.zeno.fm/gf58b0pt5x8uv?zs=_88r_Fp8TmC34vmgpzzmzQ",
+    "description": "classical",
     "language": "English",
     "country": "KE",
     "categories": [
-      "hits",
-      "music"
+      "classical"
     ],
-    "website": "https://citizen.digital/radio/hot-96-fm-2",
+    "website": "http://stream-57.zeno.fm/gf58b0pt5x8uv?zs=_88r_Fp8TmC34vmgpzzmzQ",
     "isFeatured": false
   },
   {
-    "id": "radio-george-jones-ke",
-    "name": "George Jones",
+    "id": "radio-kustommediaradio-ke",
+    "name": "Kustommediaradio",
     "type": "radio",
-    "streamUrl": "https://streaming.exclusive.radio/er/georgejones/icecast.audio",
-    "logo": "https://liveonlineradio.net/wp-content/uploads/2021/02/Exclusively-Kylie-Minogue.jpg",
-    "description": "Radio station",
-    "language": "English",
+    "streamUrl": "https://stream.zeno.fm/3zgc6zpfvorvv",
+    "description": "pepea show la kijanja 1-4pm",
+    "language": "Swahili",
     "country": "KE",
-    "categories": [],
-    "website": "https://play.exclusive.radio/",
+    "categories": [
+      "pepea show la kijanja 1-4pm"
+    ],
+    "website": "https://stream.zeno.fm/3zgc6zpfvorvv",
     "isFeatured": false
   },
   {
-    "id": "radio-ghetto-kenya-ke",
-    "name": "ghetto kenya",
+    "id": "radio-juja-fm-ke",
+    "name": "Juja FM",
     "type": "radio",
-    "streamUrl": "https://stream.zeno.fm/kvudezx1h2zuv",
+    "streamUrl": "http://node-10.zeno.fm/5w8y7wcf9x8uv?zs=xwoBg8DVTx2jYRhHsWgHXw&rj-ttl=5&rj-tok=AAABgnKqVSgAmEHnh12jXuZhAw",
+    "logo": "http://repentandpreparetheway.org/favicon.ico",
     "description": "Radio station",
-    "language": "English",
+    "language": "American English",
     "country": "KE",
     "categories": [],
-    "website": "https://stream.zeno.fm/kvudezx1h2zuv",
+    "website": "http://repentandpreparetheway.org/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-aldai-radio-ke",
+    "name": "Aldai Radio",
+    "type": "radio",
+    "streamUrl": "https://stream.zeno.fm/sojbskv8s10vv",
+    "description": "afrobeat, news, pop, talk",
+    "language": "English",
+    "country": "KE",
+    "categories": [
+      "afrobeat",
+      "news",
+      "pop",
+      "talk"
+    ],
+    "isFeatured": false
+  },
+  {
+    "id": "radio-replay-news-kiswahili-ke",
+    "name": "REPLAY NEWS - Kiswahili",
+    "type": "radio",
+    "streamUrl": "https://replaynewssw.ice.infomaniak.ch/replaynewssw-128.mp3",
+    "logo": "https://www.publicsante.com/BIENVENU/LOGO%20REPLAY%20NEWS-SW.png",
+    "description": "news",
+    "language": "Swahili",
+    "country": "KE",
+    "categories": [
+      "news"
+    ],
+    "website": "https://www.replaynews.net/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-clouds-fm-tz",
+    "name": "Clouds FM",
+    "type": "radio",
+    "streamUrl": "http://eu6.fastcast4u.com:5306/;",
+    "logo": "https://cloudsmedia.co.tz/build/assets/clouds_icon-4199f5a8.png",
+    "description": "Radio station",
+    "language": "English",
+    "country": "TZ",
+    "categories": [],
+    "website": "https://cloudsmedia.co.tz/home/clouds-fm",
     "isFeatured": false
   },
   {
@@ -3996,29 +4001,43 @@
     "isFeatured": false
   },
   {
-    "id": "radio-clouds-fm-tz",
-    "name": "Clouds FM",
+    "id": "radio-ishizwe-fm-tz",
+    "name": "Ishizwe FM",
     "type": "radio",
-    "streamUrl": "http://eu6.fastcast4u.com:5306/;",
-    "logo": "https://cloudsmedia.co.tz/build/assets/clouds_icon-4199f5a8.png",
+    "streamUrl": "https://stream.zeno.fm/zhhawbqoikatv",
+    "logo": "https://stream.zeno.fm/zhhawbqoikatv.m3u",
     "description": "Radio station",
     "language": "English",
     "country": "TZ",
     "categories": [],
-    "website": "https://cloudsmedia.co.tz/home/clouds-fm",
+    "website": "https://ishizwemedia.co.t/",
     "isFeatured": false
   },
   {
-    "id": "radio-crown-fm-tz",
-    "name": "Crown FM",
+    "id": "radio-radio-uhai-tz",
+    "name": "Radio Uhai",
     "type": "radio",
-    "streamUrl": "https://radio.crownmedia.co.tz:8443/crown",
-    "logo": "https://crownmedia.co.tz/wp-content/uploads/2024/04/CROWN-FM.jpg",
+    "streamUrl": "https://s2.citrus3.com:8050/stream",
+    "logo": "https://www.radiouhai.co.tz/favicon/apple-touch-icon.png",
+    "description": "christian",
+    "language": "Swahili",
+    "country": "TZ",
+    "categories": [
+      "christian"
+    ],
+    "website": "https://www.radiouhai.co.tz/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-nuru-fm-tz",
+    "name": "Nuru FM",
+    "type": "radio",
+    "streamUrl": "https://radiotadio.co.tz/nuru-fm-stream",
     "description": "Radio station",
     "language": "English",
     "country": "TZ",
     "categories": [],
-    "website": "https://crownmedia.co.tz/crownfm/",
+    "website": "https://radiotadio.co.tz/nurufm/",
     "isFeatured": false
   },
   {
@@ -4035,28 +4054,16 @@
     "isFeatured": false
   },
   {
-    "id": "radio-radio-one-stereo-tz",
-    "name": "Radio One Stereo",
+    "id": "radio-crown-fm-tz",
+    "name": "Crown FM",
     "type": "radio",
-    "streamUrl": "https://radioonetanzania.radioca.st/stream",
+    "streamUrl": "https://radio.crownmedia.co.tz:8443/crown",
+    "logo": "https://crownmedia.co.tz/wp-content/uploads/2024/04/CROWN-FM.jpg",
     "description": "Radio station",
     "language": "English",
     "country": "TZ",
     "categories": [],
-    "website": "https://www.radio1.co.tz/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-ishizwe-fm-tz",
-    "name": "Ishizwe FM",
-    "type": "radio",
-    "streamUrl": "https://stream.zeno.fm/zhhawbqoikatv",
-    "logo": "https://stream.zeno.fm/zhhawbqoikatv.m3u",
-    "description": "Radio station",
-    "language": "English",
-    "country": "TZ",
-    "categories": [],
-    "website": "https://ishizwemedia.co.t/",
+    "website": "https://crownmedia.co.tz/crownfm/",
     "isFeatured": false
   },
   {
@@ -4072,18 +4079,55 @@
     "isFeatured": false
   },
   {
-    "id": "radio-radio-uhai-tz",
-    "name": "Radio Uhai",
+    "id": "radio-imbanasi-tz",
+    "name": "ImbaNasi",
     "type": "radio",
-    "streamUrl": "https://s2.citrus3.com:8050/stream",
-    "logo": "https://www.radiouhai.co.tz/favicon/apple-touch-icon.png",
-    "description": "christian",
-    "language": "Swahili",
+    "streamUrl": "https://stream.zeno.fm/dsfhivkawjiuv",
+    "description": "Radio station",
+    "language": "English",
+    "country": "TZ",
+    "categories": [],
+    "website": "http://imbanasi.com/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-radio-one-stereo-tz",
+    "name": "Radio One Stereo",
+    "type": "radio",
+    "streamUrl": "https://radioonetanzania.radioca.st/stream",
+    "description": "Radio station",
+    "language": "English",
+    "country": "TZ",
+    "categories": [],
+    "website": "https://www.radio1.co.tz/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-capital-radio-tz",
+    "name": "Capital Radio",
+    "type": "radio",
+    "streamUrl": "https://capitalradio.radioca.st/stream",
+    "description": "news, talk",
+    "language": "English",
     "country": "TZ",
     "categories": [
-      "christian"
+      "news",
+      "talk"
     ],
-    "website": "https://www.radiouhai.co.tz/",
+    "website": "https://www.capitalradio.co.tz/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-radio-kwizera-tz",
+    "name": "Radio Kwizera",
+    "type": "radio",
+    "streamUrl": "https://uk4-vn.mixstream.net/:8052/;listen.mp3",
+    "logo": "https://radiokwizera.co.tz/wp-content/uploads/2026/02/cropped-RadioKwizeraLogo.png",
+    "description": "Radio station",
+    "language": "English",
+    "country": "TZ",
+    "categories": [],
+    "website": "https://radiokwizera.co.tz/",
     "isFeatured": false
   },
   {
@@ -4106,30 +4150,31 @@
     "isFeatured": false
   },
   {
-    "id": "radio-nuru-fm-tz",
-    "name": "Nuru FM",
+    "id": "radio-bcc-fm-radio-tz",
+    "name": "BCC-FM Radio",
     "type": "radio",
-    "streamUrl": "https://radiotadio.co.tz/nuru-fm-stream",
+    "streamUrl": "https://a7.asurahosting.com/listen/bethel_fm/radio.mp3",
+    "logo": "https://a7.asurahosting.com/public/bethel_fm",
+    "description": "smooth jazz",
+    "language": "English",
+    "country": "TZ",
+    "categories": [
+      "smooth jazz"
+    ],
+    "website": "https://a7.asurahosting.com/public/bethel_fm",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-glorious-online-radio-tz",
+    "name": "Glorious Online Radio",
+    "type": "radio",
+    "streamUrl": "https://stream.zeno.fm/xnamppblrnlvv",
+    "logo": "https://zeno.fm/radio/glorious-online-radio/",
     "description": "Radio station",
     "language": "English",
     "country": "TZ",
     "categories": [],
-    "website": "https://radiotadio.co.tz/nurufm/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-capital-radio-tz",
-    "name": "Capital Radio",
-    "type": "radio",
-    "streamUrl": "https://capitalradio.radioca.st/stream",
-    "description": "news, talk",
-    "language": "English",
-    "country": "TZ",
-    "categories": [
-      "news",
-      "talk"
-    ],
-    "website": "https://www.capitalradio.co.tz/",
+    "website": "https://zeno.fm/radio/glorious-online-radio/",
     "isFeatured": false
   },
   {
@@ -4148,59 +4193,6 @@
       "news talk music entertainment"
     ],
     "website": "https://kizaziradio.com/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-glorious-online-radio-tz",
-    "name": "Glorious Online Radio",
-    "type": "radio",
-    "streamUrl": "https://stream.zeno.fm/xnamppblrnlvv",
-    "logo": "https://zeno.fm/radio/glorious-online-radio/",
-    "description": "Radio station",
-    "language": "English",
-    "country": "TZ",
-    "categories": [],
-    "website": "https://zeno.fm/radio/glorious-online-radio/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-radio-kwizera-tz",
-    "name": "Radio Kwizera",
-    "type": "radio",
-    "streamUrl": "https://uk4-vn.mixstream.net/:8052/;listen.mp3",
-    "logo": "https://radiokwizera.co.tz/wp-content/uploads/2026/02/cropped-RadioKwizeraLogo.png",
-    "description": "Radio station",
-    "language": "English",
-    "country": "TZ",
-    "categories": [],
-    "website": "https://radiokwizera.co.tz/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-imbanasi-tz",
-    "name": "ImbaNasi",
-    "type": "radio",
-    "streamUrl": "https://stream.zeno.fm/dsfhivkawjiuv",
-    "description": "Radio station",
-    "language": "English",
-    "country": "TZ",
-    "categories": [],
-    "website": "http://imbanasi.com/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-bcc-fm-radio-tz",
-    "name": "BCC-FM Radio",
-    "type": "radio",
-    "streamUrl": "https://a7.asurahosting.com/listen/bethel_fm/radio.mp3",
-    "logo": "https://a7.asurahosting.com/public/bethel_fm",
-    "description": "smooth jazz",
-    "language": "English",
-    "country": "TZ",
-    "categories": [
-      "smooth jazz"
-    ],
-    "website": "https://a7.asurahosting.com/public/bethel_fm",
     "isFeatured": false
   },
   {
@@ -4230,21 +4222,6 @@
     "isFeatured": false
   },
   {
-    "id": "radio-magic-fm-rw",
-    "name": "Magic FM",
-    "type": "radio",
-    "streamUrl": "http://listen.rba.co.rw:8080/",
-    "description": "dance, pop",
-    "language": "English",
-    "country": "RW",
-    "categories": [
-      "dance",
-      "pop"
-    ],
-    "website": "http://rba.co.rw/radio/7/Magic-Fm",
-    "isFeatured": false
-  },
-  {
     "id": "radio-radio-maria-rwanda-rw",
     "name": "RADIO MARIA RWANDA",
     "type": "radio",
@@ -4260,6 +4237,21 @@
       "religious"
     ],
     "website": "http://www.radiomaria.rw/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-magic-fm-rw",
+    "name": "Magic FM",
+    "type": "radio",
+    "streamUrl": "http://listen.rba.co.rw:8080/",
+    "description": "dance, pop",
+    "language": "English",
+    "country": "RW",
+    "categories": [
+      "dance",
+      "pop"
+    ],
+    "website": "http://rba.co.rw/radio/7/Magic-Fm",
     "isFeatured": false
   },
   {
@@ -4384,6 +4376,21 @@
     "isFeatured": false
   },
   {
+    "id": "radio-radio-mix-congolaise-cd",
+    "name": "Radio Mix Congolaise",
+    "type": "radio",
+    "streamUrl": "https://stream.zeno.fm/qe5g83upga0uv",
+    "logo": "https://images.zeno.fm/fzjwSLDd-HMj8y7DUl0WRMPCuvgxfydRbyqG3hApFBg/rs:fit:240:240/g:ce:0:0/aHR0cHM6Ly9zdHJlYW0tdG9vbHMuemVub21lZGlhLmNvbS9jb250ZW50L3N0YXRpb25zL2FneHpmbnBsYm04dGMzUmhkSE55TWdzU0NrRjFkR2hEYkdsbGJuUVlnSURROFBDcnZBZ01DeElPVTNSaGRHbHZibEJ5YjJacGJHVVlnSURRb09EaS1Ba01vZ0VFZW1WdWJ3L2ltYWdlLz91cGRhdGVkPTE2NzcxNDY0NDMwMDA.webp",
+    "description": "soukous",
+    "language": "English",
+    "country": "CD",
+    "categories": [
+      "soukous"
+    ],
+    "website": "https://zeno.fm/radio/radio-mix-congolaise/",
+    "isFeatured": false
+  },
+  {
     "id": "radio-innovation-fm-cd",
     "name": "Innovation FM",
     "type": "radio",
@@ -4403,18 +4410,16 @@
     "isFeatured": false
   },
   {
-    "id": "radio-radio-mix-congolaise-cd",
-    "name": "Radio Mix Congolaise",
+    "id": "radio-gospel-fm-cd",
+    "name": "Gospel FM",
     "type": "radio",
-    "streamUrl": "https://stream.zeno.fm/qe5g83upga0uv",
-    "logo": "https://images.zeno.fm/fzjwSLDd-HMj8y7DUl0WRMPCuvgxfydRbyqG3hApFBg/rs:fit:240:240/g:ce:0:0/aHR0cHM6Ly9zdHJlYW0tdG9vbHMuemVub21lZGlhLmNvbS9jb250ZW50L3N0YXRpb25zL2FneHpmbnBsYm04dGMzUmhkSE55TWdzU0NrRjFkR2hEYkdsbGJuUVlnSURROFBDcnZBZ01DeElPVTNSaGRHbHZibEJ5YjJacGJHVVlnSURRb09EaS1Ba01vZ0VFZW1WdWJ3L2ltYWdlLz91cGRhdGVkPTE2NzcxNDY0NDMwMDA.webp",
-    "description": "soukous",
-    "language": "English",
+    "streamUrl": "http://stream.zeno.fm/n3sgwrm2mg8uv",
+    "logo": "https://zeno.fm/favicon.ico",
+    "description": "Radio station",
+    "language": "French",
     "country": "CD",
-    "categories": [
-      "soukous"
-    ],
-    "website": "https://zeno.fm/radio/radio-mix-congolaise/",
+    "categories": [],
+    "website": "https://zeno.fm/millenium-radioh1tmcgfd5f8uv/",
     "isFeatured": false
   },
   {
@@ -4426,19 +4431,6 @@
     "language": "English",
     "country": "CD",
     "categories": [],
-    "isFeatured": false
-  },
-  {
-    "id": "radio-gospel-fm-cd",
-    "name": "Gospel FM",
-    "type": "radio",
-    "streamUrl": "http://stream.zeno.fm/n3sgwrm2mg8uv",
-    "logo": "https://zeno.fm/favicon.ico",
-    "description": "Radio station",
-    "language": "French",
-    "country": "CD",
-    "categories": [],
-    "website": "https://zeno.fm/millenium-radioh1tmcgfd5f8uv/",
     "isFeatured": false
   },
   {
@@ -4468,19 +4460,6 @@
     "isFeatured": false
   },
   {
-    "id": "radio-millenium-radio-cd",
-    "name": "MILLENIUM RADIO",
-    "type": "radio",
-    "streamUrl": "http://stream.zeno.fm/471pmgfd5f8uv",
-    "logo": "https://zeno.fm/favicon.ico",
-    "description": "Radio station",
-    "language": "French",
-    "country": "CD",
-    "categories": [],
-    "website": "https://zeno.fm/millenium-radioh1tmcgfd5f8uv/",
-    "isFeatured": false
-  },
-  {
     "id": "radio-rmbb-cd",
     "name": "rmbb",
     "type": "radio",
@@ -4492,6 +4471,19 @@
       "radio communautaire"
     ],
     "website": "https://www.radiomoto.net/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-millenium-radio-cd",
+    "name": "MILLENIUM RADIO",
+    "type": "radio",
+    "streamUrl": "http://stream.zeno.fm/471pmgfd5f8uv",
+    "logo": "https://zeno.fm/favicon.ico",
+    "description": "Radio station",
+    "language": "French",
+    "country": "CD",
+    "categories": [],
+    "website": "https://zeno.fm/millenium-radioh1tmcgfd5f8uv/",
     "isFeatured": false
   },
   {
@@ -4607,6 +4599,25 @@
     "isFeatured": false
   },
   {
+    "id": "radio-classic-vinyl-hd-us",
+    "name": "Classic Vinyl HD",
+    "type": "radio",
+    "streamUrl": "https://icecast.walmradio.com:8443/classic",
+    "logo": "https://icecast.walmradio.com:8443/classic.jpg",
+    "description": "1930, 1940, 1950, 1960, beautiful music",
+    "language": "English",
+    "country": "US",
+    "categories": [
+      "1930",
+      "1940",
+      "1950",
+      "1960",
+      "beautiful music"
+    ],
+    "website": "https://walmradio.com/classic",
+    "isFeatured": false
+  },
+  {
     "id": "radio-france-info-fr",
     "name": "France Info",
     "type": "radio",
@@ -4641,33 +4652,20 @@
     "isFeatured": false
   },
   {
-    "id": "radio-europe-1-fr",
-    "name": "Europe 1",
+    "id": "radio-101-smooth-jazz-us",
+    "name": "101 SMOOTH JAZZ",
     "type": "radio",
-    "streamUrl": "https://europe1.lmn.fm/europe1.mp3",
-    "logo": "https://db.radioline.fr/pictures/radio_fa64fea9b6ccd92e058ced3fa41f58f5/logo200.jpg",
-    "description": "génaraliste",
-    "language": "French",
-    "country": "FR",
+    "streamUrl": "http://jking.cdnstream1.com/b22139_128mp3",
+    "logo": "http://101smoothjazz.com/favicon.ico",
+    "description": "easy listening, jazz, smooth jazz",
+    "language": "English",
+    "country": "US",
     "categories": [
-      "génaraliste"
+      "easy listening",
+      "jazz",
+      "smooth jazz"
     ],
-    "website": "https://www.europe1.fr/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-rmc-info-talk-sport-fr",
-    "name": "RMC Info Talk Sport",
-    "type": "radio",
-    "streamUrl": "https://audio.bfmtv.com/rmcradio_128.mp3?aw_0_1st.playerId=RMC_audio_web&aggregator=RMC_audio_web",
-    "logo": "https://rmc.bfmtv.com/android-icon-192x192.png",
-    "description": "sports news",
-    "language": "French",
-    "country": "FR",
-    "categories": [
-      "sports news"
-    ],
-    "website": "https://rmc.bfmtv.com/",
+    "website": "http://101smoothjazz.com/",
     "isFeatured": false
   },
   {
@@ -4690,20 +4688,18 @@
     "isFeatured": false
   },
   {
-    "id": "radio-101-smooth-jazz-us",
-    "name": "101 SMOOTH JAZZ",
+    "id": "radio-europe-1-fr",
+    "name": "Europe 1",
     "type": "radio",
-    "streamUrl": "http://jking.cdnstream1.com/b22139_128mp3",
-    "logo": "http://101smoothjazz.com/favicon.ico",
-    "description": "easy listening, jazz, smooth jazz",
-    "language": "English",
-    "country": "US",
+    "streamUrl": "https://europe1.lmn.fm/europe1.mp3",
+    "logo": "https://db.radioline.fr/pictures/radio_fa64fea9b6ccd92e058ced3fa41f58f5/logo200.jpg",
+    "description": "génaraliste",
+    "language": "French",
+    "country": "FR",
     "categories": [
-      "easy listening",
-      "jazz",
-      "smooth jazz"
+      "génaraliste"
     ],
-    "website": "http://101smoothjazz.com/",
+    "website": "https://www.europe1.fr/",
     "isFeatured": false
   },
   {
@@ -4756,6 +4752,40 @@
     "isFeatured": false
   },
   {
+    "id": "radio-rmc-info-talk-sport-fr",
+    "name": "RMC Info Talk Sport",
+    "type": "radio",
+    "streamUrl": "https://audio.bfmtv.com/rmcradio_128.mp3?aw_0_1st.playerId=RMC_audio_web&aggregator=RMC_audio_web",
+    "logo": "https://rmc.bfmtv.com/android-icon-192x192.png",
+    "description": "sports news",
+    "language": "French",
+    "country": "FR",
+    "categories": [
+      "sports news"
+    ],
+    "website": "https://rmc.bfmtv.com/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-heart-80s-gb",
+    "name": "Heart 80s",
+    "type": "radio",
+    "streamUrl": "https://media-ssl.musicradio.com/Heart80sMP3",
+    "logo": "https://www.heart.co.uk/assets_v4r/heart/img/favicon-196x196.png",
+    "description": "80s, national, pop, public radio, variety",
+    "language": "English",
+    "country": "GB",
+    "categories": [
+      "80s",
+      "national",
+      "pop",
+      "public radio",
+      "variety"
+    ],
+    "website": "https://www.heart.co.uk/80s",
+    "isFeatured": false
+  },
+  {
     "id": "radio-deutschlandfunk-dlf-mp3-128k-de",
     "name": "Deutschlandfunk | DLF | MP3 128k",
     "type": "radio",
@@ -4774,20 +4804,31 @@
     "isFeatured": false
   },
   {
-    "id": "radio-france-inter-fr",
-    "name": "France Inter",
+    "id": "radio-damarturk-fm-tr",
+    "name": "DamarTurk FM",
     "type": "radio",
-    "streamUrl": "http://direct.franceinter.fr/live/franceinter-midfi.mp3",
-    "logo": "https://www.radiofrance.fr/dist/favicons/logo-120.png",
-    "description": "debate, music, news",
-    "language": "French",
-    "country": "FR",
+    "streamUrl": "https://live.radyositesihazir.com:10997/stream?type=http&nocache=99881",
+    "logo": "https://www.damarturkfm.com/favicon.ico",
+    "description": "Radio station",
+    "language": "English",
+    "country": "TR",
+    "categories": [],
+    "website": "https://www.damarturkfm.com/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-virgin-radio-t-rkiye-tr",
+    "name": "Virgin Radio Türkiye",
+    "type": "radio",
+    "streamUrl": "http://19983.live.streamtheworld.com/VIRGIN_RADIO_SC",
+    "logo": "https://i.karnavalcdn.com/media/site_media/icons/android-icon-192x192.png",
+    "description": "pop rock",
+    "language": "Turkish",
+    "country": "TR",
     "categories": [
-      "debate",
-      "music",
-      "news"
+      "pop rock"
     ],
-    "website": "https://www.radiofrance.fr/franceinter",
+    "website": "http://www.virginradioturkiye.com/",
     "isFeatured": false
   },
   {
@@ -4808,22 +4849,32 @@
     "isFeatured": false
   },
   {
-    "id": "radio-heart-80s-gb",
-    "name": "Heart 80s",
+    "id": "radio-france-inter-fr",
+    "name": "France Inter",
     "type": "radio",
-    "streamUrl": "https://media-ssl.musicradio.com/Heart80sMP3",
-    "logo": "https://www.heart.co.uk/assets_v4r/heart/img/favicon-196x196.png",
-    "description": "80s, national, pop, public radio, variety",
-    "language": "English",
-    "country": "GB",
+    "streamUrl": "http://direct.franceinter.fr/live/franceinter-midfi.mp3",
+    "logo": "https://www.radiofrance.fr/dist/favicons/logo-120.png",
+    "description": "debate, music, news",
+    "language": "French",
+    "country": "FR",
     "categories": [
-      "80s",
-      "national",
-      "pop",
-      "public radio",
-      "variety"
+      "debate",
+      "music",
+      "news"
     ],
-    "website": "https://www.heart.co.uk/80s",
+    "website": "https://www.radiofrance.fr/franceinter",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-joy-t-rk-turkey-tr",
+    "name": "JOY TÜRK TURKEY",
+    "type": "radio",
+    "streamUrl": "https://playerservices.streamtheworld.com/api/livestream-redirect/JOY_TURK_SC?/",
+    "description": "Radio station",
+    "language": "English",
+    "country": "TR",
+    "categories": [],
+    "website": "https://playerservices.streamtheworld.com/api/livestream-redirect/JOY_TURK_SC?/",
     "isFeatured": false
   },
   {
@@ -4856,34 +4907,6 @@
     "isFeatured": false
   },
   {
-    "id": "radio-damarturk-fm-tr",
-    "name": "DamarTurk FM",
-    "type": "radio",
-    "streamUrl": "https://live.radyositesihazir.com:10997/stream?type=http&nocache=99881",
-    "logo": "https://www.damarturkfm.com/favicon.ico",
-    "description": "Radio station",
-    "language": "English",
-    "country": "TR",
-    "categories": [],
-    "website": "https://www.damarturkfm.com/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-virgin-radio-t-rkiye-tr",
-    "name": "Virgin Radio Türkiye",
-    "type": "radio",
-    "streamUrl": "http://19983.live.streamtheworld.com/VIRGIN_RADIO_SC",
-    "logo": "https://i.karnavalcdn.com/media/site_media/icons/android-icon-192x192.png",
-    "description": "pop rock",
-    "language": "Turkish",
-    "country": "TR",
-    "categories": [
-      "pop rock"
-    ],
-    "website": "http://www.virginradioturkiye.com/",
-    "isFeatured": false
-  },
-  {
     "id": "radio-bollywood-gaane-purane-in",
     "name": "Bollywood Gaane Purane",
     "type": "radio",
@@ -4894,21 +4917,6 @@
     "country": "IN",
     "categories": [],
     "website": "https://gaanepurane.my-free.website/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-fox-news-radio-us",
-    "name": "Fox News Radio",
-    "type": "radio",
-    "streamUrl": "https://live.amperwave.net/direct/foxnewsradio-foxnewsradioaac-imc?source=fnr.web",
-    "logo": "https://static.foxnews.com/radio.foxnews.com/content/uploads/2017/10/default_logo-150x150.png",
-    "description": "news",
-    "language": "American English",
-    "country": "US",
-    "categories": [
-      "news"
-    ],
-    "website": "https://radio.foxnews.com/",
     "isFeatured": false
   },
   {
@@ -4928,6 +4936,50 @@
     "isFeatured": false
   },
   {
+    "id": "radio-fox-news-radio-us",
+    "name": "Fox News Radio",
+    "type": "radio",
+    "streamUrl": "https://live.amperwave.net/direct/foxnewsradio-foxnewsradioaac-imc?source=fnr.web",
+    "logo": "https://static.foxnews.com/radio.foxnews.com/content/uploads/2017/10/default_logo-150x150.png",
+    "description": "news",
+    "language": "American English",
+    "country": "US",
+    "categories": [
+      "news"
+    ],
+    "website": "https://radio.foxnews.com/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-90lar-turkey-tr",
+    "name": "90lar turkey",
+    "type": "radio",
+    "streamUrl": "http://37.247.98.8/stream/166/",
+    "logo": "https://onlineradio.com.tr/images/50_radio.png",
+    "description": "hits 90's, turkish pop",
+    "language": "Turkish",
+    "country": "TR",
+    "categories": [
+      "hits 90's",
+      "turkish pop"
+    ],
+    "website": "https://radyohome.com/radyolar/90lar",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-s-per-fm-tr",
+    "name": "Süper FM",
+    "type": "radio",
+    "streamUrl": "http://28993.live.streamtheworld.com:3690/SUPER_FMAAC_SC",
+    "description": "pop",
+    "language": "English",
+    "country": "TR",
+    "categories": [
+      "pop"
+    ],
+    "isFeatured": false
+  },
+  {
     "id": "radio-cadena-100-es",
     "name": "Cadena 100",
     "type": "radio",
@@ -4943,45 +4995,18 @@
     "isFeatured": false
   },
   {
-    "id": "radio-joy-t-rk-turkey-tr",
-    "name": "JOY TÜRK TURKEY",
+    "id": "radio-bayern-3-de",
+    "name": "Bayern 3",
     "type": "radio",
-    "streamUrl": "https://playerservices.streamtheworld.com/api/livestream-redirect/JOY_TURK_SC?/",
-    "description": "Radio station",
-    "language": "English",
-    "country": "TR",
-    "categories": [],
-    "website": "https://playerservices.streamtheworld.com/api/livestream-redirect/JOY_TURK_SC?/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-radio-24-il-sole-24-ore-it",
-    "name": "Radio 24 il sole 24 ore",
-    "type": "radio",
-    "streamUrl": "http://shoutcast2.radio24.it:8000/;",
-    "logo": "https://www.radio24.ilsole24ore.com/whitelabel/group-2420101401040528/img/apple-touch-icon.png",
-    "description": "news talk",
-    "language": "Italian",
-    "country": "IT",
+    "streamUrl": "https://dispatcher.rndfnk.com/br/br3/live/mp3/mid",
+    "logo": "https://api.ardmediathek.de/image-service/images/urn:ard:image:52fd25fc45de7c6a?w=512",
+    "description": "pop",
+    "language": "German",
+    "country": "DE",
     "categories": [
-      "news talk"
+      "pop"
     ],
-    "website": "https://www.radio24.ilsole24ore.com/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio--cn",
-    "name": "怀集音乐之声",
-    "type": "radio",
-    "streamUrl": "https://lhttp.qingting.fm/live/4804/64k.mp3",
-    "logo": "http://www.hj0758.cn/favicon.ico",
-    "description": "music",
-    "language": "Chinese",
-    "country": "CN",
-    "categories": [
-      "music"
-    ],
-    "website": "http://www.hj0758.cn/",
+    "website": "https://www.bayern3.de/",
     "isFeatured": false
   },
   {
@@ -5004,6 +5029,34 @@
     "isFeatured": false
   },
   {
+    "id": "radio-radyo-7-tr",
+    "name": "Radyo 7",
+    "type": "radio",
+    "streamUrl": "http://46.20.3.250/;stream",
+    "logo": "https://cdn.kanal7.com/radyo7//application/assets/home/common/images/apple-touch-icon-114x114.png",
+    "description": "Radio station",
+    "language": "English",
+    "country": "TR",
+    "categories": [],
+    "website": "http://www.radyo7.com/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio--cn",
+    "name": "怀集音乐之声",
+    "type": "radio",
+    "streamUrl": "https://lhttp.qingting.fm/live/4804/64k.mp3",
+    "logo": "http://www.hj0758.cn/favicon.ico",
+    "description": "music",
+    "language": "Chinese",
+    "country": "CN",
+    "categories": [
+      "music"
+    ],
+    "website": "http://www.hj0758.cn/",
+    "isFeatured": false
+  },
+  {
     "id": "radio-bbc-world-service-gb",
     "name": "BBC World Service",
     "type": "radio",
@@ -5016,101 +5069,6 @@
       "bbc"
     ],
     "website": "https://www.bbc.co.uk/sounds/play/live:bbc_world_service",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-s-per-fm-tr",
-    "name": "Süper FM",
-    "type": "radio",
-    "streamUrl": "http://28993.live.streamtheworld.com:3690/SUPER_FMAAC_SC",
-    "description": "pop",
-    "language": "English",
-    "country": "TR",
-    "categories": [
-      "pop"
-    ],
-    "isFeatured": false
-  },
-  {
-    "id": "radio-esradio-madrid-es",
-    "name": "esRadio Madrid",
-    "type": "radio",
-    "streamUrl": "http://livestreaming3.esradio.fm/stream64.mp3",
-    "description": "news",
-    "language": "English",
-    "country": "ES",
-    "categories": [
-      "news"
-    ],
-    "isFeatured": false
-  },
-  {
-    "id": "radio-1live-de",
-    "name": "1LIVE",
-    "type": "radio",
-    "streamUrl": "https://wdr-1live-live.icecastssl.wdr.de/wdr/1live/live/mp3/128/stream.mp3",
-    "logo": "https://www1.wdr.de/radio/1live/resources/img/favicon/apple-touch-icon.png",
-    "description": "ard, pop, public radio, rock, wdr",
-    "language": "German",
-    "country": "DE",
-    "categories": [
-      "ard",
-      "pop",
-      "public radio",
-      "rock",
-      "wdr"
-    ],
-    "website": "https://einslive.de/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-bayern-3-de",
-    "name": "Bayern 3",
-    "type": "radio",
-    "streamUrl": "https://dispatcher.rndfnk.com/br/br3/live/mp3/mid",
-    "logo": "https://api.ardmediathek.de/image-service/images/urn:ard:image:52fd25fc45de7c6a?w=512",
-    "description": "pop",
-    "language": "German",
-    "country": "DE",
-    "categories": [
-      "pop"
-    ],
-    "website": "https://www.bayern3.de/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-90lar-turkey-tr",
-    "name": "90lar turkey",
-    "type": "radio",
-    "streamUrl": "http://37.247.98.8/stream/166/",
-    "logo": "https://onlineradio.com.tr/images/50_radio.png",
-    "description": "hits 90's, turkish pop",
-    "language": "Turkish",
-    "country": "TR",
-    "categories": [
-      "hits 90's",
-      "turkish pop"
-    ],
-    "website": "https://radyohome.com/radyolar/90lar",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-walm-2-hd-us",
-    "name": "WALM 2 HD",
-    "type": "radio",
-    "streamUrl": "https://icecast.walmradio.com:8443/walm2",
-    "logo": "https://icecast.walmradio.com:8443/walm.jpg",
-    "description": "choral, christian, christian music, classical music, hymns",
-    "language": "English",
-    "country": "US",
-    "categories": [
-      "choral",
-      "christian",
-      "christian music",
-      "classical music",
-      "hymns"
-    ],
-    "website": "https://walmradio.com/walm2",
     "isFeatured": false
   },
   {
@@ -5133,16 +5091,16 @@
     "isFeatured": false
   },
   {
-    "id": "radio-radio-538-nl",
-    "name": "Radio 538",
+    "id": "radio-kral-fm-tr",
+    "name": "KRAL FM",
     "type": "radio",
-    "streamUrl": "http://playerservices.streamtheworld.com/api/livestream-redirect/RADIO538.mp3",
-    "logo": "https://www.538.nl/favicon.ico",
+    "streamUrl": "https://dygedge2.radyotvonline.net/kralfm/playlist.m3u8",
+    "logo": "https://www.kralmuzik.com.tr/app/themes/kral/assets/images/kralmuzik_logo.png?v=2",
     "description": "Radio station",
     "language": "English",
-    "country": "NL",
+    "country": "TR",
     "categories": [],
-    "website": "https://www.538.nl/",
+    "website": "https://www.kralmuzik.com.tr/",
     "isFeatured": false
   },
   {
@@ -5165,6 +5123,73 @@
     "isFeatured": false
   },
   {
+    "id": "radio-walm-2-hd-us",
+    "name": "WALM 2 HD",
+    "type": "radio",
+    "streamUrl": "https://icecast.walmradio.com:8443/walm2",
+    "logo": "https://icecast.walmradio.com:8443/walm.jpg",
+    "description": "choral, christian, christian music, classical music, hymns",
+    "language": "English",
+    "country": "US",
+    "categories": [
+      "choral",
+      "christian",
+      "christian music",
+      "classical music",
+      "hymns"
+    ],
+    "website": "https://walmradio.com/walm2",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-t-rk-lerle-t-rkiye-tr",
+    "name": "Türkülerle Türkiye",
+    "type": "radio",
+    "streamUrl": "http://37.247.98.8/stream/22/;",
+    "description": "türkü",
+    "language": "Turkish",
+    "country": "TR",
+    "categories": [
+      "türkü"
+    ],
+    "website": "https://www.canliradyodinle.fm/radyo-turkulerle-turkiye-dinle.html",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-1live-de",
+    "name": "1LIVE",
+    "type": "radio",
+    "streamUrl": "https://wdr-1live-live.icecastssl.wdr.de/wdr/1live/live/mp3/128/stream.mp3",
+    "logo": "https://www1.wdr.de/radio/1live/resources/img/favicon/apple-touch-icon.png",
+    "description": "ard, pop, public radio, rock, wdr",
+    "language": "German",
+    "country": "DE",
+    "categories": [
+      "ard",
+      "pop",
+      "public radio",
+      "rock",
+      "wdr"
+    ],
+    "website": "https://einslive.de/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-radio-24-il-sole-24-ore-it",
+    "name": "Radio 24 il sole 24 ore",
+    "type": "radio",
+    "streamUrl": "http://shoutcast2.radio24.it:8000/;",
+    "logo": "https://www.radio24.ilsole24ore.com/whitelabel/group-2420101401040528/img/apple-touch-icon.png",
+    "description": "news talk",
+    "language": "Italian",
+    "country": "IT",
+    "categories": [
+      "news talk"
+    ],
+    "website": "https://www.radio24.ilsole24ore.com/",
+    "isFeatured": false
+  },
+  {
     "id": "radio-hindi-gold-radio-in",
     "name": "Hindi Gold Radio",
     "type": "radio",
@@ -5174,109 +5199,6 @@
     "language": "Hindi",
     "country": "IN",
     "categories": [],
-    "isFeatured": false
-  },
-  {
-    "id": "radio-radyo-7-tr",
-    "name": "Radyo 7",
-    "type": "radio",
-    "streamUrl": "http://46.20.3.250/;stream",
-    "logo": "https://cdn.kanal7.com/radyo7//application/assets/home/common/images/apple-touch-icon-114x114.png",
-    "description": "Radio station",
-    "language": "English",
-    "country": "TR",
-    "categories": [],
-    "website": "http://www.radyo7.com/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-alem-fm-tr",
-    "name": "Alem Fm",
-    "type": "radio",
-    "streamUrl": "https://turkmedya.radyotvonline.net/alemfmaac",
-    "logo": "https://www.alemfm.com/assets/img/alemfm-apple-touch-icon.png",
-    "description": "classical",
-    "language": "English",
-    "country": "TR",
-    "categories": [
-      "classical"
-    ],
-    "website": "https://www.alemfm.com/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-your-classical-relax-us",
-    "name": "Your Classical - Relax",
-    "type": "radio",
-    "streamUrl": "http://relax.stream.publicradio.org/relax.mp3",
-    "logo": "http://www.yourclassical.org/apple-touch-icon.png",
-    "description": "classical, relax",
-    "language": "English",
-    "country": "US",
-    "categories": [
-      "classical",
-      "relax"
-    ],
-    "website": "http://www.yourclassical.org/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-kral-fm-tr",
-    "name": "KRAL FM",
-    "type": "radio",
-    "streamUrl": "https://dygedge2.radyotvonline.net/kralfm/playlist.m3u8",
-    "logo": "https://www.kralmuzik.com.tr/app/themes/kral/assets/images/kralmuzik_logo.png?v=2",
-    "description": "Radio station",
-    "language": "English",
-    "country": "TR",
-    "categories": [],
-    "website": "https://www.kralmuzik.com.tr/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-rai-radio-1-it",
-    "name": "Rai Radio 1",
-    "type": "radio",
-    "streamUrl": "http://icestreaming.rai.it/1.mp3",
-    "logo": "https://www.rai.it/cropgd/560x292/dl/img/2019/01/07/1280x720_1546854278675_conferenza%20radio1.jpg",
-    "description": "news, public radio, rai",
-    "language": "Italian",
-    "country": "IT",
-    "categories": [
-      "news",
-      "public radio",
-      "rai"
-    ],
-    "website": "http://www.radio1.rai.it/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-cope-sevilla-es",
-    "name": "COPE + Sevilla",
-    "type": "radio",
-    "streamUrl": "http://wecast09-h-cloud.flumotion.com/copesedes/sevilla-mas.mp3",
-    "description": "local news",
-    "language": "Spanish",
-    "country": "ES",
-    "categories": [
-      "local news"
-    ],
-    "website": "https://www.cope.es/directos/cope-mas-sevilla",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-rmf-fm-pl",
-    "name": "RMF FM",
-    "type": "radio",
-    "streamUrl": "http://195.150.20.9/RMFFM48",
-    "logo": "http://www.rmf.fm/assets/images/favicon/apple-icon-120x120.png?3",
-    "description": "pop",
-    "language": "Polish",
-    "country": "PL",
-    "categories": [
-      "pop"
-    ],
-    "website": "http://www.rmf.fm/",
     "isFeatured": false
   },
   {
@@ -5299,18 +5221,122 @@
     "isFeatured": false
   },
   {
-    "id": "radio-lbc-radio-gb",
-    "name": "LBC Radio",
+    "id": "radio-radio-538-nl",
+    "name": "Radio 538",
     "type": "radio",
-    "streamUrl": "http://media-sov.musicradio.com/LBC973MP3Low",
-    "logo": "http://www.lbc.co.uk/assets_v4r/lbc/img/favicon-196x196.png",
-    "description": "political talk",
+    "streamUrl": "http://playerservices.streamtheworld.com/api/livestream-redirect/RADIO538.mp3",
+    "logo": "https://www.538.nl/favicon.ico",
+    "description": "Radio station",
     "language": "English",
-    "country": "GB",
+    "country": "NL",
+    "categories": [],
+    "website": "https://www.538.nl/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-your-classical-relax-us",
+    "name": "Your Classical - Relax",
+    "type": "radio",
+    "streamUrl": "http://relax.stream.publicradio.org/relax.mp3",
+    "logo": "http://www.yourclassical.org/apple-touch-icon.png",
+    "description": "classical, relax",
+    "language": "English",
+    "country": "US",
     "categories": [
-      "political talk"
+      "classical",
+      "relax"
     ],
-    "website": "http://www.lbc.co.uk/",
+    "website": "http://www.yourclassical.org/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-orf-hitradio-3-hq-at",
+    "name": "ORF Hitradio Ö3 | HQ",
+    "type": "radio",
+    "streamUrl": "https://orf-live.ors-shoutcast.at/oe3-q2a",
+    "logo": "https://tubestatic.orf.at/mojo/1_3/storyserver//tube/common/images/apple-icons/oe3.png",
+    "description": "orf, pop",
+    "language": "German",
+    "country": "AT",
+    "categories": [
+      "orf",
+      "pop"
+    ],
+    "website": "http://oe3.orf.at/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-rmf-fm-pl",
+    "name": "RMF FM",
+    "type": "radio",
+    "streamUrl": "http://195.150.20.9/RMFFM48",
+    "logo": "http://www.rmf.fm/assets/images/favicon/apple-icon-120x120.png?3",
+    "description": "pop",
+    "language": "Polish",
+    "country": "PL",
+    "categories": [
+      "pop"
+    ],
+    "website": "http://www.rmf.fm/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-radio-357-pl",
+    "name": "Radio 357",
+    "type": "radio",
+    "streamUrl": "https://n-11-21.dcs.redcdn.pl/sc/o2/radio357/live/radio357_pr.livx?preroll=0",
+    "logo": "https://radio357.pl/wp-content/uploads/2022/04/c5399c0d-1b8e-43d5-b23b-e5cef1857856.png",
+    "description": "adult contemporary",
+    "language": "Polish",
+    "country": "PL",
+    "categories": [
+      "adult contemporary"
+    ],
+    "website": "https://radio357.pl/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-esradio-madrid-es",
+    "name": "esRadio Madrid",
+    "type": "radio",
+    "streamUrl": "http://livestreaming3.esradio.fm/stream64.mp3",
+    "description": "news",
+    "language": "English",
+    "country": "ES",
+    "categories": [
+      "news"
+    ],
+    "isFeatured": false
+  },
+  {
+    "id": "radio-rai-radio-1-it",
+    "name": "Rai Radio 1",
+    "type": "radio",
+    "streamUrl": "http://icestreaming.rai.it/1.mp3",
+    "logo": "https://www.rai.it/cropgd/560x292/dl/img/2019/01/07/1280x720_1546854278675_conferenza%20radio1.jpg",
+    "description": "news, public radio, rai",
+    "language": "Italian",
+    "country": "IT",
+    "categories": [
+      "news",
+      "public radio",
+      "rai"
+    ],
+    "website": "http://www.radio1.rai.it/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-977-80s-us",
+    "name": ".977 80s",
+    "type": "radio",
+    "streamUrl": "http://29318.live.streamtheworld.com/977_80_SC",
+    "description": "80s",
+    "language": "English",
+    "country": "US",
+    "categories": [
+      "80s"
+    ],
+    "website": "http://www.977music.com/",
     "isFeatured": false
   },
   {
@@ -5333,37 +5359,31 @@
     "isFeatured": false
   },
   {
-    "id": "radio-npr-24-hour-program-stream-us",
-    "name": "NPR 24 Hour Program Stream",
+    "id": "radio-los40-classic-es",
+    "name": "LOS40 Classic",
     "type": "radio",
-    "streamUrl": "http://npr-ice.streamguys1.com/live.mp3",
-    "logo": "https://static-assets.npr.org/static/images/favicon/favicon-96x96.png",
-    "description": "news, news talk, political talk, politics, public radio",
-    "language": "English",
-    "country": "US",
+    "streamUrl": "https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40_CLASSIC.mp3",
+    "logo": "https://los40es00.epimg.net/estaticos/recursosgraficos/v1/img/app/los40_192.png",
+    "description": "pop rock",
+    "language": "Spanish",
+    "country": "ES",
     "categories": [
-      "news",
-      "news talk",
-      "political talk",
-      "politics",
-      "public radio"
+      "pop rock"
     ],
-    "website": "https://www.npr.org/2016/04/05/472557877/npr-program-stream",
+    "website": "https://play.los40.com/emisora/los40_classic/",
     "isFeatured": false
   },
   {
-    "id": "radio-radio-357-pl",
-    "name": "Radio 357",
+    "id": "radio-iran-international-https-stream-ir",
+    "name": "Iran International (HTTPS stream)",
     "type": "radio",
-    "streamUrl": "https://n-11-21.dcs.redcdn.pl/sc/o2/radio357/live/radio357_pr.livx?preroll=0",
-    "logo": "https://radio357.pl/wp-content/uploads/2022/04/c5399c0d-1b8e-43d5-b23b-e5cef1857856.png",
-    "description": "adult contemporary",
-    "language": "Polish",
-    "country": "PL",
-    "categories": [
-      "adult contemporary"
-    ],
-    "website": "https://radio357.pl/",
+    "streamUrl": "https://stream.radiojar.com/iintl_c",
+    "logo": "https://www.iranintl.com/favicon.ico",
+    "description": "Radio station",
+    "language": "Persian",
+    "country": "IR",
+    "categories": [],
+    "website": "https://www.iranintl.com/",
     "isFeatured": false
   },
   {
@@ -5376,6 +5396,36 @@
     "language": "Hindi",
     "country": "IN",
     "categories": [],
+    "isFeatured": false
+  },
+  {
+    "id": "radio-lbc-radio-gb",
+    "name": "LBC Radio",
+    "type": "radio",
+    "streamUrl": "http://media-sov.musicradio.com/LBC973MP3Low",
+    "logo": "http://www.lbc.co.uk/assets_v4r/lbc/img/favicon-196x196.png",
+    "description": "political talk",
+    "language": "English",
+    "country": "GB",
+    "categories": [
+      "political talk"
+    ],
+    "website": "http://www.lbc.co.uk/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-retro-ko-radio-jp",
+    "name": "Retro-Ko Radio",
+    "type": "radio",
+    "streamUrl": "https://radio.retroko.com/listen/retroko/radio.mp3",
+    "logo": "https://radio.retroko.com/static/uploads/browser_icon/original.1794115059.png",
+    "description": "electronic",
+    "language": "English",
+    "country": "JP",
+    "categories": [
+      "electronic"
+    ],
+    "website": "https://www.retro-ko.com/",
     "isFeatured": false
   },
   {
@@ -5395,22 +5445,6 @@
     "isFeatured": false
   },
   {
-    "id": "radio-orf-hitradio-3-hq-at",
-    "name": "ORF Hitradio Ö3 | HQ",
-    "type": "radio",
-    "streamUrl": "https://orf-live.ors-shoutcast.at/oe3-q2a",
-    "logo": "https://tubestatic.orf.at/mojo/1_3/storyserver//tube/common/images/apple-icons/oe3.png",
-    "description": "orf, pop",
-    "language": "German",
-    "country": "AT",
-    "categories": [
-      "orf",
-      "pop"
-    ],
-    "website": "http://oe3.orf.at/",
-    "isFeatured": false
-  },
-  {
     "id": "radio--ru",
     "name": "РАДИО ВАНЯ",
     "type": "radio",
@@ -5422,6 +5456,19 @@
       "pop"
     ],
     "website": "http://www.radiovanya.ru/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-my-radio-dj-in",
+    "name": "MY RADIO DJ",
+    "type": "radio",
+    "streamUrl": "http://stream.zeno.fm/84h97t3ewg0uv",
+    "logo": "http://zeno.fm/favicon.ico",
+    "description": "Radio station",
+    "language": "Hindi",
+    "country": "IN",
+    "categories": [],
+    "website": "http://zeno.fm/myradiodj",
     "isFeatured": false
   },
   {
@@ -5441,109 +5488,17 @@
     "isFeatured": false
   },
   {
-    "id": "radio-cope-madrid-fm-es",
-    "name": "Cope Madrid FM",
+    "id": "radio-cope-sevilla-es",
+    "name": "COPE + Sevilla",
     "type": "radio",
-    "streamUrl": "https://net1-cope-rrcast.flumotion.com/cope/net1-low.mp3",
-    "logo": "https://static.mytuner.mobi/media/tvos_radios/871/cope-madrid.51d780e3.png",
-    "description": "Radio station",
-    "language": "Spanish",
-    "country": "ES",
-    "categories": [],
-    "website": "https://cope.es/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-iran-international-https-stream-ir",
-    "name": "Iran International (HTTPS stream)",
-    "type": "radio",
-    "streamUrl": "https://stream.radiojar.com/iintl_c",
-    "logo": "https://www.iranintl.com/favicon.ico",
-    "description": "Radio station",
-    "language": "Persian",
-    "country": "IR",
-    "categories": [],
-    "website": "https://www.iranintl.com/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-retro-ko-radio-jp",
-    "name": "Retro-Ko Radio",
-    "type": "radio",
-    "streamUrl": "https://radio.retroko.com/listen/retroko/radio.mp3",
-    "logo": "https://radio.retroko.com/static/uploads/browser_icon/original.1794115059.png",
-    "description": "electronic",
-    "language": "English",
-    "country": "JP",
-    "categories": [
-      "electronic"
-    ],
-    "website": "https://www.retro-ko.com/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-radio-eins-de",
-    "name": "Radio Eins",
-    "type": "radio",
-    "streamUrl": "http://f131.rndfnk.com/ard/rbb/radioeins/live/mp3/128/stream.mp3?cid=01FC1WH12KJ93TCQPDSE2E5PZ9&sid=3MDMylowxszuYz6NbwPfyVXhibu&token=AksWSAbhNIGQ1kCLFkjXQEOooTJ3fcs_LKUvM53s3e0&tvf=RZMp9lnG6BhmMTMxLnJuZGZuay5jb20",
-    "logo": "http://www.radioeins.de/content/dam/rbb/rbb/logos/touch/rad-128.png",
-    "description": "adult contemporary, alternative, ard, information, pop",
-    "language": "German",
-    "country": "DE",
-    "categories": [
-      "adult contemporary",
-      "alternative",
-      "ard",
-      "information",
-      "pop"
-    ],
-    "website": "http://www.radioeins.de/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-radio-105-network-it",
-    "name": "Radio 105 Network",
-    "type": "radio",
-    "streamUrl": "http://icecast.unitedradio.it/Radio105.mp3",
-    "logo": "https://upload.wikimedia.org/wikipedia/it/0/01/105.png",
-    "description": "hits, mediaset, pop, top 40",
-    "language": "Italian",
-    "country": "IT",
-    "categories": [
-      "hits",
-      "mediaset",
-      "pop",
-      "top 40"
-    ],
-    "website": "http://www.105.net/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-los40-classic-es",
-    "name": "LOS40 Classic",
-    "type": "radio",
-    "streamUrl": "https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40_CLASSIC.mp3",
-    "logo": "https://los40es00.epimg.net/estaticos/recursosgraficos/v1/img/app/los40_192.png",
-    "description": "pop rock",
+    "streamUrl": "http://wecast09-h-cloud.flumotion.com/copesedes/sevilla-mas.mp3",
+    "description": "local news",
     "language": "Spanish",
     "country": "ES",
     "categories": [
-      "pop rock"
+      "local news"
     ],
-    "website": "https://play.los40.com/emisora/los40_classic/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-my-radio-dj-in",
-    "name": "MY RADIO DJ",
-    "type": "radio",
-    "streamUrl": "http://stream.zeno.fm/84h97t3ewg0uv",
-    "logo": "http://zeno.fm/favicon.ico",
-    "description": "Radio station",
-    "language": "Hindi",
-    "country": "IN",
-    "categories": [],
-    "website": "http://zeno.fm/myradiodj",
+    "website": "https://www.cope.es/directos/cope-mas-sevilla",
     "isFeatured": false
   },
   {
@@ -5557,67 +5512,6 @@
     "country": "IN",
     "categories": [],
     "website": "https://bigfmindia.com/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-fnf-fm-hindi-in",
-    "name": "Fnf.Fm Hindi",
-    "type": "radio",
-    "streamUrl": "http://192.99.8.192:5032/;stream",
-    "description": "bollywood",
-    "language": "Hindi",
-    "country": "IN",
-    "categories": [
-      "bollywood"
-    ],
-    "website": "http://hi.fnf.fm/?m=1",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-radio-nacional-de-espa-a-radio-5-todo-noticias-es",
-    "name": "Radio Nacional de España - Radio 5 Todo noticias",
-    "type": "radio",
-    "streamUrl": "https://d131.rndfnk.com/star/crtve/rne5/main/mp3/128/stream.mp3?aggregator=tunein&cid=01GEP4MW5CAHPYP1EXHVKWFJ8W&sid=2OeE42hivuba6dTGvjnMGjKByQe&token=cdczXcnimVx4AY4iamqYbTMdu3cK7oBxmS2UQN9cWc0&tvf=pdPcDBxuVxdkMTMxLnJuZGZuay5jb20",
-    "logo": "https://img2.rtve.es/css//rtve.2021/i/rtve-logos/logos_cadenas/radio-5_color.svg",
-    "description": "news, talk",
-    "language": "Castellano. EspaÑOl",
-    "country": "ES",
-    "categories": [
-      "news",
-      "talk"
-    ],
-    "website": "https://www.rtve.es/play/radio/radio-5/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio--tw",
-    "name": "中廣新聞網",
-    "type": "radio",
-    "streamUrl": "https://n03.rcs.revma.com/78fm9wyy2tzuv",
-    "logo": "https://www.bcc.com.tw/images/lg1.jpg",
-    "description": "news",
-    "language": "Chinese",
-    "country": "TW",
-    "categories": [
-      "news"
-    ],
-    "website": "https://www.bcc.com.tw/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-dfm-90-ru",
-    "name": "DFM Дискач 90-х",
-    "type": "radio",
-    "streamUrl": "https://dfm-disc90.hostingradio.ru/disc9096.aacp",
-    "description": "90-е, eurodance, nostalgia",
-    "language": "Russian",
-    "country": "RU",
-    "categories": [
-      "90-е",
-      "eurodance",
-      "nostalgia"
-    ],
-    "website": "https://dfm.ru/",
     "isFeatured": false
   },
   {
@@ -5638,22 +5532,34 @@
     "isFeatured": false
   },
   {
-    "id": "radio-retro-r-di-hu",
-    "name": "Retro Rádió",
+    "id": "radio-dfm-90-ru",
+    "name": "DFM Дискач 90-х",
     "type": "radio",
-    "streamUrl": "https://icast.connectmedia.hu/5001/live.mp3",
-    "logo": "https://retroradio.hu/wp-content/themes/retroradio/assets/dist/img/favicon/android-icon-192x192.png",
-    "description": "pop, rock, retro, 80s, 90s",
-    "language": "Hungarian",
-    "country": "HU",
+    "streamUrl": "https://dfm-disc90.hostingradio.ru/disc9096.aacp",
+    "description": "90-е, eurodance, nostalgia",
+    "language": "Russian",
+    "country": "RU",
     "categories": [
-      "pop",
-      "rock",
-      "retro",
-      "80s",
-      "90s"
+      "90-е",
+      "eurodance",
+      "nostalgia"
     ],
-    "website": "http://www.retroradio.hu/",
+    "website": "https://dfm.ru/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-capital-fm-london-gb",
+    "name": "Capital FM London",
+    "type": "radio",
+    "streamUrl": "http://media-ice.musicradio.com/CapitalMP3",
+    "logo": "http://assets6.capitalfm.com/2016/11/capital-3d-network-logo-large-canvas-1458228638-herowidev4-0.jpg",
+    "description": "pop",
+    "language": "English",
+    "country": "GB",
+    "categories": [
+      "pop"
+    ],
+    "website": "http://www.capitalfm.com/london/",
     "isFeatured": false
   },
   {
@@ -5676,82 +5582,17 @@
     "isFeatured": false
   },
   {
-    "id": "radio-capital-fm-london-gb",
-    "name": "Capital FM London",
+    "id": "radio-fnf-fm-hindi-in",
+    "name": "Fnf.Fm Hindi",
     "type": "radio",
-    "streamUrl": "http://media-ice.musicradio.com/CapitalMP3",
-    "logo": "http://assets6.capitalfm.com/2016/11/capital-3d-network-logo-large-canvas-1458228638-herowidev4-0.jpg",
-    "description": "pop",
-    "language": "English",
-    "country": "GB",
-    "categories": [
-      "pop"
-    ],
-    "website": "http://www.capitalfm.com/london/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-los-40-principales-m-xico-mx",
-    "name": "Los 40 Principales México",
-    "type": "radio",
-    "streamUrl": "http://15693.live.streamtheworld.com/LOS40_MEXICO_SC",
-    "logo": "https://los40es00.epimg.net/estaticos/recursosgraficos/v1/img/app/los40_192.png",
-    "description": "hits, latin pop, top 40",
-    "language": "Spanish",
-    "country": "MX",
-    "categories": [
-      "hits",
-      "latin pop",
-      "top 40"
-    ],
-    "website": "http://los40.com.mx/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-radio-navahang-ir",
-    "name": "Radio Navahang",
-    "type": "radio",
-    "streamUrl": "https://navairan.com/;stream.nsv",
-    "logo": "https://www.navahang.com/apple-touch-icon.png",
-    "description": "middle eastern music, pop",
-    "language": "Persian",
-    "country": "IR",
-    "categories": [
-      "middle eastern music",
-      "pop"
-    ],
-    "website": "https://www.navahang.com/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-50s-60s-retro-hits-it",
-    "name": "50s 60s RETRO HITS",
-    "type": "radio",
-    "streamUrl": "https://stream.zeno.fm/pxzwykxbluitv",
-    "logo": "https://static.wixstatic.com/media/f361b3_ea9b293c1b80488d97f24981e7c6c1d3~mv2.jpg",
-    "description": "50s, 60s, classic hits, classic rock, community radio",
-    "language": "English",
-    "country": "IT",
-    "categories": [
-      "50s",
-      "60s",
-      "classic hits",
-      "classic rock",
-      "community radio"
-    ],
-    "website": "https://zeno.fm/radio/50s-60s-retro-hits/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-kishorekumarradio-in",
-    "name": "kishorekumarradio",
-    "type": "radio",
-    "streamUrl": "https://stream.zeno.fm/0ghtfp8ztm0uv",
-    "logo": "https://radiosindia.com/images/kishorekumarradio.jpg",
-    "description": "Radio station",
+    "streamUrl": "http://192.99.8.192:5032/;stream",
+    "description": "bollywood",
     "language": "Hindi",
     "country": "IN",
-    "categories": [],
+    "categories": [
+      "bollywood"
+    ],
+    "website": "http://hi.fnf.fm/?m=1",
     "isFeatured": false
   },
   {
@@ -5773,51 +5614,40 @@
     "isFeatured": false
   },
   {
-    "id": "radio-smooth-jazz-lounge-br",
-    "name": "Smooth Jazz Lounge",
+    "id": "radio-retro-r-di-hu",
+    "name": "Retro Rádió",
     "type": "radio",
-    "streamUrl": "https://radio4.vip-radios.fm:18060/stream-128kmp3-SmoothJazzLounge",
-    "logo": "https://www.vip-radios.fm/favicon.ico",
-    "description": "jazz, smooth jazz, smooth lounge",
-    "language": "American English",
-    "country": "BR",
+    "streamUrl": "https://icast.connectmedia.hu/5001/live.mp3",
+    "logo": "https://retroradio.hu/wp-content/themes/retroradio/assets/dist/img/favicon/android-icon-192x192.png",
+    "description": "pop, rock, retro, 80s, 90s",
+    "language": "Hungarian",
+    "country": "HU",
     "categories": [
-      "jazz",
-      "smooth jazz",
-      "smooth lounge"
-    ],
-    "website": "https://www.vip-radios.fm/station/smooth-jazz-lounge",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-mosaique-fm-tn",
-    "name": "Mosaique FM",
-    "type": "radio",
-    "streamUrl": "http://radio.mosaiquefm.net:8000/mosalive",
-    "description": "Radio station",
-    "language": "Arabic",
-    "country": "TN",
-    "categories": [],
-    "website": "http://www.mosaiquefm.net/ar/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-heart-90s-gb",
-    "name": "Heart 90s",
-    "type": "radio",
-    "streamUrl": "https://media-ssl.musicradio.com/Heart90sMP3",
-    "logo": "https://www.heart.co.uk/assets_v4r/heart/img/favicon-196x196.png",
-    "description": "90s, national, pop, public radio, variety",
-    "language": "English",
-    "country": "GB",
-    "categories": [
-      "90s",
-      "national",
       "pop",
-      "public radio",
-      "variety"
+      "rock",
+      "retro",
+      "80s",
+      "90s"
     ],
-    "website": "https://www.heart.co.uk/90s",
+    "website": "http://www.retroradio.hu/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-radio-105-network-it",
+    "name": "Radio 105 Network",
+    "type": "radio",
+    "streamUrl": "http://icecast.unitedradio.it/Radio105.mp3",
+    "logo": "https://upload.wikimedia.org/wikipedia/it/0/01/105.png",
+    "description": "hits, mediaset, pop, top 40",
+    "language": "Italian",
+    "country": "IT",
+    "categories": [
+      "hits",
+      "mediaset",
+      "pop",
+      "top 40"
+    ],
+    "website": "http://www.105.net/",
     "isFeatured": false
   },
   {
@@ -5840,31 +5670,15 @@
     "isFeatured": false
   },
   {
-    "id": "radio-radio-9090-90-9-eg",
-    "name": "Radio 9090 90.9",
+    "id": "radio-mosaique-fm-tn",
+    "name": "Mosaique FM",
     "type": "radio",
-    "streamUrl": "http://9090streaming.mobtada.com/9090FMEGYPT",
-    "logo": "http://www.9090.fm/favicon.ico",
+    "streamUrl": "http://radio.mosaiquefm.net:8000/mosalive",
     "description": "Radio station",
     "language": "Arabic",
-    "country": "EG",
+    "country": "TN",
     "categories": [],
-    "website": "http://www.9090.fm/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-cadena-dial-es",
-    "name": "Cadena Dial",
-    "type": "radio",
-    "streamUrl": "http://playerservices.streamtheworld.com/api/livestream-redirect/CADENADIAL.mp3",
-    "logo": "https://www.cadenadial.com/wp-content/uploads/2024/03/cropped-512x512_favicon_dial-180x180.png",
-    "description": "música en español",
-    "language": "Spanish",
-    "country": "ES",
-    "categories": [
-      "música en español"
-    ],
-    "website": "https://www.cadenadial.com/",
+    "website": "http://www.mosaiquefm.net/ar/",
     "isFeatured": false
   },
   {
@@ -5887,57 +5701,18 @@
     "isFeatured": false
   },
   {
-    "id": "radio-heart-dance-gb",
-    "name": "Heart Dance",
+    "id": "radio-cadena-dial-es",
+    "name": "Cadena Dial",
     "type": "radio",
-    "streamUrl": "https://media-ssl.musicradio.com/HeartDanceMP3",
-    "logo": "https://www.heart.co.uk/assets_v4r/heart/img/favicon-196x196.png",
-    "description": "dance, national, pop, public radio, variety",
-    "language": "English",
-    "country": "GB",
+    "streamUrl": "http://playerservices.streamtheworld.com/api/livestream-redirect/CADENADIAL.mp3",
+    "logo": "https://www.cadenadial.com/wp-content/uploads/2024/03/cropped-512x512_favicon_dial-180x180.png",
+    "description": "música en español",
+    "language": "Spanish",
+    "country": "ES",
     "categories": [
-      "dance",
-      "national",
-      "pop",
-      "public radio",
-      "variety"
+      "música en español"
     ],
-    "website": "https://www.heart.co.uk/dance",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-sound-up-station-nfrs-jp",
-    "name": "SOUND UP STATION NFRS",
-    "type": "radio",
-    "streamUrl": "https://stream2.rcast.net/70945",
-    "logo": "https://static.wixstatic.com/ficons/1173e1_15807acf4a474b03a67c854178f38727~mv2.ico",
-    "description": "indie, jpop",
-    "language": "Japanese",
-    "country": "JP",
-    "categories": [
-      "indie",
-      "jpop"
-    ],
-    "website": "https://www.nfrsradio.com/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-virgin-radio-italy-it",
-    "name": "Virgin Radio Italy",
-    "type": "radio",
-    "streamUrl": "https://icy.unitedradio.it/Virgin.mp3",
-    "logo": "https://www.virginradio.it/wp-content/themes/virgin-radio-theme/public/images/VRG-symbol-footer.066739.png",
-    "description": "alternative rock, classic rock, indie rock, pop rock, punk rock",
-    "language": "Italian",
-    "country": "IT",
-    "categories": [
-      "alternative rock",
-      "classic rock",
-      "indie rock",
-      "pop rock",
-      "punk rock"
-    ],
-    "website": "https://www.virginradio.it/web-radio/virgin-radio-on-air/",
+    "website": "https://www.cadenadial.com/",
     "isFeatured": false
   },
   {
@@ -5960,6 +5735,22 @@
     "isFeatured": false
   },
   {
+    "id": "radio-radio-nacional-de-espa-a-radio-5-todo-noticias-es",
+    "name": "Radio Nacional de España - Radio 5 Todo noticias",
+    "type": "radio",
+    "streamUrl": "https://d131.rndfnk.com/star/crtve/rne5/main/mp3/128/stream.mp3?aggregator=tunein&cid=01GEP4MW5CAHPYP1EXHVKWFJ8W&sid=2OeE42hivuba6dTGvjnMGjKByQe&token=cdczXcnimVx4AY4iamqYbTMdu3cK7oBxmS2UQN9cWc0&tvf=pdPcDBxuVxdkMTMxLnJuZGZuay5jb20",
+    "logo": "https://img2.rtve.es/css//rtve.2021/i/rtve-logos/logos_cadenas/radio-5_color.svg",
+    "description": "news, talk",
+    "language": "Castellano. EspaÑOl",
+    "country": "ES",
+    "categories": [
+      "news",
+      "talk"
+    ],
+    "website": "https://www.rtve.es/play/radio/radio-5/",
+    "isFeatured": false
+  },
+  {
     "id": "radio-70s-80s-90s-rdmix-network-ca",
     "name": "# 70s 80s 90s RdMix Network",
     "type": "radio",
@@ -5978,6 +5769,21 @@
     "isFeatured": false
   },
   {
+    "id": "radio--tw",
+    "name": "中廣新聞網",
+    "type": "radio",
+    "streamUrl": "https://n03.rcs.revma.com/78fm9wyy2tzuv",
+    "logo": "https://www.bcc.com.tw/images/lg1.jpg",
+    "description": "news",
+    "language": "Chinese",
+    "country": "TW",
+    "categories": [
+      "news"
+    ],
+    "website": "https://www.bcc.com.tw/",
+    "isFeatured": false
+  },
+  {
     "id": "radio-npo-2-nl",
     "name": "NPO 2",
     "type": "radio",
@@ -5991,48 +5797,163 @@
     "isFeatured": false
   },
   {
-    "id": "radio-replay-news-5-cn",
-    "name": "REPLAY NEWS - 中文 每5分钟播报一次新闻的电台",
+    "id": "radio-heart-90s-gb",
+    "name": "Heart 90s",
     "type": "radio",
-    "streamUrl": "https://replaynewszh.ice.infomaniak.ch/replaynewszh-128.mp3",
-    "logo": "https://www.publicsante.com/BIENVENU/LOGO REPLAY NEWS-ZH.png",
+    "streamUrl": "https://media-ssl.musicradio.com/Heart90sMP3",
+    "logo": "https://www.heart.co.uk/assets_v4r/heart/img/favicon-196x196.png",
+    "description": "90s, national, pop, public radio, variety",
+    "language": "English",
+    "country": "GB",
+    "categories": [
+      "90s",
+      "national",
+      "pop",
+      "public radio",
+      "variety"
+    ],
+    "website": "https://www.heart.co.uk/90s",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-50s-60s-retro-hits-it",
+    "name": "50s 60s RETRO HITS",
+    "type": "radio",
+    "streamUrl": "https://stream.zeno.fm/pxzwykxbluitv",
+    "logo": "https://static.wixstatic.com/media/f361b3_ea9b293c1b80488d97f24981e7c6c1d3~mv2.jpg",
+    "description": "50s, 60s, classic hits, classic rock, community radio",
+    "language": "English",
+    "country": "IT",
+    "categories": [
+      "50s",
+      "60s",
+      "classic hits",
+      "classic rock",
+      "community radio"
+    ],
+    "website": "https://zeno.fm/radio/50s-60s-retro-hits/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-talksport-gb",
+    "name": "talkSPORT",
+    "type": "radio",
+    "streamUrl": "https://radio.talksport.com/stream",
+    "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAcdmwRcs4FcWk_OQqxq4EyZH5YA7ixM2dvQ&usqp=CAU",
     "description": "news",
-    "language": "Chinese",
-    "country": "CN",
+    "language": "English",
+    "country": "GB",
     "categories": [
       "news"
     ],
-    "website": "https://www.replaynews.net/",
+    "website": "https://talksport.com/",
     "isFeatured": false
   },
   {
-    "id": "radio-1-fm-deep-house-radio-ch",
-    "name": "1.FM - Deep House Radio",
+    "id": "radio-radio-9090-90-9-eg",
+    "name": "Radio 9090 90.9",
     "type": "radio",
-    "streamUrl": "http://strm112.1.fm/deephouse_mobile_mp3",
-    "description": "deep house, techno",
-    "language": "English",
-    "country": "CH",
-    "categories": [
-      "deep house",
-      "techno"
-    ],
-    "website": "http://www.1.fm/",
+    "streamUrl": "http://9090streaming.mobtada.com/9090FMEGYPT",
+    "logo": "http://www.9090.fm/favicon.ico",
+    "description": "Radio station",
+    "language": "Arabic",
+    "country": "EG",
+    "categories": [],
+    "website": "http://www.9090.fm/",
     "isFeatured": false
   },
   {
-    "id": "radio-dfm-russian-dance-ru",
-    "name": "DFM RUSSIAN DANCE",
+    "id": "radio-smooth-jazz-lounge-br",
+    "name": "Smooth Jazz Lounge",
     "type": "radio",
-    "streamUrl": "https://dfm-dfmrusdance.hostingradio.ru/dfmrusdance96.aacp?0.9987259013359274",
-    "logo": "https://dfm.ru/uploads/favicon.ico",
-    "description": "dance",
-    "language": "Russian",
-    "country": "RU",
+    "streamUrl": "https://radio4.vip-radios.fm:18060/stream-128kmp3-SmoothJazzLounge",
+    "logo": "https://www.vip-radios.fm/favicon.ico",
+    "description": "jazz, smooth jazz, smooth lounge",
+    "language": "American English",
+    "country": "BR",
     "categories": [
-      "dance"
+      "jazz",
+      "smooth jazz",
+      "smooth lounge"
     ],
-    "website": "https://dfm.ru/",
+    "website": "https://www.vip-radios.fm/station/smooth-jazz-lounge",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-kishorekumarradio-in",
+    "name": "kishorekumarradio",
+    "type": "radio",
+    "streamUrl": "https://stream.zeno.fm/0ghtfp8ztm0uv",
+    "logo": "https://radiosindia.com/images/kishorekumarradio.jpg",
+    "description": "Radio station",
+    "language": "Hindi",
+    "country": "IN",
+    "categories": [],
+    "isFeatured": false
+  },
+  {
+    "id": "radio-radio-navahang-ir",
+    "name": "Radio Navahang",
+    "type": "radio",
+    "streamUrl": "https://navairan.com/;stream.nsv",
+    "logo": "https://www.navahang.com/apple-touch-icon.png",
+    "description": "middle eastern music, pop",
+    "language": "Persian",
+    "country": "IR",
+    "categories": [
+      "middle eastern music",
+      "pop"
+    ],
+    "website": "https://www.navahang.com/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-virgin-radio-italy-it",
+    "name": "Virgin Radio Italy",
+    "type": "radio",
+    "streamUrl": "https://icy.unitedradio.it/Virgin.mp3",
+    "logo": "https://www.virginradio.it/wp-content/themes/virgin-radio-theme/public/images/VRG-symbol-footer.066739.png",
+    "description": "alternative rock, classic rock, indie rock, pop rock, punk rock",
+    "language": "Italian",
+    "country": "IT",
+    "categories": [
+      "alternative rock",
+      "classic rock",
+      "indie rock",
+      "pop rock",
+      "punk rock"
+    ],
+    "website": "https://www.virginradio.it/web-radio/virgin-radio-on-air/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-cope-madrid-fm-es",
+    "name": "Cope Madrid FM",
+    "type": "radio",
+    "streamUrl": "https://net1-cope-rrcast.flumotion.com/cope/net1-low.mp3",
+    "logo": "https://static.mytuner.mobi/media/tvos_radios/871/cope-madrid.51d780e3.png",
+    "description": "Radio station",
+    "language": "Spanish",
+    "country": "ES",
+    "categories": [],
+    "website": "https://cope.es/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-los-40-principales-m-xico-mx",
+    "name": "Los 40 Principales México",
+    "type": "radio",
+    "streamUrl": "http://15693.live.streamtheworld.com/LOS40_MEXICO_SC",
+    "logo": "https://los40es00.epimg.net/estaticos/recursosgraficos/v1/img/app/los40_192.png",
+    "description": "hits, latin pop, top 40",
+    "language": "Spanish",
+    "country": "MX",
+    "categories": [
+      "hits",
+      "latin pop",
+      "top 40"
+    ],
+    "website": "http://los40.com.mx/",
     "isFeatured": false
   },
   {
@@ -6051,20 +5972,92 @@
     "isFeatured": false
   },
   {
-    "id": "radio-radio-ibiza-it",
-    "name": "Radio Ibiza",
+    "id": "radio-dfm-russian-dance-ru",
+    "name": "DFM RUSSIAN DANCE",
     "type": "radio",
-    "streamUrl": "http://wma08.fluidstream.net:5010/;stream.aac",
-    "logo": "https://radioibiza.it/wp-content/uploads/2021/07/cropped-favicon-ibiza-180x180.png",
-    "description": "dance, electronica, napoli",
+    "streamUrl": "https://dfm-dfmrusdance.hostingradio.ru/dfmrusdance96.aacp?0.9987259013359274",
+    "logo": "https://dfm.ru/uploads/favicon.ico",
+    "description": "dance",
+    "language": "Russian",
+    "country": "RU",
+    "categories": [
+      "dance"
+    ],
+    "website": "https://dfm.ru/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-sound-up-station-nfrs-jp",
+    "name": "SOUND UP STATION NFRS",
+    "type": "radio",
+    "streamUrl": "https://stream2.rcast.net/70945",
+    "logo": "https://static.wixstatic.com/ficons/1173e1_15807acf4a474b03a67c854178f38727~mv2.ico",
+    "description": "indie, jpop",
+    "language": "Japanese",
+    "country": "JP",
+    "categories": [
+      "indie",
+      "jpop"
+    ],
+    "website": "https://www.nfrsradio.com/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-rds-relax-it",
+    "name": "RDS relax",
+    "type": "radio",
+    "streamUrl": "http://icstream.rds.radio/rdsrelax",
+    "logo": "https://rdsrelax.it/images/logo.png",
+    "description": "Radio station",
     "language": "Italian",
     "country": "IT",
+    "categories": [],
+    "website": "https://rdsrelax.it/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-1-fm-deep-house-radio-ch",
+    "name": "1.FM - Deep House Radio",
+    "type": "radio",
+    "streamUrl": "http://strm112.1.fm/deephouse_mobile_mp3",
+    "description": "deep house, techno",
+    "language": "English",
+    "country": "CH",
     "categories": [
-      "dance",
-      "electronica",
-      "napoli"
+      "deep house",
+      "techno"
     ],
-    "website": "http://www.radioibiza.it/",
+    "website": "http://www.1.fm/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-sky-radio-christmas-nl",
+    "name": "Sky Radio Christmas",
+    "type": "radio",
+    "streamUrl": "http://playerservices.streamtheworld.com/api/livestream-redirect/SRGSTR08.mp3",
+    "logo": "http://www.skyradio.nl/favicon.ico",
+    "description": "christmas music",
+    "language": "Dutch",
+    "country": "NL",
+    "categories": [
+      "christmas music"
+    ],
+    "website": "http://www.skyradio.nl/player/sky-radio-christmas",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-replay-news-5-cn",
+    "name": "REPLAY NEWS - 中文 每5分钟播报一次新闻的电台",
+    "type": "radio",
+    "streamUrl": "https://replaynewszh.ice.infomaniak.ch/replaynewszh-128.mp3",
+    "logo": "https://www.publicsante.com/BIENVENU/LOGO REPLAY NEWS-ZH.png",
+    "description": "news",
+    "language": "Chinese",
+    "country": "CN",
+    "categories": [
+      "news"
+    ],
+    "website": "https://www.replaynews.net/",
     "isFeatured": false
   },
   {
@@ -6084,21 +6077,6 @@
     "isFeatured": false
   },
   {
-    "id": "radio-parsa-ir",
-    "name": "parsa",
-    "type": "radio",
-    "streamUrl": "http://parsa.icdndhcp.com:18000/stream",
-    "logo": "https://lh5.googleusercontent.com/proxy/25PMsUBa3Z6So8cdvAyZT7_93NyV26cJNuTTDY4xk6aJU1lcKPByf2C7o2HbrGrv-QxPvbI3dio2D39zYlgi1v6nLg",
-    "description": "classical",
-    "language": "English",
-    "country": "IR",
-    "categories": [
-      "classical"
-    ],
-    "website": "http://radio.sarcheshmeh.us/parsa.html",
-    "isFeatured": false
-  },
-  {
     "id": "radio-radio-srf-3-ch",
     "name": "Radio SRF 3",
     "type": "radio",
@@ -6113,6 +6091,58 @@
       "rock"
     ],
     "website": "https://www.srf.ch/radio-srf-3",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-eska-gor-ca-20-pl",
+    "name": "ESKA - Gorąca 20",
+    "type": "radio",
+    "streamUrl": "https://waw.ic.smcdn.pl/6130-1.mp3",
+    "logo": "https://www.eska.pl/favicon.ico",
+    "description": "dance, pop, pop music, rock",
+    "language": "Polish",
+    "country": "PL",
+    "categories": [
+      "dance",
+      "pop",
+      "pop music",
+      "rock"
+    ],
+    "website": "https://www.eska.pl/goraca20/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-om-kalthom-eg",
+    "name": "OM Kalthom",
+    "type": "radio",
+    "streamUrl": "https://stream.zeno.fm/zsgrfxg71s8uv",
+    "logo": "https://proxy.zeno.fm/content/stations/agxzfnplbm8tc3RhdHNyMgsSCkF1dGhDbGllbnQYgICwmLXj6gkMCxIOU3RhdGlvblByb2ZpbGUYgICwnNazygoMogEEemVubw/image/?u=1660862760000",
+    "description": "arabic, classics, music, oriental",
+    "language": "Arabic",
+    "country": "EG",
+    "categories": [
+      "arabic",
+      "classics",
+      "music",
+      "oriental"
+    ],
+    "website": "https://zeno.fm/radio/om-kalthom/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-sertaneja-106-7-br",
+    "name": "Sertaneja 106.7",
+    "type": "radio",
+    "streamUrl": "https://sc4s.cdn.upx.com:8067/stream",
+    "logo": "https://assets.clubefm.com.br/uploads/site/logo/2/106-sertaneja-4fff3e1f118ab621432fa4d74136e042e86b6eedbabf561ded0dfd61123d980e.png",
+    "description": "country, sertanejo",
+    "language": "Brazilian Portuguese",
+    "country": "BR",
+    "categories": [
+      "country",
+      "sertanejo"
+    ],
+    "website": "https://www.106sertaneja.com.br/",
     "isFeatured": false
   },
   {
@@ -6135,19 +6165,31 @@
     "isFeatured": false
   },
   {
-    "id": "radio-sertaneja-106-7-br",
-    "name": "Sertaneja 106.7",
+    "id": "radio-parsa-ir",
+    "name": "parsa",
     "type": "radio",
-    "streamUrl": "https://sc4s.cdn.upx.com:8067/stream",
-    "logo": "https://assets.clubefm.com.br/uploads/site/logo/2/106-sertaneja-4fff3e1f118ab621432fa4d74136e042e86b6eedbabf561ded0dfd61123d980e.png",
-    "description": "country, sertanejo",
-    "language": "Brazilian Portuguese",
-    "country": "BR",
+    "streamUrl": "http://parsa.icdndhcp.com:18000/stream",
+    "logo": "https://lh5.googleusercontent.com/proxy/25PMsUBa3Z6So8cdvAyZT7_93NyV26cJNuTTDY4xk6aJU1lcKPByf2C7o2HbrGrv-QxPvbI3dio2D39zYlgi1v6nLg",
+    "description": "classical",
+    "language": "English",
+    "country": "IR",
     "categories": [
-      "country",
-      "sertanejo"
+      "classical"
     ],
-    "website": "https://www.106sertaneja.com.br/",
+    "website": "http://radio.sarcheshmeh.us/parsa.html",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-vox-fm-pl",
+    "name": "VOX FM",
+    "type": "radio",
+    "streamUrl": "http://ic2.smcdn.pl/3990-1.mp3",
+    "logo": "https://www.voxfm.pl/apple-touch-icon.png",
+    "description": "Radio station",
+    "language": "English",
+    "country": "PL",
+    "categories": [],
+    "website": "https://www.voxfm.pl/",
     "isFeatured": false
   },
   {
@@ -6162,63 +6204,6 @@
       "music"
     ],
     "website": "https://www.kissfm.ua/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-fm-ru",
-    "name": "Вести FM",
-    "type": "radio",
-    "streamUrl": "http://icecast.vgtrk.cdnvideo.ru/vestifm",
-    "description": "news, talk",
-    "language": "Russian",
-    "country": "RU",
-    "categories": [
-      "news",
-      "talk"
-    ],
-    "website": "http://radiovesti.ru/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-cbs-fm-kr",
-    "name": "CBS 음악 FM",
-    "type": "radio",
-    "streamUrl": "https://m-aac.cbs.co.kr/cbs939/_definst_/cbs939.stream/playlist.m3u8",
-    "description": "Radio station",
-    "language": "English",
-    "country": "KR",
-    "categories": [],
-    "isFeatured": false
-  },
-  {
-    "id": "radio-eska-gor-ca-20-pl",
-    "name": "ESKA - Gorąca 20",
-    "type": "radio",
-    "streamUrl": "https://waw.ic.smcdn.pl/6130-1.mp3",
-    "logo": "https://www.eska.pl/favicon.ico",
-    "description": "dance, pop, pop music, rock",
-    "language": "Polish",
-    "country": "PL",
-    "categories": [
-      "dance",
-      "pop",
-      "pop music",
-      "rock"
-    ],
-    "website": "https://www.eska.pl/goraca20/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-nogoum-fm-eg",
-    "name": "Nogoum FM",
-    "type": "radio",
-    "streamUrl": "https://stream-159.zeno.fm/qb1zvsykm98uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJxYjF6dnN5a205OHV2IiwiaG9zdCI6InN0cmVhbS0xNTkuemVuby5mbSIsInJ0dGwiOjUsImp0aSI6Ild2WTItbVhJU2Z5VlBEOHc3a2J1X0EiLCJpYXQiOjE3NzA5ODcyOTUsImV4cCI6MTc3MDk4NzM1NX0.ob8jdjoAgAzIcrxMk5b127wgaxpnJHEASSChnE5v5ro",
-    "logo": "https://www.nogoumfm.net/wp-content/uploads/2019/12/logo-nogoum-1.png",
-    "description": "Radio station",
-    "language": "Arabic",
-    "country": "EG",
-    "categories": [],
-    "website": "https://www.nogoumfm.net/live-radio-stream/",
     "isFeatured": false
   },
   {
@@ -6241,68 +6226,6 @@
     "isFeatured": false
   },
   {
-    "id": "radio-sky-radio-christmas-nl",
-    "name": "Sky Radio Christmas",
-    "type": "radio",
-    "streamUrl": "http://playerservices.streamtheworld.com/api/livestream-redirect/SRGSTR08.mp3",
-    "logo": "http://www.skyradio.nl/favicon.ico",
-    "description": "christmas music",
-    "language": "Dutch",
-    "country": "NL",
-    "categories": [
-      "christmas music"
-    ],
-    "website": "http://www.skyradio.nl/player/sky-radio-christmas",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-f-103-1-ua",
-    "name": "Люкс FМ 103.1",
-    "type": "radio",
-    "streamUrl": "http://lux.radio.tvstitch.com/kyiv/lux_adv_sd",
-    "logo": "https://lux.fm/favicons/apple-touch-icon.png",
-    "description": "music",
-    "language": "Ukrainian",
-    "country": "UA",
-    "categories": [
-      "music"
-    ],
-    "website": "https://lux.fm/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-hits-1-alg-rie-dz",
-    "name": "Hits 1 Algérie",
-    "type": "radio",
-    "streamUrl": "https://radio12.pro-fhi.net/listen/whmnrlow/stream",
-    "description": "pop, top40",
-    "language": "French",
-    "country": "DZ",
-    "categories": [
-      "pop",
-      "top40"
-    ],
-    "website": "https://www.hits1radio.com/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-antena-1-s-o-paulo-sp-zyd823-94-7-mhz-fm-aac-br",
-    "name": "Antena 1 São Paulo, SP (ZYD823 94,7 MHz FM) [aac]",
-    "type": "radio",
-    "streamUrl": "http://antena1.newradio.it/stream?ext=.mp3",
-    "description": "adult contemporary, jazz, pop, smooth jazz",
-    "language": "Portuguese",
-    "country": "BR",
-    "categories": [
-      "adult contemporary",
-      "jazz",
-      "pop",
-      "smooth jazz"
-    ],
-    "website": "http://antena1.com.br/",
-    "isFeatured": false
-  },
-  {
     "id": "radio-mixadance-fm-ru",
     "name": "Mixadance FM",
     "type": "radio",
@@ -6322,90 +6245,20 @@
     "isFeatured": false
   },
   {
-    "id": "radio-om-kalthom-eg",
-    "name": "OM Kalthom",
+    "id": "radio-r-dio-mix-106-3-fm-br",
+    "name": "Rádio Mix 106.3 FM",
     "type": "radio",
-    "streamUrl": "https://stream.zeno.fm/zsgrfxg71s8uv",
-    "logo": "https://proxy.zeno.fm/content/stations/agxzfnplbm8tc3RhdHNyMgsSCkF1dGhDbGllbnQYgICwmLXj6gkMCxIOU3RhdGlvblByb2ZpbGUYgICwnNazygoMogEEemVubw/image/?u=1660862760000",
-    "description": "arabic, classics, music, oriental",
-    "language": "Arabic",
-    "country": "EG",
+    "streamUrl": "https://playerservices.streamtheworld.com/api/livestream-redirect/MIXFM_SAOPAULOAAC.aac",
+    "logo": "https://img.radios.com.br/radio/lg/radio13955_1720711597.png",
+    "description": "chr, pop-rock, youth",
+    "language": "Portuguese",
+    "country": "BR",
     "categories": [
-      "arabic",
-      "classics",
-      "music",
-      "oriental"
+      "chr",
+      "pop-rock",
+      "youth"
     ],
-    "website": "https://zeno.fm/radio/om-kalthom/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-la-100-99-9-fm-grupo-clar-n-buenos-aires-argentina-ar",
-    "name": "La 100 - 99.9 FM - Grupo Clarín - Buenos Aires, Argentina",
-    "type": "radio",
-    "streamUrl": "https://playerservices.streamtheworld.com/api/livestream-redirect/FM999_56.mp3",
-    "logo": "http://cdn-profiles.tunein.com/s6984/images/logod.jpg",
-    "description": "99.9 fm, argentina, buenos aires, entretenimiento, español",
-    "language": "Spanish",
-    "country": "AR",
-    "categories": [
-      "99.9 fm",
-      "argentina",
-      "buenos aires",
-      "entretenimiento",
-      "español"
-    ],
-    "website": "https://la100.cienradios.com/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-slam-nl",
-    "name": "SLAM!",
-    "type": "radio",
-    "streamUrl": "http://stream.slam.nl/slam",
-    "logo": "https://www.slam.nl/favicon.ico",
-    "description": "dance, electro, house, pop",
-    "language": "Dutch",
-    "country": "NL",
-    "categories": [
-      "dance",
-      "electro",
-      "house",
-      "pop"
-    ],
-    "website": "https://www.slam.nl/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-kiss-fm-ro",
-    "name": "Kiss Fm Ro",
-    "type": "radio",
-    "streamUrl": "https://live.kissfm.ro/kissfm.aacp",
-    "description": "romanian pop",
-    "language": "Romanian",
-    "country": "RO",
-    "categories": [
-      "romanian pop"
-    ],
-    "website": "https://www.kissfm.ro/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-qmusic-nl",
-    "name": "Qmusic",
-    "type": "radio",
-    "streamUrl": "https://icecast-qmusicnl-cdp.triple-it.nl/Qmusic_nl_live.mp3",
-    "logo": "https://qmusic.nl/assets/qmusic-a1d81a5f88375b3c5507cbc0b064ce1fc8778a076a245bddfd4f2a3e2417c330.png",
-    "description": "##browserfriendly, mix, pop, top 40",
-    "language": "Dutch",
-    "country": "NL",
-    "categories": [
-      "##browserfriendly",
-      "mix",
-      "pop",
-      "top 40"
-    ],
-    "website": "http://www.qmusic.nl/",
+    "website": "https://aovivo.radiomixfm.com.br/",
     "isFeatured": false
   },
   {
@@ -6422,22 +6275,6 @@
     "isFeatured": false
   },
   {
-    "id": "radio-radio-swiss-classic-de-aac-192-ch",
-    "name": "Radio Swiss Classic DE (AAC 192)",
-    "type": "radio",
-    "streamUrl": "https://stream.srg-ssr.ch/srgssr/rsc_de/aac/192",
-    "logo": "https://www.radioswissclassic.ch/social-media/rsc-web.png",
-    "description": "classical, srg ssr",
-    "language": "German",
-    "country": "CH",
-    "categories": [
-      "classical",
-      "srg ssr"
-    ],
-    "website": "https://www.radioswissclassic.ch/de",
-    "isFeatured": false
-  },
-  {
     "id": "radio-deep-house-radio-bucharest-romania-ro",
     "name": "Deep House Radio - Bucharest Romania",
     "type": "radio",
@@ -6450,6 +6287,65 @@
       "deep house"
     ],
     "website": "http://www.dancemusic.ro/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-hits-1-alg-rie-dz",
+    "name": "Hits 1 Algérie",
+    "type": "radio",
+    "streamUrl": "https://radio12.pro-fhi.net/listen/whmnrlow/stream",
+    "description": "pop, top40",
+    "language": "French",
+    "country": "DZ",
+    "categories": [
+      "pop",
+      "top40"
+    ],
+    "website": "https://www.hits1radio.com/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-fm-ru",
+    "name": "Вести FM",
+    "type": "radio",
+    "streamUrl": "http://icecast.vgtrk.cdnvideo.ru/vestifm",
+    "description": "news, talk",
+    "language": "Russian",
+    "country": "RU",
+    "categories": [
+      "news",
+      "talk"
+    ],
+    "website": "http://radiovesti.ru/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-sky-radio-nl",
+    "name": "Sky Radio",
+    "type": "radio",
+    "streamUrl": "https://www.mp3streams.nl/zender/skyradio/stream/8-mp3-128",
+    "logo": "https://www.skyradio.nl/favicon.ico",
+    "description": "Radio station",
+    "language": "English",
+    "country": "NL",
+    "categories": [],
+    "website": "https://www.skyradio.nl/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-orf-hitradio-3-at",
+    "name": "ORF Hitradio Ö3",
+    "type": "radio",
+    "streamUrl": "https://ors-sn03.ors-shoutcast.at/oe3-q1a",
+    "logo": "https://tubestatic.orf.at/mojo/1_3/storyserver//tube/common/images/apple-icons/oe3.png",
+    "description": "orf, pop",
+    "language": "German",
+    "country": "AT",
+    "categories": [
+      "orf",
+      "pop"
+    ],
+    "website": "http://oe3.orf.at/",
     "isFeatured": false
   },
   {
@@ -6472,6 +6368,108 @@
     "isFeatured": false
   },
   {
+    "id": "radio-radio-swiss-classic-de-aac-192-ch",
+    "name": "Radio Swiss Classic DE (AAC 192)",
+    "type": "radio",
+    "streamUrl": "https://stream.srg-ssr.ch/srgssr/rsc_de/aac/192",
+    "logo": "https://www.radioswissclassic.ch/social-media/rsc-web.png",
+    "description": "classical, srg ssr",
+    "language": "German",
+    "country": "CH",
+    "categories": [
+      "classical",
+      "srg ssr"
+    ],
+    "website": "https://www.radioswissclassic.ch/de",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-kiss-fm-ro",
+    "name": "Kiss Fm Ro",
+    "type": "radio",
+    "streamUrl": "https://live.kissfm.ro/kissfm.aacp",
+    "description": "romanian pop",
+    "language": "Romanian",
+    "country": "RO",
+    "categories": [
+      "romanian pop"
+    ],
+    "website": "https://www.kissfm.ro/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-anty-radio-pl",
+    "name": "Anty Radio",
+    "type": "radio",
+    "streamUrl": "https://an.cdn.eurozet.pl/ant-web.mp3?t=1713710188361",
+    "logo": "https://gfx-player.radiozet.pl/var/player/storage/images/player-antyradio/programy/antyradio-ekstra/936460-5-pol-PL/Antyradio-Ekstra_size-70x70.png",
+    "description": "Radio station",
+    "language": "English",
+    "country": "PL",
+    "categories": [],
+    "website": "https://www.antyradio.pl/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-slam-nl",
+    "name": "SLAM!",
+    "type": "radio",
+    "streamUrl": "http://stream.slam.nl/slam",
+    "logo": "https://www.slam.nl/favicon.ico",
+    "description": "dance, electro, house, pop",
+    "language": "Dutch",
+    "country": "NL",
+    "categories": [
+      "dance",
+      "electro",
+      "house",
+      "pop"
+    ],
+    "website": "https://www.slam.nl/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-antena-1-s-o-paulo-sp-zyd823-94-7-mhz-fm-aac-br",
+    "name": "Antena 1 São Paulo, SP (ZYD823 94,7 MHz FM) [aac]",
+    "type": "radio",
+    "streamUrl": "http://antena1.newradio.it/stream?ext=.mp3",
+    "description": "adult contemporary, jazz, pop, smooth jazz",
+    "language": "Portuguese",
+    "country": "BR",
+    "categories": [
+      "adult contemporary",
+      "jazz",
+      "pop",
+      "smooth jazz"
+    ],
+    "website": "http://antena1.com.br/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-cbs-fm-kr",
+    "name": "CBS 음악 FM",
+    "type": "radio",
+    "streamUrl": "https://m-aac.cbs.co.kr/cbs939/_definst_/cbs939.stream/playlist.m3u8",
+    "description": "Radio station",
+    "language": "English",
+    "country": "KR",
+    "categories": [],
+    "isFeatured": false
+  },
+  {
+    "id": "radio-radio-aswat-ma",
+    "name": "Radio Aswat",
+    "type": "radio",
+    "streamUrl": "http://broadcast.ice.infomaniak.ch/aswat-high.mp3?.mp3",
+    "logo": "http://www.radioaswat.ma/favicon.ico",
+    "description": "Radio station",
+    "language": "Arabic",
+    "country": "MA",
+    "categories": [],
+    "website": "http://www.radioaswat.ma/",
+    "isFeatured": false
+  },
+  {
     "id": "radio-a-mississippi-blues-ca",
     "name": "A MISSISSIPPI BLUES",
     "type": "radio",
@@ -6491,36 +6489,64 @@
     "isFeatured": false
   },
   {
-    "id": "radio-891-cn",
-    "name": "891线上音乐台 高清",
+    "id": "radio-f-103-1-ua",
+    "name": "Люкс FМ 103.1",
     "type": "radio",
-    "streamUrl": "https://live.fm891.net/192k.aac",
-    "logo": "https://pic.qtfm.cn/2025/1001/20251001070637.png",
-    "description": "internet radio, music",
-    "language": "Chinese",
-    "country": "CN",
+    "streamUrl": "http://lux.radio.tvstitch.com/kyiv/lux_adv_sd",
+    "logo": "https://lux.fm/favicons/apple-touch-icon.png",
+    "description": "music",
+    "language": "Ukrainian",
+    "country": "UA",
     "categories": [
-      "internet radio",
       "music"
     ],
-    "website": "https://www.fm891.net/",
+    "website": "https://lux.fm/",
     "isFeatured": false
   },
   {
-    "id": "radio-r-dio-mix-106-3-fm-br",
-    "name": "Rádio Mix 106.3 FM",
+    "id": "radio-el-bahdja-dz",
+    "name": "El Bahdja - الجزائر العاصمة",
     "type": "radio",
-    "streamUrl": "https://playerservices.streamtheworld.com/api/livestream-redirect/MIXFM_SAOPAULOAAC.aac",
-    "logo": "https://img.radios.com.br/radio/lg/radio13955_1720711597.png",
-    "description": "chr, pop-rock, youth",
+    "streamUrl": "https://webradio3.tda.dz:8001/ElBahdja_64K.mp3",
+    "logo": "https://my.radioalgerie.dz/sites/default/files/styles/d02/public/2021-10/Logo-Bahdja.png",
+    "description": "local, music, news",
+    "language": "Arabic",
+    "country": "DZ",
+    "categories": [
+      "local",
+      "music",
+      "news"
+    ],
+    "website": "https://my.radioalgerie.dz/fr/bahdja",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-kiss-radio-128mp3-cz",
+    "name": "Kiss Radio - 128MP3",
+    "type": "radio",
+    "streamUrl": "https://icecast1.play.cz/kissdelta128.mp3",
+    "logo": "https://www.kiss.cz/assets/favicon/apple-touch-icon.png",
+    "description": "Radio station",
+    "language": "Czech",
+    "country": "CZ",
+    "categories": [],
+    "website": "https://kiss.cz/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-antena-1-fm-94-7-s-o-paulo-br",
+    "name": "Antena 1 FM 94.7 São Paulo",
+    "type": "radio",
+    "streamUrl": "http://antena1.newradio.it/stream",
+    "logo": "https://www.antena1.com.br/apple-touch-icon.png",
+    "description": "adult contemporary, lite",
     "language": "Portuguese",
     "country": "BR",
     "categories": [
-      "chr",
-      "pop-rock",
-      "youth"
+      "adult contemporary",
+      "lite"
     ],
-    "website": "https://aovivo.radiomixfm.com.br/",
+    "website": "https://www.antena1.com.br/",
     "isFeatured": false
   },
   {
@@ -6537,16 +6563,110 @@
     "isFeatured": false
   },
   {
-    "id": "radio-vox-fm-pl",
-    "name": "VOX FM",
+    "id": "radio-la-100-99-9-fm-grupo-clar-n-buenos-aires-argentina-ar",
+    "name": "La 100 - 99.9 FM - Grupo Clarín - Buenos Aires, Argentina",
     "type": "radio",
-    "streamUrl": "http://ic2.smcdn.pl/3990-1.mp3",
-    "logo": "https://www.voxfm.pl/apple-touch-icon.png",
-    "description": "Radio station",
-    "language": "English",
+    "streamUrl": "https://playerservices.streamtheworld.com/api/livestream-redirect/FM999_56.mp3",
+    "logo": "http://cdn-profiles.tunein.com/s6984/images/logod.jpg",
+    "description": "99.9 fm, argentina, buenos aires, entretenimiento, español",
+    "language": "Spanish",
+    "country": "AR",
+    "categories": [
+      "99.9 fm",
+      "argentina",
+      "buenos aires",
+      "entretenimiento",
+      "español"
+    ],
+    "website": "https://la100.cienradios.com/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-80-hits-brasil-br",
+    "name": "80 Hits Brasil",
+    "type": "radio",
+    "streamUrl": "https://stm5.painelcast.com:7662/stream",
+    "logo": "https://i.ibb.co/5x1yHdR0/LOGO2025.png",
+    "description": "80's, 80s, mpb, musica brasileira, oldies",
+    "language": "Portugues Do Braasil",
+    "country": "BR",
+    "categories": [
+      "80's",
+      "80s",
+      "mpb",
+      "musica brasileira",
+      "oldies"
+    ],
+    "website": "https://80hitsbrasil.weebly.com/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-radio-republika-pl",
+    "name": "Radio Republika",
+    "type": "radio",
+    "streamUrl": "https://ssl-1.radiotvrepublika.pl:12698/stream",
+    "logo": "https://radiotvrepublika.pl/favicon-96x96.png",
+    "description": "news, news talk, politics, talk",
+    "language": "Polish",
     "country": "PL",
-    "categories": [],
-    "website": "https://www.voxfm.pl/",
+    "categories": [
+      "news",
+      "news talk",
+      "politics",
+      "talk"
+    ],
+    "website": "https://radiotvrepublika.pl/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-qmusic-nl",
+    "name": "Qmusic",
+    "type": "radio",
+    "streamUrl": "https://icecast-qmusicnl-cdp.triple-it.nl/Qmusic_nl_live.mp3",
+    "logo": "https://qmusic.nl/assets/qmusic-a1d81a5f88375b3c5507cbc0b064ce1fc8778a076a245bddfd4f2a3e2417c330.png",
+    "description": "##browserfriendly, mix, pop, top 40",
+    "language": "Dutch",
+    "country": "NL",
+    "categories": [
+      "##browserfriendly",
+      "mix",
+      "pop",
+      "top 40"
+    ],
+    "website": "http://www.qmusic.nl/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-big-b-radio-kpop-kr",
+    "name": "Big B Radio - Kpop",
+    "type": "radio",
+    "streamUrl": "https://antares.dribbcast.com/proxy/kpop?mp=/s",
+    "description": "music, pop",
+    "language": "Korean",
+    "country": "KR",
+    "categories": [
+      "music",
+      "pop"
+    ],
+    "website": "https://bigbradio.net/kpop",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-el-fon-grafo-690-am-xen-am-grupo-radio-centro-ciudad-de-m-xico-mx",
+    "name": "EL FONÓGRAFO - 690 AM - XEN-AM - Grupo Radio Centro - Ciudad de México",
+    "type": "radio",
+    "streamUrl": "https://29309.live.streamtheworld.com:443/XEN_AMAAC.aac",
+    "description": "690 am, 80s en español, am, balada en español, baladas en español",
+    "language": "Spanish",
+    "country": "MX",
+    "categories": [
+      "690 am",
+      "80s en español",
+      "am",
+      "balada en español",
+      "baladas en español"
+    ],
+    "website": "https://elfonografo.mx/",
     "isFeatured": false
   },
   {
@@ -6569,6 +6689,36 @@
     "isFeatured": false
   },
   {
+    "id": "radio-saudi-quran1-sa",
+    "name": "Saudi Quran1",
+    "type": "radio",
+    "streamUrl": "http://n01.radiojar.com/0tpy1h0kxtzuv?rj-ttl=5&rj-tok=AAABjrUiYUAAxwNU2wDdcOap9w",
+    "logo": "https://aloula.faulio.com/storage/mediagallery/c9/19/small_144a972e52acb9b4a3a3151fb0b7aa84509d14b5.png",
+    "description": "Radio station",
+    "language": "Arabic",
+    "country": "SA",
+    "categories": [],
+    "website": "https://www.aloula.sa/ar/live/quranradio",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-energy-nrj-bulgaria-bg",
+    "name": "Energy NRJ Bulgaria",
+    "type": "radio",
+    "streamUrl": "http://play.global.audio/nrj128",
+    "logo": "https://media.metacast.eu/pictures/10_2015/OdriLYWpbHJqKDAcGCMv-7384.png",
+    "description": "pop, dance, retro",
+    "language": "Bulgarian",
+    "country": "BG",
+    "categories": [
+      "pop",
+      "dance",
+      "retro"
+    ],
+    "website": "https://radioenergy.bg/",
+    "isFeatured": false
+  },
+  {
     "id": "radio-sky-news-australia-radio-au",
     "name": "Sky News Australia Radio",
     "type": "radio",
@@ -6588,115 +6738,21 @@
     "isFeatured": false
   },
   {
-    "id": "radio-oldies-internet-radio-mx",
-    "name": "Oldies Internet Radio",
+    "id": "radio-energy-z-rich-nrj-ch",
+    "name": "Energy Zürich (NRJ)",
     "type": "radio",
-    "streamUrl": "http://162.244.81.98:8140/listen",
-    "description": "1970s, 1980s, 70s, 80s, classic hits",
-    "language": "Spanish",
-    "country": "MX",
-    "categories": [
-      "1970s",
-      "1980s",
-      "70s",
-      "80s",
-      "classic hits"
-    ],
-    "website": "https://oldiesinternetradio.com/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-el-fon-grafo-690-am-xen-am-grupo-radio-centro-ciudad-de-m-xico-mx",
-    "name": "EL FONÓGRAFO - 690 AM - XEN-AM - Grupo Radio Centro - Ciudad de México",
-    "type": "radio",
-    "streamUrl": "https://29309.live.streamtheworld.com:443/XEN_AMAAC.aac",
-    "description": "690 am, 80s en español, am, balada en español, baladas en español",
-    "language": "Spanish",
-    "country": "MX",
-    "categories": [
-      "690 am",
-      "80s en español",
-      "am",
-      "balada en español",
-      "baladas en español"
-    ],
-    "website": "https://elfonografo.mx/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-saudi-quran1-sa",
-    "name": "Saudi Quran1",
-    "type": "radio",
-    "streamUrl": "http://n01.radiojar.com/0tpy1h0kxtzuv?rj-ttl=5&rj-tok=AAABjrUiYUAAxwNU2wDdcOap9w",
-    "logo": "https://aloula.faulio.com/storage/mediagallery/c9/19/small_144a972e52acb9b4a3a3151fb0b7aa84509d14b5.png",
-    "description": "Radio station",
-    "language": "Arabic",
-    "country": "SA",
-    "categories": [],
-    "website": "https://www.aloula.sa/ar/live/quranradio",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-radio-aswat-ma",
-    "name": "Radio Aswat",
-    "type": "radio",
-    "streamUrl": "http://broadcast.ice.infomaniak.ch/aswat-high.mp3?.mp3",
-    "logo": "http://www.radioaswat.ma/favicon.ico",
-    "description": "Radio station",
-    "language": "Arabic",
-    "country": "MA",
-    "categories": [],
-    "website": "http://www.radioaswat.ma/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-radio-republika-pl",
-    "name": "Radio Republika",
-    "type": "radio",
-    "streamUrl": "https://ssl-1.radiotvrepublika.pl:12698/stream",
-    "logo": "https://radiotvrepublika.pl/favicon-96x96.png",
-    "description": "news, news talk, politics, talk",
-    "language": "Polish",
-    "country": "PL",
-    "categories": [
-      "news",
-      "news talk",
-      "politics",
-      "talk"
-    ],
-    "website": "https://radiotvrepublika.pl/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-orf-hitradio-3-at",
-    "name": "ORF Hitradio Ö3",
-    "type": "radio",
-    "streamUrl": "https://ors-sn03.ors-shoutcast.at/oe3-q1a",
-    "logo": "https://tubestatic.orf.at/mojo/1_3/storyserver//tube/common/images/apple-icons/oe3.png",
-    "description": "orf, pop",
+    "streamUrl": "http://broadcast.infomaniak.ch/energyzuerich-high.mp3",
+    "logo": "https://energy.ch/ech-new/images/ech/apple-touch-icon.png",
+    "description": "mainstream, news, pop, swiss",
     "language": "German",
-    "country": "AT",
+    "country": "CH",
     "categories": [
-      "orf",
-      "pop"
+      "mainstream",
+      "news",
+      "pop",
+      "swiss"
     ],
-    "website": "http://oe3.orf.at/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-antena-1-fm-94-7-s-o-paulo-br",
-    "name": "Antena 1 FM 94.7 São Paulo",
-    "type": "radio",
-    "streamUrl": "http://antena1.newradio.it/stream",
-    "logo": "https://www.antena1.com.br/apple-touch-icon.png",
-    "description": "adult contemporary, lite",
-    "language": "Portuguese",
-    "country": "BR",
-    "categories": [
-      "adult contemporary",
-      "lite"
-    ],
-    "website": "https://www.antena1.com.br/",
+    "website": "https://energy.ch/radio/zurich",
     "isFeatured": false
   },
   {
@@ -6715,23 +6771,6 @@
     "isFeatured": false
   },
   {
-    "id": "radio-el-bahdja-dz",
-    "name": "El Bahdja - الجزائر العاصمة",
-    "type": "radio",
-    "streamUrl": "https://webradio3.tda.dz:8001/ElBahdja_64K.mp3",
-    "logo": "https://my.radioalgerie.dz/sites/default/files/styles/d02/public/2021-10/Logo-Bahdja.png",
-    "description": "local, music, news",
-    "language": "Arabic",
-    "country": "DZ",
-    "categories": [
-      "local",
-      "music",
-      "news"
-    ],
-    "website": "https://my.radioalgerie.dz/fr/bahdja",
-    "isFeatured": false
-  },
-  {
     "id": "radio-radio-swiss-jazz-aac-192-ch",
     "name": "Radio Swiss Jazz (AAC 192)",
     "type": "radio",
@@ -6745,6 +6784,190 @@
       "srg ssr"
     ],
     "website": "https://www.radioswissjazz.ch/de",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-sumerfm-iraq-iq",
+    "name": "SumerFm Iraq",
+    "type": "radio",
+    "streamUrl": "https://l3.itworkscdn.net/itwaudio/9012/stream",
+    "description": "arabic music, iraq, iraq radio, music, sumer",
+    "language": "Arabic",
+    "country": "IQ",
+    "categories": [
+      "arabic music",
+      "iraq",
+      "iraq radio",
+      "music",
+      "sumer"
+    ],
+    "website": "https://www.alsumaria.tv/SumerFm",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-bons-tempos-fm-br",
+    "name": "Bons Tempos FM",
+    "type": "radio",
+    "streamUrl": "https://server02.ouvir.radio.br:8050/stream?1609720768800",
+    "logo": "https://static.radios.com.br/img/apple-touch-icon.png",
+    "description": "nostalgia, nostalgic, rock, romantic",
+    "language": "Brazilian Portuguese",
+    "country": "BR",
+    "categories": [
+      "nostalgia",
+      "nostalgic",
+      "rock",
+      "romantic"
+    ],
+    "website": "https://www.radios.com.br/aovivo/bons-tempos-fm/37027",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-slow-rock-90-my",
+    "name": "Slow Rock 90'",
+    "type": "radio",
+    "streamUrl": "https://stream.zeno.fm/hiut6cwfoneuv",
+    "logo": "https://zeno.fm/_next/image/?url=https%3A%2F%2Fimages.zeno.fm%2FrKtC0NpB5ZmSBUWmZtAUn1sM1w_Owj9kNo-Xuc310Ak%2Frs%3Afit%3A240%3A240%2Fg%3Ace%3A0%3A0%2FaHR0cHM6Ly9zdHJlYW0tdG9vbHMuemVub21lZGlhLmNvbS9jb250ZW50L3N0YXRpb25zLzg3MzhjNDA0LTMzODItNDgxMC04YWE3LTEwZjE3MjE2ZGRjZC9pbWFnZS8_dXBkYXRlZD0xNzAyNjMxMzU2MDAw.webp&w=750&q=100",
+    "description": "90's, classic rock, general, rock, slow rock",
+    "language": "Malay",
+    "country": "MY",
+    "categories": [
+      "90's",
+      "classic rock",
+      "general",
+      "rock",
+      "slow rock"
+    ],
+    "website": "https://zeno.fm/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-gensokyo-radio-jp",
+    "name": "Gensokyo Radio",
+    "type": "radio",
+    "streamUrl": "https://stream.gensokyoradio.net/3",
+    "logo": "https://gensokyoradio.net/favicon.ico",
+    "description": "anime, touhou",
+    "language": "English",
+    "country": "JP",
+    "categories": [
+      "anime",
+      "touhou"
+    ],
+    "website": "https://gensokyoradio.net/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-sham-fm-sy",
+    "name": "sham fm",
+    "type": "radio",
+    "streamUrl": "http://66.248.205.220:8400/stream",
+    "logo": "http://sham.fm/favicon.ico",
+    "description": "Radio station",
+    "language": "Arabic",
+    "country": "SY",
+    "categories": [],
+    "website": "http://sham.fm/ar/index.html",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-digi-fm-ro",
+    "name": "DIGI FM",
+    "type": "radio",
+    "streamUrl": "http://edge76.rdsnet.ro:84/digifm/digifm.mp3",
+    "logo": "http://www.digi-fm.ro/static/theme-repo/apple-touch-icon.png?v=2.0&cache=rls-2021111100-v9",
+    "description": "music, news",
+    "language": "Romanian",
+    "country": "RO",
+    "categories": [
+      "music",
+      "news"
+    ],
+    "website": "http://www.digi-fm.ro/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-fm4-orf-at",
+    "name": "FM4 | ORF",
+    "type": "radio",
+    "streamUrl": "https://orf-live.ors-shoutcast.at/fm4-q1a",
+    "logo": "https://tubestatic.orf.at/mojo/1_3/storyserver//tube/fm4/images/touch-icon-iphone-retina.png",
+    "description": "orf, alternative mainstream, electronic, pop, rock",
+    "language": "English",
+    "country": "AT",
+    "categories": [
+      "orf",
+      "alternative mainstream",
+      "electronic",
+      "pop",
+      "rock"
+    ],
+    "website": "https://fm4.orf.at/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-fm94-7-cn",
+    "name": "上海经典音乐广播 FM94.7",
+    "type": "radio",
+    "streamUrl": "https://lhttp-hw.qtfm.cn/live/267/64k.mp3",
+    "logo": "http://pic.qingting.fm/sso/48/1641437907698_k0NNOUP54.jpeg",
+    "description": "classical",
+    "language": "Chinese",
+    "country": "CN",
+    "categories": [
+      "classical"
+    ],
+    "website": "https://www.smg.cn/review/index.html",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-rock-en-espa-ol-rock-de-m-xico-espa-a-y-argentina-mx",
+    "name": "ROCK EN ESPAÑOL: Rock de México, España y Argentina",
+    "type": "radio",
+    "streamUrl": "https://18193.live.streamtheworld.com:443/ACIR20_S01AAC.aac",
+    "logo": "https://i.iheart.com/v3/re/new_assets/5bc5ed6ac7977ca1c9302285",
+    "description": "80s, 80s en español, 90s, acir, acir online",
+    "language": "Spanish",
+    "country": "MX",
+    "categories": [
+      "80s",
+      "80s en español",
+      "90s",
+      "acir",
+      "acir online"
+    ],
+    "website": "https://www.iheart.com/live/rock-en-espanol-8061/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-radio-plus-agadir-fm-92-4-ma",
+    "name": "Radio Plus Agadir FM 92.4",
+    "type": "radio",
+    "streamUrl": "https://stream-158.zeno.fm/bqdbb6hd0neuv",
+    "description": "Radio station",
+    "language": "French",
+    "country": "MA",
+    "categories": [],
+    "website": "https://www.radioplus.ma/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-100-best-ibiza-deep-house-ca",
+    "name": "100 BEST IBIZA DEEP HOUSE",
+    "type": "radio",
+    "streamUrl": "https://stream.zeno.fm/lwv6zqgtv1dtv",
+    "logo": "https://static.wixstatic.com/media/f361b3_cf8747dc2b804de09c56359c324dd1f5~mv2.jpg",
+    "description": "club dance, community radio, dance music, deep house, deephouse",
+    "language": "English",
+    "country": "CA",
+    "categories": [
+      "club dance",
+      "community radio",
+      "dance music",
+      "deep house",
+      "deephouse"
+    ],
+    "website": "https://zeno.fm/radio/100-best-ibiza-deep-house-/",
     "isFeatured": false
   },
   {
@@ -6766,29 +6989,223 @@
     "isFeatured": false
   },
   {
-    "id": "radio-kiss-radio-128mp3-cz",
-    "name": "Kiss Radio - 128MP3",
+    "id": "radio-tiktok-hits-id",
+    "name": "TikTok Hits",
     "type": "radio",
-    "streamUrl": "https://icecast1.play.cz/kissdelta128.mp3",
-    "logo": "https://www.kiss.cz/assets/favicon/apple-touch-icon.png",
-    "description": "Radio station",
-    "language": "Czech",
-    "country": "CZ",
-    "categories": [],
-    "website": "https://kiss.cz/",
+    "streamUrl": "https://tiktokhits.funstream.net/listen/tiktokhits/radio.aac",
+    "logo": "https://static.mytuner.mobi/media/tvos_radios/248/tiktok-hits.08ab6d31.png",
+    "description": "hip hop, k-pop, pop",
+    "language": "English",
+    "country": "ID",
+    "categories": [
+      "hip hop",
+      "k-pop",
+      "pop"
+    ],
+    "website": "https://radiostream.novawap.com/",
     "isFeatured": false
   },
   {
-    "id": "radio-sky-radio-nl",
-    "name": "Sky Radio",
+    "id": "radio-radio-maria-kenya-nyeri-ke",
+    "name": "Radio Maria Kenya - Nairobi",
     "type": "radio",
-    "streamUrl": "https://www.mp3streams.nl/zender/skyradio/stream/8-mp3-128",
-    "logo": "https://www.skyradio.nl/favicon.ico",
+    "streamUrl": "http://141.95.98.87:8069/stream",
     "description": "Radio station",
     "language": "English",
-    "country": "NL",
+    "country": "KE",
     "categories": [],
-    "website": "https://www.skyradio.nl/",
+    "website": "https://www.radiomaria.co.ke/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-carribean-ke",
+    "name": "CARRIBEAN",
+    "type": "radio",
+    "streamUrl": "https://streams.rautemusik.fm/caribbean-wave/mp3-192/",
+    "description": "classical",
+    "language": "English",
+    "country": "KE",
+    "categories": [
+      "classical"
+    ],
+    "website": "https://streams.rautemusik.fm/caribbean-wave/mp3-192/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-radio-safari-kenya-ke",
+    "name": "Radio Safari Kenya",
+    "type": "radio",
+    "streamUrl": "https://stream.zeno.fm/t65cszbgunhvv",
+    "description": "christian, hits, news, pop",
+    "language": "English",
+    "country": "KE",
+    "categories": [
+      "christian",
+      "hits",
+      "news",
+      "pop"
+    ],
+    "isFeatured": false
+  },
+  {
+    "id": "radio-radio-maria-kenya-kisumu-ke",
+    "name": "Radio Maria Kenya Kisumu",
+    "type": "radio",
+    "streamUrl": "http://141.95.98.87:8129/stream",
+    "description": "Radio station",
+    "language": "English",
+    "country": "KE",
+    "categories": [],
+    "website": "https://www.radiomaria.co.ke/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-campus-radio-kenya-ke",
+    "name": "Campus Radio Kenya",
+    "type": "radio",
+    "streamUrl": "https://stream.zenolive.com/mayn36v1v8quv.aac",
+    "logo": "https://i0.wp.com/www.campusradio.co.ke/wp-content/uploads/2019/09/2-CRK-Official-Logo-1.png?fit=307%2C138&ssl=1",
+    "description": "Radio station",
+    "language": "English",
+    "country": "KE",
+    "categories": [],
+    "website": "https://www.campusradio.co.ke/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-alem-fm-tr",
+    "name": "Alem Fm",
+    "type": "radio",
+    "streamUrl": "https://turkmedya.radyotvonline.net/alemfmaac",
+    "logo": "https://www.alemfm.com/assets/img/alemfm-apple-touch-icon.png",
+    "description": "classical",
+    "language": "English",
+    "country": "TR",
+    "categories": [
+      "classical"
+    ],
+    "website": "https://www.alemfm.com/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-npr-24-hour-program-stream-us",
+    "name": "NPR 24 Hour Program Stream",
+    "type": "radio",
+    "streamUrl": "http://npr-ice.streamguys1.com/live.mp3",
+    "logo": "https://static-assets.npr.org/static/images/favicon/favicon-96x96.png",
+    "description": "news, news talk, political talk, politics, public radio",
+    "language": "English",
+    "country": "US",
+    "categories": [
+      "news",
+      "news talk",
+      "political talk",
+      "politics",
+      "public radio"
+    ],
+    "website": "https://www.npr.org/2016/04/05/472557877/npr-program-stream",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-radio-eins-de",
+    "name": "Radio Eins",
+    "type": "radio",
+    "streamUrl": "http://f131.rndfnk.com/ard/rbb/radioeins/live/mp3/128/stream.mp3?cid=01FC1WH12KJ93TCQPDSE2E5PZ9&sid=3MDMylowxszuYz6NbwPfyVXhibu&token=AksWSAbhNIGQ1kCLFkjXQEOooTJ3fcs_LKUvM53s3e0&tvf=RZMp9lnG6BhmMTMxLnJuZGZuay5jb20",
+    "logo": "http://www.radioeins.de/content/dam/rbb/rbb/logos/touch/rad-128.png",
+    "description": "adult contemporary, alternative, ard, information, pop",
+    "language": "German",
+    "country": "DE",
+    "categories": [
+      "adult contemporary",
+      "alternative",
+      "ard",
+      "information",
+      "pop"
+    ],
+    "website": "http://www.radioeins.de/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-heart-dance-gb",
+    "name": "Heart Dance",
+    "type": "radio",
+    "streamUrl": "https://media-ssl.musicradio.com/HeartDanceMP3",
+    "logo": "https://www.heart.co.uk/assets_v4r/heart/img/favicon-196x196.png",
+    "description": "dance, national, pop, public radio, variety",
+    "language": "English",
+    "country": "GB",
+    "categories": [
+      "dance",
+      "national",
+      "pop",
+      "public radio",
+      "variety"
+    ],
+    "website": "https://www.heart.co.uk/dance",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-radio-ibiza-it",
+    "name": "Radio Ibiza",
+    "type": "radio",
+    "streamUrl": "http://wma08.fluidstream.net:5010/;stream.aac",
+    "logo": "https://radioibiza.it/wp-content/uploads/2021/07/cropped-favicon-ibiza-180x180.png",
+    "description": "dance, electronica, napoli",
+    "language": "Italian",
+    "country": "IT",
+    "categories": [
+      "dance",
+      "electronica",
+      "napoli"
+    ],
+    "website": "http://www.radioibiza.it/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-nogoum-fm-eg",
+    "name": "Nogoum FM",
+    "type": "radio",
+    "streamUrl": "https://stream-159.zeno.fm/qb1zvsykm98uv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiJxYjF6dnN5a205OHV2IiwiaG9zdCI6InN0cmVhbS0xNTkuemVuby5mbSIsInJ0dGwiOjUsImp0aSI6Ild2WTItbVhJU2Z5VlBEOHc3a2J1X0EiLCJpYXQiOjE3NzA5ODcyOTUsImV4cCI6MTc3MDk4NzM1NX0.ob8jdjoAgAzIcrxMk5b127wgaxpnJHEASSChnE5v5ro",
+    "logo": "https://www.nogoumfm.net/wp-content/uploads/2019/12/logo-nogoum-1.png",
+    "description": "Radio station",
+    "language": "Arabic",
+    "country": "EG",
+    "categories": [],
+    "website": "https://www.nogoumfm.net/live-radio-stream/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-891-cn",
+    "name": "891线上音乐台 高清",
+    "type": "radio",
+    "streamUrl": "https://live.fm891.net/192k.aac",
+    "logo": "https://pic.qtfm.cn/2025/1001/20251001070637.png",
+    "description": "internet radio, music",
+    "language": "Chinese",
+    "country": "CN",
+    "categories": [
+      "internet radio",
+      "music"
+    ],
+    "website": "https://www.fm891.net/",
+    "isFeatured": false
+  },
+  {
+    "id": "radio-oldies-internet-radio-mx",
+    "name": "Oldies Internet Radio",
+    "type": "radio",
+    "streamUrl": "http://162.244.81.98:8140/listen",
+    "description": "1970s, 1980s, 70s, 80s, classic hits",
+    "language": "Spanish",
+    "country": "MX",
+    "categories": [
+      "1970s",
+      "1980s",
+      "70s",
+      "80s",
+      "classic hits"
+    ],
+    "website": "https://oldiesinternetradio.com/",
     "isFeatured": false
   },
   {
@@ -6841,41 +7258,6 @@
     "isFeatured": false
   },
   {
-    "id": "radio-gensokyo-radio-jp",
-    "name": "Gensokyo Radio",
-    "type": "radio",
-    "streamUrl": "https://stream.gensokyoradio.net/3",
-    "logo": "https://gensokyoradio.net/favicon.ico",
-    "description": "anime, touhou",
-    "language": "English",
-    "country": "JP",
-    "categories": [
-      "anime",
-      "touhou"
-    ],
-    "website": "https://gensokyoradio.net/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-fm4-orf-at",
-    "name": "FM4 | ORF",
-    "type": "radio",
-    "streamUrl": "https://orf-live.ors-shoutcast.at/fm4-q1a",
-    "logo": "https://tubestatic.orf.at/mojo/1_3/storyserver//tube/fm4/images/touch-icon-iphone-retina.png",
-    "description": "orf, alternative mainstream, electronic, pop, rock",
-    "language": "English",
-    "country": "AT",
-    "categories": [
-      "orf",
-      "alternative mainstream",
-      "electronic",
-      "pop",
-      "rock"
-    ],
-    "website": "https://fm4.orf.at/",
-    "isFeatured": false
-  },
-  {
     "id": "radio-pyongyang-fm-radio-kp",
     "name": "Pyongyang FM Radio",
     "type": "radio",
@@ -6905,25 +7287,6 @@
     "isFeatured": false
   },
   {
-    "id": "radio-80-hits-brasil-br",
-    "name": "80 Hits Brasil",
-    "type": "radio",
-    "streamUrl": "https://stm5.painelcast.com:7662/stream",
-    "logo": "https://i.ibb.co/5x1yHdR0/LOGO2025.png",
-    "description": "80's, 80s, mpb, musica brasileira, oldies",
-    "language": "Portugues Do Braasil",
-    "country": "BR",
-    "categories": [
-      "80's",
-      "80s",
-      "mpb",
-      "musica brasileira",
-      "oldies"
-    ],
-    "website": "https://80hitsbrasil.weebly.com/",
-    "isFeatured": false
-  },
-  {
     "id": "radio-faz-ir",
     "name": "Faz",
     "type": "radio",
@@ -6933,58 +7296,6 @@
     "country": "IR",
     "categories": [],
     "website": "http://www.radiofaaz.com:8000/radiofaaz",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-energy-z-rich-nrj-ch",
-    "name": "Energy Zürich (NRJ)",
-    "type": "radio",
-    "streamUrl": "http://broadcast.infomaniak.ch/energyzuerich-high.mp3",
-    "logo": "https://energy.ch/ech-new/images/ech/apple-touch-icon.png",
-    "description": "mainstream, news, pop, swiss",
-    "language": "German",
-    "country": "CH",
-    "categories": [
-      "mainstream",
-      "news",
-      "pop",
-      "swiss"
-    ],
-    "website": "https://energy.ch/radio/zurich",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-big-b-radio-kpop-kr",
-    "name": "Big B Radio - Kpop",
-    "type": "radio",
-    "streamUrl": "https://antares.dribbcast.com/proxy/kpop?mp=/s",
-    "description": "music, pop",
-    "language": "Korean",
-    "country": "KR",
-    "categories": [
-      "music",
-      "pop"
-    ],
-    "website": "https://bigbradio.net/kpop",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-rock-en-espa-ol-rock-de-m-xico-espa-a-y-argentina-mx",
-    "name": "ROCK EN ESPAÑOL: Rock de México, España y Argentina",
-    "type": "radio",
-    "streamUrl": "https://18193.live.streamtheworld.com:443/ACIR20_S01AAC.aac",
-    "logo": "https://i.iheart.com/v3/re/new_assets/5bc5ed6ac7977ca1c9302285",
-    "description": "80s, 80s en español, 90s, acir, acir online",
-    "language": "Spanish",
-    "country": "MX",
-    "categories": [
-      "80s",
-      "80s en español",
-      "90s",
-      "acir",
-      "acir online"
-    ],
-    "website": "https://www.iheart.com/live/rock-en-espanol-8061/",
     "isFeatured": false
   },
   {
@@ -7001,42 +7312,6 @@
       "politics"
     ],
     "website": "https://radio.nv.ua/ru",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-energy-nrj-bulgaria-bg",
-    "name": "Energy NRJ Bulgaria",
-    "type": "radio",
-    "streamUrl": "http://play.global.audio/nrj128",
-    "logo": "https://media.metacast.eu/pictures/10_2015/OdriLYWpbHJqKDAcGCMv-7384.png",
-    "description": "pop, dance, retro",
-    "language": "Bulgarian",
-    "country": "BG",
-    "categories": [
-      "pop",
-      "dance",
-      "retro"
-    ],
-    "website": "https://radioenergy.bg/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-slow-rock-90-my",
-    "name": "Slow Rock 90'",
-    "type": "radio",
-    "streamUrl": "https://stream.zeno.fm/hiut6cwfoneuv",
-    "logo": "https://zeno.fm/_next/image/?url=https%3A%2F%2Fimages.zeno.fm%2FrKtC0NpB5ZmSBUWmZtAUn1sM1w_Owj9kNo-Xuc310Ak%2Frs%3Afit%3A240%3A240%2Fg%3Ace%3A0%3A0%2FaHR0cHM6Ly9zdHJlYW0tdG9vbHMuemVub21lZGlhLmNvbS9jb250ZW50L3N0YXRpb25zLzg3MzhjNDA0LTMzODItNDgxMC04YWE3LTEwZjE3MjE2ZGRjZC9pbWFnZS8_dXBkYXRlZD0xNzAyNjMxMzU2MDAw.webp&w=750&q=100",
-    "description": "90's, classic rock, general, rock, slow rock",
-    "language": "Malay",
-    "country": "MY",
-    "categories": [
-      "90's",
-      "classic rock",
-      "general",
-      "rock",
-      "slow rock"
-    ],
-    "website": "https://zeno.fm/",
     "isFeatured": false
   },
   {
@@ -7159,33 +7434,6 @@
     "isFeatured": false
   },
   {
-    "id": "radio-juja-fm-ke",
-    "name": "Juja FM",
-    "type": "radio",
-    "streamUrl": "http://node-10.zeno.fm/5w8y7wcf9x8uv?zs=xwoBg8DVTx2jYRhHsWgHXw&rj-ttl=5&rj-tok=AAABgnKqVSgAmEHnh12jXuZhAw",
-    "logo": "http://repentandpreparetheway.org/favicon.ico",
-    "description": "Radio station",
-    "language": "American English",
-    "country": "KE",
-    "categories": [],
-    "website": "http://repentandpreparetheway.org/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-kustommediaradio-ke",
-    "name": "Kustommediaradio",
-    "type": "radio",
-    "streamUrl": "https://stream.zeno.fm/3zgc6zpfvorvv",
-    "description": "pepea show la kijanja 1-4pm",
-    "language": "Swahili",
-    "country": "KE",
-    "categories": [
-      "pepea show la kijanja 1-4pm"
-    ],
-    "website": "https://stream.zeno.fm/3zgc6zpfvorvv",
-    "isFeatured": false
-  },
-  {
     "id": "radio-radio-waumini-88-3fm-ke",
     "name": "Radio Waumini 88.3FM",
     "type": "radio",
@@ -7196,20 +7444,6 @@
     "country": "KE",
     "categories": [],
     "website": "https://radiowaumini.co.ke/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-t-rk-lerle-t-rkiye-tr",
-    "name": "Türkülerle Türkiye",
-    "type": "radio",
-    "streamUrl": "http://37.247.98.8/stream/22/;",
-    "description": "türkü",
-    "language": "Turkish",
-    "country": "TR",
-    "categories": [
-      "türkü"
-    ],
-    "website": "https://www.canliradyodinle.fm/radyo-turkulerle-turkiye-dinle.html",
     "isFeatured": false
   },
   {
@@ -7290,21 +7524,6 @@
     "country": "KE",
     "categories": [],
     "website": "https://exclusive.com/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-replay-news-kiswahili-ke",
-    "name": "REPLAY NEWS - Kiswahili",
-    "type": "radio",
-    "streamUrl": "https://replaynewssw.ice.infomaniak.ch/replaynewssw-128.mp3",
-    "logo": "https://www.publicsante.com/BIENVENU/LOGO%20REPLAY%20NEWS-SW.png",
-    "description": "news",
-    "language": "Swahili",
-    "country": "KE",
-    "categories": [
-      "news"
-    ],
-    "website": "https://www.replaynews.net/",
     "isFeatured": false
   },
   {
@@ -7483,18 +7702,6 @@
     "isFeatured": false
   },
   {
-    "id": "radio-radio-plus-agadir-fm-92-4-ma",
-    "name": "Radio Plus Agadir FM 92.4",
-    "type": "radio",
-    "streamUrl": "https://stream-158.zeno.fm/bqdbb6hd0neuv",
-    "description": "Radio station",
-    "language": "French",
-    "country": "MA",
-    "categories": [],
-    "website": "https://www.radioplus.ma/",
-    "isFeatured": false
-  },
-  {
     "id": "radio-radio-mars-ma",
     "name": "Radio Mars",
     "type": "radio",
@@ -7521,22 +7728,6 @@
       "urban"
     ],
     "website": "https://emmachev.com/emmachev-radio/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-aldai-radio-ke",
-    "name": "Aldai Radio",
-    "type": "radio",
-    "streamUrl": "https://stream.zeno.fm/sojbskv8s10vv",
-    "description": "afrobeat, news, pop, talk",
-    "language": "English",
-    "country": "KE",
-    "categories": [
-      "afrobeat",
-      "news",
-      "pop",
-      "talk"
-    ],
     "isFeatured": false
   },
   {
@@ -7592,24 +7783,6 @@
     "categories": [
       "pop"
     ],
-    "isFeatured": false
-  },
-  {
-    "id": "radio-sumerfm-iraq-iq",
-    "name": "SumerFm Iraq",
-    "type": "radio",
-    "streamUrl": "https://l3.itworkscdn.net/itwaudio/9012/stream",
-    "description": "arabic music, iraq, iraq radio, music, sumer",
-    "language": "Arabic",
-    "country": "IQ",
-    "categories": [
-      "arabic music",
-      "iraq",
-      "iraq radio",
-      "music",
-      "sumer"
-    ],
-    "website": "https://www.alsumaria.tv/SumerFm",
     "isFeatured": false
   },
   {
@@ -7694,21 +7867,6 @@
       "talk"
     ],
     "website": "http://www.romania-actualitati.ro/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-talksport-gb",
-    "name": "talkSPORT",
-    "type": "radio",
-    "streamUrl": "https://radio.talksport.com/stream",
-    "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAcdmwRcs4FcWk_OQqxq4EyZH5YA7ixM2dvQ&usqp=CAU",
-    "description": "news",
-    "language": "English",
-    "country": "GB",
-    "categories": [
-      "news"
-    ],
-    "website": "https://talksport.com/",
     "isFeatured": false
   },
   {
@@ -7899,19 +8057,6 @@
       "news"
     ],
     "website": "https://my.radioalgerie.dz/fr/rai",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-ras-style-ke",
-    "name": "RAS STYLE",
-    "type": "radio",
-    "streamUrl": "http://stream.zeno.fm/gf58b0pt5x8uv",
-    "description": "classical",
-    "language": "English",
-    "country": "KE",
-    "categories": [
-      "classical"
-    ],
     "isFeatured": false
   },
   {
@@ -8171,19 +8316,6 @@
       "news"
     ],
     "website": "https://my.radioalgerie.dz/ar/oran",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-sham-fm-sy",
-    "name": "sham fm",
-    "type": "radio",
-    "streamUrl": "http://66.248.205.220:8400/stream",
-    "logo": "http://sham.fm/favicon.ico",
-    "description": "Radio station",
-    "language": "Arabic",
-    "country": "SY",
-    "categories": [],
-    "website": "http://sham.fm/ar/index.html",
     "isFeatured": false
   },
   {
@@ -8460,22 +8592,6 @@
     "isFeatured": false
   },
   {
-    "id": "radio-digi-fm-ro",
-    "name": "DIGI FM",
-    "type": "radio",
-    "streamUrl": "http://edge76.rdsnet.ro:84/digifm/digifm.mp3",
-    "logo": "http://www.digi-fm.ro/static/theme-repo/apple-touch-icon.png?v=2.0&cache=rls-2021111100-v9",
-    "description": "music, news",
-    "language": "Romanian",
-    "country": "RO",
-    "categories": [
-      "music",
-      "news"
-    ],
-    "website": "http://www.digi-fm.ro/",
-    "isFeatured": false
-  },
-  {
     "id": "radio-klubr-di-95-3-hu",
     "name": "Klubrádió 95,3",
     "type": "radio",
@@ -8731,31 +8847,6 @@
     "isFeatured": false
   },
   {
-    "id": "radio-rds-relax-it",
-    "name": "RDS relax",
-    "type": "radio",
-    "streamUrl": "http://icstream.rds.radio/rdsrelax",
-    "logo": "https://rdsrelax.it/images/logo.png",
-    "description": "Radio station",
-    "language": "Italian",
-    "country": "IT",
-    "categories": [],
-    "website": "https://rdsrelax.it/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-iran-on-air-ir",
-    "name": "Iran On Air",
-    "type": "radio",
-    "streamUrl": "http://ice41.securenetsystems.net/KIRN",
-    "description": "Radio station",
-    "language": "Persian",
-    "country": "IR",
-    "categories": [],
-    "website": "http://www.iranonair.com/",
-    "isFeatured": false
-  },
-  {
     "id": "radio-rap-lbeldi-maroc-hip-hop-music-from-morocco-fr-ar-ma",
     "name": "Rap Lbeldi Maroc - Hip Hop Music from Morocco FR AR",
     "type": "radio",
@@ -8857,20 +8948,6 @@
       "talk"
     ],
     "website": "https://www.rll.com.lb/",
-    "isFeatured": false
-  },
-  {
-    "id": "radio-977-80s-us",
-    "name": ".977 80s",
-    "type": "radio",
-    "streamUrl": "http://26433.live.streamtheworld.com/977_80_SC",
-    "description": "80s",
-    "language": "English",
-    "country": "US",
-    "categories": [
-      "80s"
-    ],
-    "website": "http://www.977music.com/",
     "isFeatured": false
   },
   {
@@ -9733,25 +9810,6 @@
     "language": "Hindi",
     "country": "IN",
     "categories": [],
-    "isFeatured": false
-  },
-  {
-    "id": "radio-100-best-ibiza-deep-house-ca",
-    "name": "#100 BEST IBIZA DEEP HOUSE",
-    "type": "radio",
-    "streamUrl": "https://stream.zeno.fm/lwv6zqgtv1dtv",
-    "logo": "https://static.wixstatic.com/media/f361b3_cf8747dc2b804de09c56359c324dd1f5~mv2.jpg",
-    "description": "chill, chill house, chillout, chillout+lounge, club dance",
-    "language": "English",
-    "country": "CA",
-    "categories": [
-      "chill",
-      "chill house",
-      "chillout",
-      "chillout+lounge",
-      "club dance"
-    ],
-    "website": "https://zeno.fm/radio/100-best-ibiza-deep-house-/",
     "isFeatured": false
   },
   {
